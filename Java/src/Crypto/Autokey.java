@@ -310,8 +310,9 @@ public class Autokey {
 
         //public String text = "THISISTHEWAYBACKHOME";
 
-        String key = "";  //15 - P
+        String key = "F";  //FUNERALCDI
         int charPos = 1;
+        int startpos = 0;
 
         if (key.matches("[-+]?\\d*\\.?\\d+"))
             key = "" + alpha.charAt(Integer.parseInt(key));
@@ -321,15 +322,18 @@ public class Autokey {
 
         enc = enc.replaceAll("\\d", "").replaceAll(" ", "").replaceAll("\\t", "").replaceAll("\\n", "").toUpperCase();
 
-        //System.out.println("Plaintext : "+text);
+        KEY_LENGTH(enc);
+
+        System.out.println();
         //System.out.println("Encrypted : " + enc);
 
         if (key.length() < 2)
             for (String key_x : alphabet)
-                System.out.println("Decrypted : " + AutoDecryption(enc, key_x, charPos) + "\nKey:" + key_x+ "\n");
+                System.out.println("Decrypted : " + AutoDecryption(enc, key_x, charPos, startpos) + "\nKey:" + key_x + "\n");
 
         else
-            System.out.println("Decrypted : " + AutoDecryption(enc, key, charPos) + "\nKey:" + key + "\n");
+            System.out.println("Decrypted : " + AutoDecryption(enc, key, charPos, startpos) + "\nKey:" + key + "\n");
+
     }
 
     public static String AutoEncryption(String text, String key) {
@@ -352,26 +356,15 @@ public class Autokey {
         return sb;
     }
 
-    public static String AutoDecryption(String text, String key, int charPos) {
+    public static String AutoDecryption(String text, String key, int charPos, int startpos) {
 
         String current = key;
         String sb = "";
         String vv = "";
-        text = enc_chars(text,charPos);
+        text = enc_chars(text, charPos, startpos);
         //System.out.println("Encrypted : " + text);
+
         int len = text.length();
-
-        double[] freq = LetterFreq(text);
-
-        for(char z : alpha.toCharArray()){
-            System.out.print(z + ":" +freq[alpha.indexOf(z)]+ "|");
-        }
-
-        System.out.println("\nETAONISRH: %"+((freq[alpha.indexOf('E')]+freq[alpha.indexOf('T')]+freq[alpha.indexOf('A')]+freq[alpha.indexOf('O')]+freq[alpha.indexOf('N')]+freq[alpha.indexOf('I')]+freq[alpha.indexOf('S')]+freq[alpha.indexOf('R')]+freq[alpha.indexOf('H')])/len)*100);
-        System.out.println("ETAON: %"+((freq[alpha.indexOf('E')]+freq[alpha.indexOf('T')]+freq[alpha.indexOf('A')]+freq[alpha.indexOf('O')]+freq[alpha.indexOf('N')])/len)*100);
-        System.out.println("LNRST: %"+((freq[alpha.indexOf('L')]+freq[alpha.indexOf('N')]+freq[alpha.indexOf('R')]+freq[alpha.indexOf('S')]+freq[alpha.indexOf('T')])/len)*100);
-        System.out.println("AEIOU: %"+((freq[alpha.indexOf('A')]+freq[alpha.indexOf('E')]+freq[alpha.indexOf('I')]+freq[alpha.indexOf('O')]+freq[alpha.indexOf('U')])/len)*100);
-        System.out.println("JKQXZ: %"+((freq[alpha.indexOf('J')]+freq[alpha.indexOf('K')]+freq[alpha.indexOf('Q')]+freq[alpha.indexOf('X')]+freq[alpha.indexOf('Z')])/len)*100);
 
         for (int x = 0; x < len; x++) {
             int get1 = alpha.indexOf(text.charAt(x));
@@ -386,25 +379,66 @@ public class Autokey {
             current += alpha.charAt(total);
 
         }
+
+        double[] freq = LetterFreq(sb);
+
+        for (char z : alpha.toCharArray()) {
+            System.out.print(z + ":" + freq[alpha.indexOf(z)] + "|");
+        }
+
+        System.out.println("\nETAONISRH: %" + ((freq[alpha.indexOf('E')] + freq[alpha.indexOf('T')] + freq[alpha.indexOf('A')] + freq[alpha.indexOf('O')] + freq[alpha.indexOf('N')] + freq[alpha.indexOf('I')] + freq[alpha.indexOf('S')] + freq[alpha.indexOf('R')] + freq[alpha.indexOf('H')]) / len) * 100);
+        //System.out.println("\nETAONISRH: %"+((freq[alpha.indexOf('E')]+freq[alpha.indexOf('T')]+freq[alpha.indexOf('A')]+freq[alpha.indexOf('O')]+freq[alpha.indexOf('N')]+freq[alpha.indexOf('I')]+freq[alpha.indexOf('S')]+freq[alpha.indexOf('R')]+freq[alpha.indexOf('H')])+"/"+len)+"*"+100);
+        System.out.println("ETAON: %" + ((freq[alpha.indexOf('E')] + freq[alpha.indexOf('T')] + freq[alpha.indexOf('A')] + freq[alpha.indexOf('O')] + freq[alpha.indexOf('N')]) / len) * 100);
+        System.out.println("LNRST: %" + ((freq[alpha.indexOf('L')] + freq[alpha.indexOf('N')] + freq[alpha.indexOf('R')] + freq[alpha.indexOf('S')] + freq[alpha.indexOf('T')]) / len) * 100);
+        System.out.println("AEIOU: %" + ((freq[alpha.indexOf('A')] + freq[alpha.indexOf('E')] + freq[alpha.indexOf('I')] + freq[alpha.indexOf('O')] + freq[alpha.indexOf('U')]) / len) * 100);
+        System.out.println("JKQXZ: %" + ((freq[alpha.indexOf('J')] + freq[alpha.indexOf('K')] + freq[alpha.indexOf('Q')] + freq[alpha.indexOf('X')] + freq[alpha.indexOf('Z')]) / len) * 100);
+
         return sb;
     }
 
 
     public static double[] LetterFreq(String s) {
 
-        char[] x= s.toUpperCase().toCharArray();
+        char[] x = s.toUpperCase().toCharArray();
         double[] bet = new double[26];
-        for(char cur:x){
-           bet[alpha.indexOf(cur)]++;
+        for (char cur : x) {
+            bet[alpha.indexOf(cur)]++;
         }
         return bet;
     }
 
-    public static String enc_chars(String s, int charPos) {
+    public static String enc_chars(String s, int charPos, int startpos) {
         String title = "";
         for (int i = 0; i < s.length(); i += charPos) {
-            title += s.charAt(i);
+            if (i + startpos < s.length()) title += s.charAt(i + startpos);
         }
         return title;
+    }
+
+
+    public static int KEY_LENGTH(String s) {
+        int key = 1;
+        int key_pos = 1;
+        int[] freq = new int[s.length()];
+
+        for(int start_Char=0;start_Char<s.length()-1;start_Char++){
+            for(int comp_Char=start_Char+1;comp_Char<s.length();comp_Char++){
+                if(s.charAt(start_Char)==s.charAt(comp_Char)){
+                    freq[comp_Char-start_Char]++;
+                }
+            }
+
+        }
+
+        for(int x = 0;x<freq.length;x++){
+            if(freq[x]!=0){
+                if(freq[x]>key){
+                    key=freq[x];
+                    key_pos=x;
+                    System.out.print(key_pos+":"+key+" | ");
+                }
+            }
+        }
+        return key;
     }
 }
