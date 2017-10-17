@@ -306,12 +306,16 @@ public class Autokey {
 
     public static void main(String[] args) {
 
-        String[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        enc = enc.replaceAll("\\d", "").replaceAll(" ", "").replaceAll("\\t", "").replaceAll("\\n", "").toUpperCase();
+
+        KEY_LENGTH(enc);
+
+        String[] alphabet = alpha.split("");
 
         //public String text = "THISISTHEWAYBACKHOME";
 
         String key = "F";  //FUNERALCDI
-        int charPos = 1;
+        int charPos = 10;
         int startpos = 0;
 
         if (key.matches("[-+]?\\d*\\.?\\d+"))
@@ -319,10 +323,6 @@ public class Autokey {
 
         //String enc = AutoEncryption(text,key);
         //String enc = "QNXEPKMAEGKLAAELDTPDLHN"; //QUEEN
-
-        enc = enc.replaceAll("\\d", "").replaceAll(" ", "").replaceAll("\\t", "").replaceAll("\\n", "").toUpperCase();
-
-        KEY_LENGTH(enc);
 
         System.out.println();
         //System.out.println("Encrypted : " + enc);
@@ -360,9 +360,7 @@ public class Autokey {
 
         String current = key;
         String sb = "";
-        String vv = "";
         text = enc_chars(text, charPos, startpos);
-        //System.out.println("Encrypted : " + text);
 
         int len = text.length();
 
@@ -371,8 +369,6 @@ public class Autokey {
             int get2 = alpha.indexOf(current.charAt(x));
 
             int total = (get1 - get2) % 26;
-            //System.out.println(text.charAt(x) + " - " + current.charAt(x) + " = "+ alpha.indexOf(total));
-            //System.out.println(get1 + " - " + get2 + " = "+ total);
             total = (total < 0) ? total + 26 : total;
             sb += alpha.charAt(total);
 
@@ -382,12 +378,11 @@ public class Autokey {
 
         double[] freq = LetterFreq(sb);
 
-        for (char z : alpha.toCharArray()) {
+        /*for (char z : alpha.toCharArray()) {
             System.out.print(z + ":" + freq[alpha.indexOf(z)] + "|");
-        }
+        }*/
 
         System.out.println("\nETAONISRH: %" + ((freq[alpha.indexOf('E')] + freq[alpha.indexOf('T')] + freq[alpha.indexOf('A')] + freq[alpha.indexOf('O')] + freq[alpha.indexOf('N')] + freq[alpha.indexOf('I')] + freq[alpha.indexOf('S')] + freq[alpha.indexOf('R')] + freq[alpha.indexOf('H')]) / len) * 100);
-        //System.out.println("\nETAONISRH: %"+((freq[alpha.indexOf('E')]+freq[alpha.indexOf('T')]+freq[alpha.indexOf('A')]+freq[alpha.indexOf('O')]+freq[alpha.indexOf('N')]+freq[alpha.indexOf('I')]+freq[alpha.indexOf('S')]+freq[alpha.indexOf('R')]+freq[alpha.indexOf('H')])+"/"+len)+"*"+100);
         System.out.println("ETAON: %" + ((freq[alpha.indexOf('E')] + freq[alpha.indexOf('T')] + freq[alpha.indexOf('A')] + freq[alpha.indexOf('O')] + freq[alpha.indexOf('N')]) / len) * 100);
         System.out.println("LNRST: %" + ((freq[alpha.indexOf('L')] + freq[alpha.indexOf('N')] + freq[alpha.indexOf('R')] + freq[alpha.indexOf('S')] + freq[alpha.indexOf('T')]) / len) * 100);
         System.out.println("AEIOU: %" + ((freq[alpha.indexOf('A')] + freq[alpha.indexOf('E')] + freq[alpha.indexOf('I')] + freq[alpha.indexOf('O')] + freq[alpha.indexOf('U')]) / len) * 100);
