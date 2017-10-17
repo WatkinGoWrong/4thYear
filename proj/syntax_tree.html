@@ -1,4 +1,4 @@
-﻿<!Doctype html>
+﻿<!DOCTYPE>
 
 
 <html lang="en">
@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="http://d3js.org/d3.v3.min.js"></script>
+
 
     
 
@@ -40,23 +41,16 @@
 
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+ 
     
 <!--<div class="col-sm-6"/>-->
 	
-<div>
-	<script>
-			
-	</script>
-	<textarea id ="inputText" rows="4" cols="50">
-	</textarea>
-</div>
-
-
 <div class="container-fluid">
 <div class="row">
  
 	<div id = "tree-one" class="col-lg-6">
-	    <script class ="js-tree-one" ">
+	    <script class ="js-tree-one">
 
 	        function tree () {
 
@@ -80,6 +74,8 @@
 	            var removeNode = false;
 	            var changeText = false;
 	            var svgNodes;
+
+	            var example = '[{"id":"00","text":"Left Tree","x":300,"y":15,"kids":[{"id":"id0.5","text":"Node 0.5","x":300,"y":55,"kids":[{"id":"id1.5","text":"Node 1.5","x":200,"y":95,"kids":[{"id":"id6.5","text":"Node 6.5","x":200,"y":135,"kids":[],"isLeaf":true,"tWidth":69.53333282470703}],"isLeaf":false,"tWidth":66.96666717529297},{"id":"id2.5","text":"Node 2.5","x":300,"y":95,"kids":[{"id":"id4.5","text":"Node 4.5","x":300,"y":135,"kids":[],"isLeaf":true,"tWidth":69.6500015258789}],"isLeaf":false,"tWidth":69.31666564941406},{"id":"id3.5","text":"Node 3.5","x":400,"y":95,"kids":[{"id":"id5.5","text":"Node 5.5","x":400,"y":135,"kids":[],"isLeaf":true,"tWidth":69.25}],"isLeaf":false,"tWidth":69.38333129882812}],"isLeaf":false,"tWidth":69.3499984741211}],"isLeaf":false,"tWidth":68.30000305175781}]';
 
 	            var JSONData;
 
@@ -369,50 +365,17 @@
 	                
 	            }
 
-	            //convert svgTree to image 
-	            svgToImage = function () {
-	                //get svg element.
-	                var svg = d3.select("svg")[0][0];
-	                
-	                //'remove' the legend in the top left corner
-	                d3.select('text#c1').attr('style', 'fill:white;');
-	                d3.select('text#c2').attr('style', 'fill:white;');
-	                d3.select('text#c3').attr('style', 'fill:white;');
-
-	                //get svg source.
-	                var serializer = new XMLSerializer();
-	                var source = serializer.serializeToString(svg);
-
-	                //add name spaces.
-	                if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
-	                    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-	                }
-	                if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
-	                    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
-	                }
-
-	                //add xml declaration
-	                source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-
-	                //convert svg source to URI data scheme.
-	                var url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
-
-	                //open the image in a new tab
-	                var win = window.open(url, '_blank');
-
-	                //make the legned visible again
-	                d3.select('text#c1').attr('style', 'font-size:6; fill:black;');
-	                d3.select('text#c2').attr('style', 'font-size:6; fill:black;');
-	                d3.select('text#c3').attr('style', 'font-size:6; fill:black;');
-
-	                win.focus();
-	            }
-
 	            //save the tree structure as JSON
 	            saveTree = function () {
 	                console.log(tree.nodes);
 	                JSONData = JSON.stringify(tree.nodes);
 	                console.log(JSONData);
+	            }
+
+	            exampleTree = function () { 
+	            	tree.nodes = JSON.parse(example); 
+	            	reposition(tree.nodes[0]); 
+	            	redraw(); 
 	            }
 
 	            //save the tree structure as JSON
@@ -489,7 +452,7 @@
 	    <input id="left" class="btn btn-success" type="button" value="SaveTree-left" onclick="saveTree();" />
 		<input id="left" class="btn btn-success" type="button" value="LoadTree-left" onclick="loadTree();" />
 		<input id="left" class="btn btn-success" type="button" value="ResetTree-left" onclick="resetTree();" />
-
+		<input id="left" class="btn btn-success" type="button" value="ExampleTree-left" onclick="exampleTree()"/>
 	    </div>
 
 	   <div id = "tree-two" class="col-lg-6" >
@@ -808,46 +771,6 @@
 	                });
 	                
 	            }
-
-	            //convert svgTree to image 
-	            svgToImage2 = function () {
-	                //get svg element.
-	                var svg = d3.select("svg")[0][0];
-	                
-	                //'remove' the legend in the top left corner
-	                d3.select('text#c1').attr('style', 'fill:white;');
-	                d3.select('text#c2').attr('style', 'fill:white;');
-	                d3.select('text#c3').attr('style', 'fill:white;');
-
-	                //get svg source.
-	                var serializer = new XMLSerializer();
-	                var source = serializer.serializeToString(svg);
-
-	                //add name spaces.
-	                if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
-	                    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-	                }
-	                if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
-	                    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
-	                }
-
-	                //add xml declaration
-	                source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-
-	                //convert svg source to URI data scheme.
-	                var url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
-
-	                //open the image in a new tab
-	                var win = window.open(url, '_blank');
-
-	                //make the legned visible again
-	                d3.select('text#c1').attr('style', 'font-size:6; fill:black;');
-	                d3.select('text#c2').attr('style', 'font-size:6; fill:black;');
-	                d3.select('text#c3').attr('style', 'font-size:6; fill:black;');
-
-	                win.focus();
-	            }
-
 	            //save the tree structure as JSON
 	            saveTree2 = function () {
 	                console.log(tree2.nodes_two);
@@ -933,9 +856,19 @@
 
 	    </div>
 	    </div>
+	    <br>
+	    <div>  
+			<textarea id ="mytextarea" rows="4" cols="50">
+			</textarea>
+			
+		</div>
     </div>
    
-		
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"/>
+	<script src="/Users/niktaw/Documents/4th-year-project/public/anno/main.js"/>	
+	
 
 </body>
+
+
 </html>
