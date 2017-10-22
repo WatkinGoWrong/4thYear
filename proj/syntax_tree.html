@@ -9,7 +9,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
 
 
-    
+
 
     <style>
         #c1, c2, c3 {
@@ -20,15 +20,15 @@
 		    text-align: center;
 		    text-decoration: none;
 		    display: inline-block;
-		  
+
 		}
 
 		#right {
-		
+
 		    text-align: center;
 		    text-decoration: none;
 		    display: inline-block;
-		  
+
 		}
 
 		#svgTree,#svgTree-two{
@@ -42,13 +42,13 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
- 
-    
+
+
 <!--<div class="col-sm-6"/>-->
-	
+
 <div class="container-fluid">
 <div class="row">
- 
+
 	<div id = "tree-one" class="col-lg-6">
 	    <script class ="js-tree-one">
 
@@ -83,7 +83,16 @@
 
 	            var JSONData;
 
-	          
+              /*var JSONTree = '{'+
+                '"tree1":{'+
+                  '"Clause":['+
+                    '"left":[],'+
+                    '"middle":[],'+
+                    '"right":[]'+
+                ']}'+
+              '}';*/
+              var JSONTree = '{"tree1":{"first":{"firstleft":1.1,"firstright":1.2},"sec":2,"trd":3}}';
+
 	            //get the nodes
 	            tree.getNodes = function () {
 	                var n = [];
@@ -140,11 +149,15 @@
 	                return nodes.node().getBBox().width;
 	            }
 	*/
-	            //add a new leaf
+	            //add a new leaf - have to look into refactoring this code
 	            tree.addLeaf = function (parent) {
 	                tree.size++;
+                  console.log(parent);
 	                function addLeaf(node) {
+                    //console.log(parent);
+                    console.log(node);
 	                    if (node.id == parent) {
+                        console.log("addLeaf");
 	                        console.log('id' + (tree.size - 1)); node.kids.push({ id: 'id' + (tree.size - 1), text: 'Node' + (tree.size - 1.5), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
 	                        refresh();
 	                        reposition(tree.nodes[0]);
@@ -156,6 +169,31 @@
 	//                reposition(tree.nodes[0]);
 	//                redraw();
 	            }
+
+            //add a new leaf - have to look into refactoring this code
+            tree.addFromJSON = function () {//parent will equal JSON.get[i];
+              var obj = JSON.parse(JSONTree);
+              var keyNames = Object.keys(obj.tree1);
+
+                for(name in keyNames){
+                 tree.size++;
+                 var parent = tree.nodes[0].id;
+                 var node = parent;
+
+                 function addLeaf(node) {
+                   console.log("NodeID: "+node.id);
+                     if (node.id == parent) {
+
+                         console.log('id' + (tree.size - 1)); node.kids.push({ id: 'id' + (tree.size - 1), text: keyNames[name], x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+                         refresh();
+                         reposition(tree.nodes[0]);
+                         redraw(); return;
+                     }
+                     node.kids.forEach(addLeaf);
+                 }
+                 addLeaf(tree.nodes[0]);
+             }
+           }
 
 	            //remove leaf
 	            tree.removeLeaf = function (nodeClicked) {
@@ -227,9 +265,9 @@
 	                                    changeText(tree.nodes[0]);
 	                                    redraw();
 	                                    d3.select("foreignObject").remove();
-	                                    
+
 	                                })
-	                                .on("keypress", function () { 
+	                                .on("keypress", function () {
 	                                    if (d3.event.keyCode == 13) {
 	                                        var e = d3.event;
 	                                        //prevents the entire tree from deleting when enter is pressed
@@ -264,7 +302,7 @@
 	            tree.nodeDepth = function () {
 	                var leafs = [];
 	                var depth = 0;
-	                
+
 	                //check if nodes are leafs
 	                function nodeDepth(n) {
 	                    n.kids.forEach(function (kid) {
@@ -278,7 +316,7 @@
 	                function changeDepth(n) {
 	                    n.kids.forEach(function (kid) {
 	                        leafs.forEach(function (leaf) { if (kid.id == leaf.id) { kid.y = depth; } })
-	                        
+
 	                    });
 	                    n.kids.forEach(changeDepth);
 	                }
@@ -298,7 +336,7 @@
 	                d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
 	                d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
 	                d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
-	  
+
 	                var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
 
 	                nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
@@ -307,7 +345,7 @@
 
 	                nodes.enter().append('text').attr('id', function (node) { console.log('id = ' + node.id); return node.id; })
 	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
-	                    .text(function (node) { return node.text; }) 
+	                    .text(function (node) { return node.text; })
 	                    .attr('tWidth', function (node) {
 	                        var n = tree.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width;
 	                    })
@@ -331,7 +369,7 @@
 	                    /*.transition().duration(500)*/
 	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - 10; });
 
-	                    
+
 	                var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
 
 	                triangles/*.transition().duration(500)*/
@@ -367,7 +405,7 @@
 	                    reposition(kid);
 	                    redraw();
 	                });
-	                
+
 	            }
 
 	            //save the tree structure as JSON
@@ -377,10 +415,10 @@
 	                console.log(JSONData);
 	            }
 
-	            exampleTree = function () { 
-	            	tree.nodes = JSON.parse(example); 
-	            	reposition(tree.nodes[0]); 
-	            	redraw(); 
+	            exampleTree = function () {
+	            	tree.nodes = JSON.parse(example);
+	            	reposition(tree.nodes[0]);
+	            	redraw();
 	            }
 
 	            //save the tree structure as JSON
@@ -394,12 +432,34 @@
 
 	            resetTree = function () {
 	                tree.nodes = [];
-	                tree.nodes.push({ id: '00', text: 'Left Tree', x: tree.cx, y: tree.cy, kids: [], isLeaf: false, tWidth: 0 });
+	                tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, kids: [], isLeaf: false, tWidth: 0 });
 	                console.log(tree.nodes);
 	                refresh();
 	                reposition(tree.nodes[0]);
 	                redraw();
 	            }
+
+              getJSON = function(){//testing how to return json value and parameter names
+                var myObj = JSON.parse(JSONTree);
+                var treeNames = Object.keys(myObj.tree1);
+                for(names in treeNames){
+                    console.debug(treeNames[name]);
+                  recursiveGetProperty(myObj, treeNames[name], function(obj) {
+                    console.debug(treeNames[name]);
+                    console.debug(obj);
+                  });
+                }
+              }
+
+              function recursiveGetProperty(obj, lookup, callback) {
+                 for (property in obj) {
+                     if (property == lookup) {
+                         callback(obj[property]);
+                     } else if (obj[property] instanceof Object) {
+                         recursiveGetProperty(obj[property], lookup, callback);
+                     }
+                 }
+              }
 
 	            //set up the page
 	            initialise = function () {
@@ -426,7 +486,7 @@
 	                    .enter().append('line')
 	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY; })
 	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY; });
-	       
+
 	                //create group of triangles
 	                d3.select('#svgTree').append('g').attr('id', 'triangles').selectAll('polygon').data(tree.getTriangles())
 	                    .enter().append('polygon')
@@ -458,7 +518,9 @@
 		<input id="left" class="btn btn-success" type="button" value="LoadTree-left" onclick="loadTree();" />
 		<input id="left" class="btn btn-success" type="button" value="ResetTree-left" onclick="resetTree();" />
 		<input id="left" class="btn btn-success" type="button" value="ExampleTree-left" onclick="exampleTree()"/>
-	    </div>
+    <input id="left" class="btn btn-success" type="button" value="Get JSON" onclick="getJSON();" />
+    <input id="left" class="btn btn-success" type="button" value="Add from JSON" onclick="tree.addFromJSON();" />
+      </div>
 
 	   <div id = "tree-two" class="col-lg-6" >
 	    <script class = "js-tree-two">
@@ -488,7 +550,7 @@
 
 	            var JSONDatatwo;
 
-	          
+
 	            //get the nodes
 	            tree2.getNodes = function () {
 	                var n_two = [];
@@ -633,9 +695,9 @@
 	                                    changeText(tree2.nodes_two[0]);
 	                                    redraw();
 	                                    d3.select("foreignObject").remove();
-	                                    
+
 	                                })
-	                                .on("keypress", function () { 
+	                                .on("keypress", function () {
 	                                    if (d3.event.keyCode == 13) {
 	                                        var e = d3.event;
 	                                        //prevents the entire tree from deleting when enter is pressed
@@ -670,7 +732,7 @@
 	            tree2.nodeDepth = function () {
 	                var leafs_two = [];
 	                var depth_two = 0;
-	                
+
 	                //check if nodes are leafs
 	                function nodeDepth(n) {
 	                    n.kids.forEach(function (kid) {
@@ -684,7 +746,7 @@
 	                function changeDepth(n) {
 	                    n.kids.forEach(function (kid) {
 	                        leafs_two.forEach(function (leaf) { if (kid.id == leaf.id) { kid.y = depth_two; } })
-	                        
+
 	                    });
 	                    n.kids.forEach(changeDepth);
 	                }
@@ -704,7 +766,7 @@
 	                d3.select('#nodes_two').selectAll('text').data(tree2.getNodes()).exit().remove();
 	                d3.select('#links_two').selectAll('line').data(tree2.getLinks()).exit().remove();
 	                d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles()).exit().remove();
-	  
+
 	                var nodes = d3.select('#nodes_two').selectAll('text').data(tree2.getNodes());
 
 	                nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
@@ -713,7 +775,7 @@
 
 	                nodes.enter().append('text').attr('id', function (node) { console.log('id = ' + node.id); return node.id; })
 	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
-	                    .text(function (node) { return node.text; }) 
+	                    .text(function (node) { return node.text; })
 	                    .attr('tWidth', function (node) {
 	                        var n = tree2.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width;
 	                    })
@@ -736,7 +798,7 @@
 	                    /*.transition().duration(500)*/
 	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - 10; });
 
-	                    
+
 	                var triangles = d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles());
 
 	                triangles/*.transition().duration(500)*/
@@ -774,7 +836,7 @@
 	                    reposition2(kid);
 	                    redraw2();
 	                });
-	                
+
 	            }
 	            //save the tree structure as JSON
 	            saveTree2 = function () {
@@ -826,7 +888,7 @@
 	                    .enter().append('line')
 	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY; })
 	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY; });
-	       
+
 	                //create group of triangles
 	                d3.select('#svgTree-two').append('g').attr('id', 'triangles_two').selectAll('polygon').data(tree2.getTriangles())
 	                    .enter().append('polygon')
@@ -843,7 +905,7 @@
 	                    .enter().append('text').attr('id', function (c) { return c.id; })
 	                    .attr('x', function (c) { return c.x; }).attr('y', function (c) { return c.y; }).text(function (c) { return c.action; })
 	                    .attr('style', 'font-size:6; fill:black;').append('tspan').attr('x', 100).attr('y', function (c) { return c.y; }).text(function (c) { return c.buttons; });
-	         
+
 	                redraw2();
 	            }
 
@@ -862,16 +924,16 @@
 	    </div>
 	    </div>
 	    <br>
-	    <!--<div>  
+	    <!--<div>
 			<textarea id ="mytextarea" rows="4" cols="50">
 			</textarea>
-			
+
 		</div>
     </div>-->
-   
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"/>
-	<script src="/Users/niktaw/Documents/4th-year-project/public/anno/main.js"/>	
-	
+	<script src="/Users/niktaw/Documents/4th-year-project/public/anno/main.js"/>
+
 
 </body>
 
