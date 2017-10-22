@@ -91,7 +91,7 @@
                     '"right":[]'+
                 ']}'+
               '}';*/
-              var JSONTree = '{"tree1":{"first":{"firstleft":1.1,"firstright":1.2},"sec":2,"trd":3}}';
+              var JSONTree = '{"tree1":{"first":{"first_0":{},"sec_0":{}},"sec":{"first_1":{},"sec_1":{}},"trd":{"first_2":{},"sec_2":{}}}}';
 
 	            //get the nodes
 	            tree.getNodes = function () {
@@ -158,7 +158,8 @@
                     console.log(node);
 	                    if (node.id == parent) {
                         console.log("addLeaf");
-	                        console.log('id' + (tree.size - 1)); node.kids.push({ id: 'id' + (tree.size - 1), text: 'Node' + (tree.size - 1.5), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+	                        console.log('id' + (tree.size - 1));
+                          node.kids.push({ id: 'id' + (tree.size - 1), text: 'Node' + (tree.size - 1.5), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
 	                        refresh();
 	                        reposition(tree.nodes[0]);
 	                        redraw(); return;
@@ -171,20 +172,29 @@
 	            }
 
             //add a new leaf - have to look into refactoring this code
-            tree.addFromJSON = function () {//parent will equal JSON.get[i];
+            tree.addFromJSON = function () {
+              //currently works only for root and first depth
+              //Must update function to take in two nodes (parent,child)
+              //Create tree/leafs from these two passed in nodes
+              //or pass in one obj, and create its children
               var obj = JSON.parse(JSONTree);
               var keyNames = Object.keys(obj.tree1);
 
                 for(name in keyNames){
                  tree.size++;
                  var parent = tree.nodes[0].id;
+
                  var node = parent;
 
                  function addLeaf(node) {
-                   console.log("NodeID: "+node.id);
+                   //console.log("NodeID: "+node.id);
+                   //console.log("NodeText: "+node.text);
                      if (node.id == parent) {
 
-                         console.log('id' + (tree.size - 1)); node.kids.push({ id: 'id' + (tree.size - 1), text: keyNames[name], x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+                         console.log('id' + (tree.size - 1));
+                         node.kids.push({ id: 'id' + (tree.size - 1), text: keyNames[name], x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+                         console.log("Parent: "+node.text);
+                         console.log("Child: " +node.kids[name].text);
                          refresh();
                          reposition(tree.nodes[0]);
                          redraw(); return;
@@ -442,11 +452,18 @@
               getJSON = function(){//testing how to return json value and parameter names
                 var myObj = JSON.parse(JSONTree);
                 var treeNames = Object.keys(myObj.tree1);
-                for(names in treeNames){
-                    console.debug(treeNames[name]);
+                for(name in treeNames){
                   recursiveGetProperty(myObj, treeNames[name], function(obj) {
                     console.debug(treeNames[name]);
                     console.debug(obj);
+                    recursiveGetProperty(myObj, 'first_'+name, function(obj) {
+                      console.debug('first_'+name);
+                      console.debug(obj);
+                      });
+                      recursiveGetProperty(myObj, 'sec_'+name, function(obj) {
+                        console.debug('sec_'+name);
+                        console.debug(obj);
+                        });
                   });
                 }
               }
