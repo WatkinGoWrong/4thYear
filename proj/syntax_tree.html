@@ -91,7 +91,9 @@
                     '"right":[]'+
                 ']}'+
               '}';*/
-              var JSONTree = '{"tree1":{"first":{"first_0":{},"sec_0":{}},"sec":{"first_1":{},"sec_1":{}},"trd":{"first_2":{},"sec_2":{}}}}';
+              var JSONTree2 = '{"tree1":{"first":{"first_0":{"first_01":0},"sec_0":{"sec_01":1}},"sec":{"first_1":{},"sec_1":{}},"trd":{"first_2":{},"sec_2":{}}}}';
+
+              var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}';
 
 	            //get the nodes
 	            tree.getNodes = function () {
@@ -157,8 +159,8 @@
                     //console.log(parent);
                     console.log(node);
 	                    if (node.id == parent) {
-                        console.log("addLeaf");
-	                        console.log('id' + (tree.size - 1));
+                        //console.log("addLeaf");
+	                        //console.log('id' + (tree.size - 1));
                           node.kids.push({ id: 'id' + (tree.size - 1), text: 'Node' + (tree.size - 1.5), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
 	                        refresh();
 	                        reposition(tree.nodes[0]);
@@ -191,10 +193,10 @@
                    //console.log("NodeText: "+node.text);
                      if (node.id == parent) {
 
-                         console.log('id' + (tree.size - 1));
-                         node.kids.push({ id: 'id' + (tree.size - 1), text: keyNames[name], x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
-                         console.log("Parent: "+node.text);
-                         console.log("Child: " +node.kids[name].text);
+                         //console.log('id: ' + (tree.size - .5));
+                         node.kids.push({ id: 'id' + (tree.size - .5), text: keyNames[name], x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+                         console.log("Parent: "+node.text + " | id: " + node.id);
+                         console.log("Child: " +node.kids[name].text + " | id: " +(tree.size - .5));
                          refresh();
                          reposition(tree.nodes[0]);
                          redraw(); return;
@@ -353,7 +355,7 @@
 	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5
 	                    .attr('fill', function (node) { if (node.isLeaf) { return 'red'; } else { return 'blue'; } });
 
-	                nodes.enter().append('text').attr('id', function (node) { console.log('id = ' + node.id); return node.id; })
+	                nodes.enter().append('text').attr('id', function (node) { /*console.log('id = ' + node.id);*/ return node.id; })
 	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
 	                    .text(function (node) { return node.text; })
 	                    .attr('tWidth', function (node) {
@@ -383,13 +385,13 @@
 	                var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
 
 	                triangles/*.transition().duration(500)*/
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) });
+	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-3.5) + ',' + triangle.leftY + ' ' + (triangle.rightX+3.5) + ',' + triangle.rightY) });
 
 	                triangles.enter().append('polygon')
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) })
+	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-3.5) + ',' + triangle.leftY + ' ' + (triangle.rightX+3.5) + ',' + triangle.rightY) })
 	                    .style({ 'stroke': 'black', 'stroke-width': '1px', 'fill': 'white' })
 	                    /*.transition().duration(500)*/
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) });
+	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-3.5) + ',' + triangle.leftY + ' ' + (triangle.rightX+3.5) + ',' + triangle.rightY) });
 	            }
 
 	            //get leaf count for node
@@ -451,19 +453,10 @@
 
               getJSON = function(){//testing how to return json value and parameter names
                 var myObj = JSON.parse(JSONTree);
-                var treeNames = Object.keys(myObj.tree1);
+                var treeNames = Object.keys(myObj);
                 for(name in treeNames){
                   recursiveGetProperty(myObj, treeNames[name], function(obj) {
-                    console.debug(treeNames[name]);
                     console.debug(obj);
-                    recursiveGetProperty(myObj, 'first_'+name, function(obj) {
-                      console.debug('first_'+name);
-                      console.debug(obj);
-                      });
-                      recursiveGetProperty(myObj, 'sec_'+name, function(obj) {
-                        console.debug('sec_'+name);
-                        console.debug(obj);
-                        });
                   });
                 }
               }
@@ -471,10 +464,22 @@
               function recursiveGetProperty(obj, lookup, callback) {
                  for (property in obj) {
                      if (property == lookup) {
-                         callback(obj[property]);
-                     } else if (obj[property] instanceof Object) {
+                       var obj2 = obj[property];
+                       var t = Object.keys(obj2);
+                       for(name in t){
+                         if(t[name]!=undefined){
+                          callback(t[name]);
+                        }
+                          recursiveGetProperty(obj2, t[name], callback);
+                       }
+                       console.log("---");
+
+                     }
+                     else if (obj[property] instanceof Object) {
                          recursiveGetProperty(obj[property], lookup, callback);
                      }
+                     //if(obj.property!=null)
+                      //recursiveGetProperty(obj.property, lookup, callback);
                  }
               }
 
@@ -483,7 +488,7 @@
 
 
 	                //add the root node
-	                tree.nodes.push({ id: '00', text: 'Left Tree', x: tree.cx, y: tree.cy, kids: [], isLeaf: false, tWidth: 0 });
+	                tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, kids: [], isLeaf: false, tWidth: 0 });
 
 	                //create the svg
 	                d3.select("#tree-one").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree')
