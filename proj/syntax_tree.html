@@ -64,7 +64,7 @@
 	                cy: 30/2,
 	                w: 100,
 	                h: 60/1.5,
-	                size: 1/2,
+	                size: 1,
 	                leafDepth: Infinity,
 	                nodes: []
 	            };
@@ -94,6 +94,7 @@
               var JSONTree2 = '{"tree1":{"first":{"first_0":{"first_01":0},"sec_0":{"sec_01":1}},"sec":{"first_1":{},"sec_1":{}},"trd":{"first_2":{},"sec_2":{}}}}';
 
               var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}';
+              //-- Add to inner piggy to demo : "T":{"I":{"Th":{"In":{}}}}
 
 	            //get the nodes
 	            tree.getNodes = function () {
@@ -161,7 +162,7 @@
 	                    if (node.id == parent) {
                         //console.log("addLeaf");
 	                        //console.log('id' + (tree.size - 1));
-                          node.kids.push({ id: 'id' + (tree.size - 1), text: 'Node' + (tree.size - 1.5), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+                          node.kids.push({ id: 'id' + (tree.size), text: 'Node' + (tree.size), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
 	                        refresh();
 	                        reposition(tree.nodes[0]);
 	                        redraw(); return;
@@ -174,37 +175,21 @@
 	            }
 
             //add a new leaf - have to look into refactoring this code
-            tree.addFromJSON = function () {
-              //currently works only for root and first depth
-              //Must update function to take in two nodes (parent,child)
-              //Create tree/leafs from these two passed in nodes
-              //or pass in one obj, and create its children
-              var obj = JSON.parse(JSONTree);
-              var keyNames = Object.keys(obj.tree1);
-
-                for(name in keyNames){
-                 tree.size++;
-                 var parent = tree.nodes[0].id;
-
-                 var node = parent;
-
-                 function addLeaf(node) {
-                   //console.log("NodeID: "+node.id);
-                   //console.log("NodeText: "+node.text);
-                     if (node.id == parent) {
-
-                         //console.log('id: ' + (tree.size - .5));
-                         node.kids.push({ id: 'id' + (tree.size - .5), text: keyNames[name], x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
-                         console.log("Parent: "+node.text + " | id: " + node.id);
-                         console.log("Child: " +node.kids[name].text + " | id: " +(tree.size - .5));
-                         refresh();
-                         reposition(tree.nodes[0]);
-                         redraw(); return;
-                     }
-                     node.kids.forEach(addLeaf);
-                 }
-                 addLeaf(tree.nodes[0]);
-             }
+            tree.addFromJSON = function (parent,child,pos) {
+              tree.size++;
+                    var node = parent;
+                    //console.log(parent);
+                    function addLeaf(node) {
+                        if (node.id == parent.id) {
+                            node.kids.push({ id: 'id' + (tree.size - .5), text: child, x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
+                            refresh();
+                            reposition(tree.nodes[0]);
+                            redraw(); return;
+                        }
+                        node.kids.forEach(addLeaf);
+                    }
+                    addLeaf(node);
+                    return node.kids[pos];
            }
 
 	            //remove leaf
@@ -454,30 +439,35 @@
               getJSON = function(){//testing how to return json value and parameter names
                 var myObj = JSON.parse(JSONTree);
                 var treeNames = Object.keys(myObj);
+                var parent = tree.nodes[0];
                 for(name in treeNames){
-                  recursiveGetProperty(myObj, treeNames[name], function(obj) {
+                  recursiveGetProperty(myObj, treeNames[name],function(obj) {
                     console.debug(obj);
-                  });
+
+                  },parent);
                 }
               }
 
-              function recursiveGetProperty(obj, lookup, callback) {
+              function recursiveGetProperty(obj, lookup, callback, parent) {
                  for (property in obj) {
                      if (property == lookup) {
                        var obj2 = obj[property];
                        var t = Object.keys(obj2);
                        for(name in t){
+                         parent2 = tree.addFromJSON(parent,t[name],name);
+                         console.log(parent2);
                          if(t[name]!=undefined){
                           callback(t[name]);
                         }
-                          recursiveGetProperty(obj2, t[name], callback);
+                          recursiveGetProperty(obj2, t[name], callback,parent2);
                        }
-                       console.log("---");
+                       console.log("<--->");
 
                      }
                      else if (obj[property] instanceof Object) {
-                         recursiveGetProperty(obj[property], lookup, callback);
+                         recursiveGetProperty(obj[property], lookup, callback,parent2);
                      }
+
                      //if(obj.property!=null)
                       //recursiveGetProperty(obj.property, lookup, callback);
                  }
@@ -541,7 +531,7 @@
 		<input id="left" class="btn btn-success" type="button" value="ResetTree-left" onclick="resetTree();" />
 		<input id="left" class="btn btn-success" type="button" value="ExampleTree-left" onclick="exampleTree()"/>
     <input id="left" class="btn btn-success" type="button" value="Get JSON" onclick="getJSON();" />
-    <input id="left" class="btn btn-success" type="button" value="Add from JSON" onclick="tree.addFromJSON();" />
+    <input id="left" class="btn btn-success" type="button" value="Add from JSON" onclick="tree.addFromJSON('hi');" />
       </div>
 
 	   <div id = "tree-two" class="col-lg-6" >
@@ -559,7 +549,7 @@
 	                cy: 30/2,
 	                w: 100,
 	                h: 60/1.5,
-	                size: 1/2,
+	                size: 1,
 	                leafDepth: Infinity,
 	                nodes_two: []
 	            };
