@@ -78,9 +78,6 @@
 	            //With x,y positions
 	            var example = '[{"id":"00","text":"Left Tree","x":300,"y":15,"kids":[{"id":"id1.5","text":"Node 1.5","x":300,"y":55,"kids":[{"id":"id2.5","text":"Node 2.5","x":150,"y":95,"kids":[{"id":"id9.5","text":"Node 9.5","x":100,"y":135,"kids":[{"id":"id10.5","text":"Node 10.5","x":50,"y":255,"kids":[],"isLeaf":true,"tWidth":76.80000305175781},{"id":"id11.5","text":"Node 11.5","x":150,"y":175,"kids":[{"id":"id12.5","text":"Node 12.5","x":150,"y":215,"kids":[{"id":"id13.5","text":"Node 13.5","x":150,"y":255,"kids":[],"isLeaf":true,"tWidth":76.83333587646484}],"isLeaf":false,"tWidth":76.76667022705078}],"isLeaf":false,"tWidth":74.41666412353516}],"isLeaf":false,"tWidth":69.46666717529297},{"id":"id16.5","text":"Node 16.5","x":250,"y":135,"kids":[{"id":"id17.5","text":"Node 17.5","x":250,"y":175,"kids":[{"id":"id18.5","text":"Node 18.5","x":250,"y":255,"kids":[],"isLeaf":true,"tWidth":77.01667022705078}],"isLeaf":false,"tWidth":74.5}],"isLeaf":false,"tWidth":76.98332977294922}],"isLeaf":false,"tWidth":69.31666564941406},{"id":"id3.5","text":"Node 3.5","x":400,"y":95,"kids":[{"id":"id4.5","text":"Node 4.5","x":350,"y":135,"kids":[{"id":"id14.5","text":"Node 14.5","x":350,"y":175,"kids":[{"id":"id15.5","text":"Node 15.5","x":350,"y":255,"kids":[],"isLeaf":true,"tWidth":76.69999694824219}],"isLeaf":false,"tWidth":77.0999984741211}],"isLeaf":false,"tWidth":69.6500015258789},{"id":"id5.5","text":"Node 5.5","x":450,"y":135,"kids":[{"id":"id6.5","text":"Node 6.5","x":450,"y":255,"kids":[],"isLeaf":true,"tWidth":69.53333282470703}],"isLeaf":false,"tWidth":69.25}],"isLeaf":false,"tWidth":69.38333129882812},{"id":"id7.5","text":"Node 7.5","x":550,"y":95,"kids":[{"id":"id8.5","text":"Node 8.5","x":550,"y":135,"kids":[{"id":"id19.5","text":"Node 19.5","x":550,"y":175,"kids":[{"id":"id20.5","text":"Node 20.5","x":550,"y":255,"kids":[],"isLeaf":true,"tWidth":79}],"isLeaf":false,"tWidth":76.91666412353516}],"isLeaf":false,"tWidth":69.56666564941406}],"isLeaf":false,"tWidth":67.05000305175781}],"isLeaf":false,"tWidth":66.96666717529297}],"isLeaf":false,"tWidth":68.30000305175781}]';
 
-	            //Minus the x,y positions
-	            var example2 = '[{"id":"00","text":"Left Tree","kids":[{"id":"id0.5","text":"Node 0.5","kids":[{"id":"id1.5","text":"Node 1.5","kids":[{"id":"id6.5","text":"Node 6.5","kids":[],"isLeaf":true,"tWidth":69.53333282470703}],"isLeaf":false,"tWidth":66.96666717529297},{"id":"id2.5","text":"Node 2.5","kids":[{"id":"id4.5","text":"Node 4.5","kids":[],"isLeaf":true,"tWidth":69.6500015258789}],"isLeaf":false,"tWidth":69.31666564941406},{"id":"id3.5","text":"Node 3.5","kids":[{"id":"id5.5","text":"Node 5.5","kids":[],"isLeaf":true,"tWidth":69.25}],"isLeaf":false,"tWidth":69.38333129882812}],"isLeaf":false,"tWidth":69.3499984741211}],"isLeaf":false,"tWidth":68.30000305175781}]';
-
 	            var JSONData;
 
               /*var JSONTree = '{'+
@@ -91,9 +88,11 @@
                     '"right":[]'+
                 ']}'+
               '}';*/
-              var JSONTree2 = '{"tree1":{"first":{"first_0":{"first_01":0},"sec_0":{"sec_01":1}},"sec":{"first_1":{},"sec_1":{}},"trd":{"first_2":{},"sec_2":{}}}}';
 
-              var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}';
+              var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+              var JSONTree2 = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+
+              //var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}';
               //-- Add to inner piggy to demo : "T":{"I":{"Th":{"In":{}}}}
 
 	            //get the nodes
@@ -437,6 +436,7 @@
 	            }
 
               getJSON = function(){//testing how to return json value and parameter names
+                resetTree();
                 var myObj = JSON.parse(JSONTree);
                 var treeNames = Object.keys(myObj);
                 var parent = tree.nodes[0];
@@ -472,10 +472,13 @@
                       //recursiveGetProperty(obj.property, lookup, callback);
                  }
               }
+               compareJSON = function() {
+                var equals = (JSONTree==JSONTree2) ? 'true' : 'false';
+                console.log(equals);
+              }
 
 	            //set up the page
 	            initialise = function () {
-
 
 	                //add the root node
 	                tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, kids: [], isLeaf: false, tWidth: 0 });
@@ -531,7 +534,7 @@
 		<input id="left" class="btn btn-success" type="button" value="ResetTree-left" onclick="resetTree();" />
 		<input id="left" class="btn btn-success" type="button" value="ExampleTree-left" onclick="exampleTree()"/>
     <input id="left" class="btn btn-success" type="button" value="Get JSON" onclick="getJSON();" />
-    <input id="left" class="btn btn-success" type="button" value="Add from JSON" onclick="tree.addFromJSON('hi');" />
+    <input id="left" class="btn btn-success" type="button" value="Compare JSON" onclick="compareJSON();" />
       </div>
 
 	   <div id = "tree-two" class="col-lg-6" >
