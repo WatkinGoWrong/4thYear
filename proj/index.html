@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+  <link type="text/css" rel="stylesheet" href="main.css" />
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+
+  <title>Poster</title>
+  <script type="text/javascript" src="tree_gen.js"></script>
+
+  <script>
+    var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+  </script>
+
+  <input id="left" class="btn btn-success" type="button" value="Save to Image" onclick="apitest(JSONTree);" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    $("#get").click(function(){
+        $.get("http://localhost:3000/Students?id=4", function(data, status){
+            data = JSON.stringify(data);
+            alert("Data: " + data + "\nStatus: " + status);
+            data.parse
+        });
+    });
+
+    $("#post").click(function(){
+      var d3_tree = apitest(JSONTree);
+      $.post("http://localhost:3000/Students",
+      {
+        JSONTree
+      },
+      function(data, status){
+          alert("Data: " + data + "\nStatus: " + status);
+      });
+    });
+  });
+  </script>
+  <button id = "post" >post</button>
+  <button id = "get" >get</button>
+
+
+</body>
+</html>
