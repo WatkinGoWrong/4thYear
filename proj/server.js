@@ -10,6 +10,13 @@ const d3 = require("d3");
 
 
 const port = 8000;
+const port2 = 3000;
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -18,24 +25,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
   require('./app/routes')(app);
   app.listen(port, () => {
     console.log('We are live on ' + port);
-  });               
+  });
 //})
 
-/*var app = require('http');
-var fs = require('fs');
 
-const PORT=8080; 
+var http = require('http'),
+    fs = require('fs');
 
-//fs.readFile('./syntax_tree.html', function (err, html) {
+
 fs.readFile('./syntax_tree.html', function (err, html) {
-
-    if (err) throw err;    
-
-    app.createServer(function(request, response) {  
-        response.writeHeader(200, {"Content-Type": "text/html"});  
-        response.write(html);  
-        	response.end();  
-    }).listen(PORT);
-
-});*/
-
+    if (err) {
+        throw err;
+    }
+    http.createServer(function(request, response) {
+        response.writeHeader(200, {"Content-Type": "text/html"});
+        response.write(html);
+        response.end();
+    }).listen(3000);
+});

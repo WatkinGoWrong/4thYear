@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "annotator": "^2.0.0-alpha.3",
     "body-parser": "^1.18.2",
     "d3": "^4.11.0",
     "deep-diff": "^0.3.8",
@@ -22,6 +23,7 @@
     "node-phantom": "^0.2.5",
     "phantom": "^4.0.8",
     "phantomjs": "^2.1.7",
+    "taggle": "^1.12.0",
     "url-to-image": "^1.0.0"
   },
   "devDependencies": {
