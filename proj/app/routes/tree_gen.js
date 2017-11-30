@@ -1,4 +1,5 @@
-    var d3 = require("d3"); 
+
+    var d3 = require("d3");
 
     function tree (){
 
@@ -12,6 +13,7 @@
 
         var tree = {
             cx: svgHeight,
+
             cy: svgHeight/40,
             w: svgHeight/5,
             h: svgHeight/10,

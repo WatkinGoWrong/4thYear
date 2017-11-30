@@ -22,14 +22,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //MongoClient.connect(db.url, (err, database) => {
   //if (err) return console.log(err)
-  require('./app/routes')(app);
+require('./app/routes')(app);
   app.listen(port, () => {
     console.log('We are live on ' + port);
   });
 //})
 
+app.get('/SFL', function (req, res) {
+   res.sendFile( __dirname + "/" + "syntax_tree.html" );
+})
 
-var http = require('http'),
+
+
+/*var http = require('http'),
     fs = require('fs');
 
 
@@ -42,4 +47,4 @@ fs.readFile('./syntax_tree.html', function (err, html) {
         response.write(html);
         response.end();
     }).listen(3000);
-});
+});*/

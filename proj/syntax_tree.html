@@ -76,9 +76,18 @@
 	            var svgNodes;
               var JSONData;
 
+              var comp = ['text','depth','parent','kids'];
+
+              var diff_count = 0;
 
 	            //With x,y positions
-              //var example = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+              var example = '[{"id":"00","text":"Clause","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+
+              //{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}
+
+              var example2 = '[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+
+              var sampleTree = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"a","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"b","x":600,"y":135,"parent":"a","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"c","x":600,"y":195,"parent":"b","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"could be heard hitting the pane, which made him feel quite sad. How about if I sleep a little bit longer and forget all this nonsense, h","x":600,"y":255,"parent":"c","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]}]}]'
 
               /*var JSONTree = '{'+
                 '"tree1":{'+
@@ -411,8 +420,8 @@
 	                console.log(JSONData);
 	            }
 
-	            exampleTree = function (reply) {
-                reply  = reply.slice(1,-1).replace(/\\/g, "");
+	            exampleTree = function () {
+                reply  = sampleTree;//.slice(1,-1).replace(/\\/g, "");
                 //console.log(example);
 	            	tree.nodes = JSON.parse(reply);
 	            	reposition(tree.nodes[0]);
@@ -446,8 +455,6 @@
                 var depth = 0;
                 for(name in treeNames){
                   recursiveGetProperty(myObj, treeNames[name],function(obj) {
-                    //console.debug(obj);
-
                   },parent,depth);
                 }
 
@@ -468,8 +475,6 @@
                         }
                           recursiveGetProperty(obj2, t[name], callback,parent2,depth);
                        }
-
-
                      }
                      else if (obj[property] instanceof Object) {
                          recursiveGetProperty(obj[property], lookup, callback,parent2,depth);
@@ -481,50 +486,53 @@
                  //console.log("<--->");
               }
 
-              function getStruc(example){//testing how to return json value and parameter names
-                example = JSON.stringify(example).slice(1,-1).replace(/\\/g, "");
-                var myObj = JSON.parse(example);
-                var treeNames = Object.keys(myObj);
-                var body = '';
-                //going to have to naviagte though JSON - check each kid - repeat for each
-                console.log(myObj[0].kids[2])
+              function getStruc(teacher,student){//testing how to return json value and parameter names
+                teacher = JSON.stringify(teacher).slice(1,-1).replace(/\\/g, "");
+                student = JSON.stringify(student).slice(1,-1).replace(/\\/g, "");
 
-                scan(myObj[0],body);
+                var tea = JSON.parse(teacher);
+                var stu = JSON.parse(student);
 
-                for(name in treeNames){
-                  recursiveGetProperty2(myObj, treeNames[name],function(obj) {
-                    //console.debug(obj);
+                console.log('Teacher : ' ,tea[0]);
+                console.log('Student : ' ,stu[0]);
+                scan(tea[0],stu[0]);
 
-                  });
-                }
+                console.log('Finished Comparing - Number of Differences :',diff_count);
               }
 
-              function scan(obj,body){
+              function scan(obj,obj2){
                   var k;
-                  if (obj instanceof Object) {
-                      for (k in obj){
-                          if (obj.hasOwnProperty(k)){
-                            if(k=="kids"){
-                              console.log('scanning property ' + k +"\n");
+                  if(obj instanceof Object & obj2 instanceof Object){
+                      for(k in comp){
+                        if(obj.hasOwnProperty(comp[k]) & obj2.hasOwnProperty(comp[k])){
+                          if(comp[k]=='kids' && obj[comp[k]].length>0){
+
+                            var length = (obj[comp[k]].length>=obj2[comp[k]].length)? obj[comp[k]].length:obj2[comp[k]].length
+
+                            for(var i = 0;i<length;i++){
+                              console.log('Teacher : ' ,(obj[comp[k]])[i]);
+                              console.log('Student : ' ,(obj2[comp[k]])[i]);
+                              scan((obj[comp[k]])[i],(obj2[comp[k]])[i]);
                             }
-                              scan( obj[k] );
-                            //}
+                          }else{
+                              scan( obj[comp[k]],obj2[comp[k]] );
                           }
+                        }
+                        else{
+                          scan( obj[comp[k]],obj2[comp[k]] );
+                        }
                       }
-                  } else {
-                      console.log('found value : ' + obj + '\n');
+                  }
+                  else{
+                    if(obj!=obj2){
+                      console.log('Difference found in values')
+                      console.log('Teacher : ',obj)
+                      console.log('Student : ',obj2)
+                      console.log('Lose marks - TBD')
+                      diff_count++;
+                    }
                   };
-
               };
-
-              function recursiveGetProperty2(obj, lookup, callback) {
-                 callback(obj);
-              }
-
-              compareJSON = function() {
-                var equals = (JSONTree==JSONTree2) ? 'true' : 'false';
-                console.log(equals);
-              }
 
               TreeJSON = function(){
                 //console.log(tree.nodes);
@@ -552,7 +560,7 @@
 	            initialise = function () {
 
 	                //add the root node
-	                tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
+	                tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
 
 	                //create the svg
 	                d3.select("#tree-one").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree')
@@ -594,7 +602,7 @@
 
 	            initialise();
 	            //getJSON();
-              //getStruc(example);
+              getStruc(example,example2);
 
 	            return tree;
 	        }

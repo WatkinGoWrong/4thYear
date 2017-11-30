@@ -21,6 +21,7 @@
     "lodash": "^4.17.4",
     "mongodb": "^2.2.33",
     "node-phantom": "^0.2.5",
+    "object-merge": "^2.5.1",
     "phantom": "^4.0.8",
     "phantomjs": "^2.1.7",
     "taggle": "^1.12.0",

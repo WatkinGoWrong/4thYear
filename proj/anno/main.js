@@ -8,8 +8,6 @@
       textReader.readAsText(event.target.files[0]);
   }
 
-
-
   function onTextReaderLoad(event) {
       var textFromFileLoaded = event.target.result;
 
@@ -45,7 +43,7 @@
       obj = JSON.parse(event.target.result);
 
       var ann2 = $("#content2").annotator();
-      var ann = $("#content").annotator(); //Assign container to hold annotator content  
+      var ann = $("#content").annotator(); //Assign container to hold annotator content
 
 
       ann.annotator('addPlugin', 'fileStorage'); // Add Storage Plugin
@@ -94,7 +92,7 @@
 
       obj = new Array();
       var ann2 = $("#content2").annotator();
-      var ann = $("#annotationText").annotator(); //Assign container to hold annotator content  
+      var ann = $("#annotationText").annotator(); //Assign container to hold annotator content
 
       ann.annotator('addPlugin', 'fileStorage'); // Add Storage Plugin
       ann2.annotator('addPlugin', 'fileStorage');
@@ -141,7 +139,7 @@
 
       dlAnchorElem.setAttribute("download", "annotationData" + dateTime + ".json");
       // console.log(JSON.stringify(obj));
-      // dlAnchorElem.click(); //this will let you download the new data 
+      // dlAnchorElem.click(); //this will let you download the new data
 
       //Send front-end data back to Express
       var assignmentModule = document.getElementById('annotationModule').innerText;
@@ -150,14 +148,14 @@
       var studentID = document.getElementById('postUserName').innerText;
       var submission = JSON.stringify(obj); // this is the annotation data that the user has inputted
 
-      
+
       console.log("submission: " + submission);
       console.log("module: " + assignmentModule);
       console.log("title: " + assignmentTitle);
       console.log("date: " + assignmentDate);
       console.log("student: " + studentID);
       console.log("submittedAt: " + dateTime);
-      
+
       $.ajax({
           url: "http://localhost:3000/classes/saveSubmission",
           type: "post",
@@ -338,7 +336,7 @@
                     "N", "F"];
 
   /*
-   * Loads data for trees, and takes a function as an argument 
+   * Loads data for trees, and takes a function as an argument
    * which is called on the generated trees
    * @param function callback
    * @return nil
@@ -364,7 +362,7 @@
 
 
   /*
-   * Takes array of annotations and creates necessary tree 
+   * Takes array of annotations and creates necessary tree
    * structure from them.
    * @param array dat_
    * @return array of nodes and ranges
@@ -372,7 +370,7 @@
   function generateTrees(dat_) {
 
       var nodeStructure; //Will contain node structure of tree
-      var rangeLengths = new Array(dat_.length); // List to hold lengths of ranges 
+      var rangeLengths = new Array(dat_.length); // List to hold lengths of ranges
       var ranges = new Array(dat_.length); // List to hold range positions
       var nodes = new Array(dat_.length);
 
@@ -390,7 +388,7 @@
           ranges[k] = new Object();
           ranges[k].start = dat_[k].ranges[0].startOffset;
           ranges[k].end = dat_[k].ranges[0].endOffset;
-          ranges[k].done = false; //Something to show whether or not its been added       
+          ranges[k].done = false; //Something to show whether or not its been added
       }
 
       for (var k = 0; k < dat_.length; k++) { //Create nodes from annotations
@@ -682,7 +680,7 @@
   /*
    * Traverses tree from given node, calling method to vertically order
    * nodes where more than one tag
-   * @param node object 
+   * @param node object
    * @return none
    */
   function traverse(node) {
