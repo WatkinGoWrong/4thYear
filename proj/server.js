@@ -23,13 +23,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //MongoClient.connect(db.url, (err, database) => {
   //if (err) return console.log(err)
 require('./app/routes')(app);
+
+//require('./app/vendor')(app);
+
   app.listen(port, () => {
     console.log('We are live on ' + port);
   });
 //})
 
 app.get('/SFL', function (req, res) {
-   res.sendFile( __dirname + "/" + "syntax_tree.html" );
+   res.sendFile( __dirname + "/" + "SFL_Anno.html" );
 })
 
 

@@ -50,13 +50,13 @@
 
 	        function tree (){
 
-	            var svgWidth = 1200,
+	            var svgWidth = 1000,
 	                svgHeight = svgWidth/2;
 
                 var devide = 2,
-                  fontsize = svgWidth/80,
+                  fontsize = svgWidth/90,
                   linkSpace = fontsize-1,
-                  trainglepadding = fontsize
+                  trainglepadding = fontsize-2
                   stroke_width = fontsize/15
 
 	            var tree = {
@@ -81,14 +81,15 @@
               var diff_count = 0;
 
 	            //With x,y positions
-              var example = '[{"id":"00","text":"Clause","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+              var example = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"A","x":420,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"B","x":420,"y":135,"parent":"A","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"C","x":420,"y":195,"parent":"B","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"back-end","x":420,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":660,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"C","x":600,"y":135,"parent":"B","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id7.5","text":"back-end","x":540,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":4,"kids":[]},{"id":"id9.5","text":"version","x":660,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id8.5","text":"C","x":780,"y":255,"parent":"B","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
 
               //{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}
 
               var example2 = '[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
 
-              var sampleTree = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"a","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"b","x":600,"y":135,"parent":"a","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"c","x":600,"y":195,"parent":"b","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"could be heard hitting the pane, which made him feel quite sad. How about if I sleep a little bit longer and forget all this nonsense, h","x":600,"y":255,"parent":"c","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]}]}]'
+              /*var sampleTree = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"A","x":420,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A1","x":420,"y":135,"parent":"A","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"A2","x":420,"y":195,"parent":"A1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"His room,","x":420,"y":255,"parent":"A2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"B1","x":600,"y":135,"parent":"B","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"B2","x":540,"y":195,"parent":"B1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id8.5","text":"a","x":540,"y":255,"parent":"B2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]},{"id":"id9.5","text":"B3","x":660,"y":195,"parent":"B1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id10.5","text":"proper","x":660,"y":255,"parent":"B3","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id11.5","text":"C","x":780,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id12.5","text":"C1","x":780,"y":135,"parent":"C","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id13.5","text":"C2","x":780,"y":195,"parent":"C1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id14.5","text":"human room","x":780,"y":255,"parent":"C2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]}]}]'
 
+              //var JSONTree = '{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron":{}}}}}}}';
               /*var JSONTree = '{'+
                 '"tree1":{'+
                   '"Clause":['+
@@ -98,7 +99,12 @@
                 ']}'+
               '}';*/
 
-              var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+              //var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+              //var JSONTree2 = '{"tree1":{"Participant 1":{"This Little Piggy":{},"test":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+
+            //  var JSONTree= '{"Placeholder Tag":{"A":{"A1":{"A2":{"His room,":{}}}},"B":{"B1":{"B2":{"a":{}},"B3":{"proper":{}}}},"C":{"C1":{"C2":{"human room":{}}}}}}';
+            var JSONTree= '{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}},"C1":{"C2":{"C3":{"in a web browser":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron":{}}}}}}}';
+
               var body = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{},"None":{}},"Participant 2":{"None":{}}}}';
 
               //var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy_Left":{},"InnerPiggy_Right":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}';
@@ -186,13 +192,30 @@
             tree.addFromJSON = function (parent,child,pos,depth) {
               tree.size++;
                     var node = parent;
+                  //  console.log("parent- ",parent.text);
+                  //  console.log("child- ",child);
+
+
                     // /console.log(parent);
                     function addLeaf(node) {
+                      var draw = true;
                         if (node.id == parent.id) {
-                            node.kids.push({ id: 'id' + (tree.size - .5), text: child, x: node.x, y: node.y, parent:parent.text, isLeaf: true, tWidth: 0, depth:depth, kids: [] }); node.isLeaf = false;
-                            refresh();
-                            reposition(tree.nodes[0]);
-                            redraw(); return;
+                          if (node.kids!=null) {
+                            //console.log('node : ', node , ' | kid :' , node.kids);
+                            for(x in node.kids){
+                              if(node.kids[x].text==child){
+                                //console.log("hi");
+                                draw = false;
+                              }
+                            }
+                          }
+                            if(draw){
+                              node.kids.push({ id: 'id' + (tree.size - .5), text: child, x: node.x, y: node.y, parent:parent.text, isLeaf: true, tWidth: 0, depth:depth, kids: [] }); node.isLeaf = false;
+                              refresh();
+                              reposition(tree.nodes[0]);
+                              redraw();
+                              return;
+                            }
                         }
                         node.kids.forEach(addLeaf);
                     }
@@ -421,7 +444,7 @@
 	            }
 
 	            exampleTree = function () {
-                reply  = sampleTree;//.slice(1,-1).replace(/\\/g, "");
+                reply  = example;//.slice(1,-1).replace(/\\/g, "");
                 //console.log(example);
 	            	tree.nodes = JSON.parse(reply);
 	            	reposition(tree.nodes[0]);
@@ -439,7 +462,7 @@
 
 	            resetTree = function () {
 	                tree.nodes = [];
-                  tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
+                  tree.nodes.push({ id: '00', text: 'Sentence', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
 	                //console.log(tree.nodes);
 	                refresh();
 	                reposition(tree.nodes[0]);
@@ -455,13 +478,12 @@
                 var depth = 0;
                 for(name in treeNames){
                   recursiveGetProperty(myObj, treeNames[name],function(obj) {
-                  },parent,depth);
+                  },parent,depth,treeNames);
                 }
-
                 TreeJSON();
               }
 
-              function recursiveGetProperty(obj, lookup, callback, parent, depth) {
+              function recursiveGetProperty(obj, lookup, callback, parent, depth,treeNames) {
                  depth++;
                  for (property in obj) {
                      if (property == lookup) {
@@ -469,15 +491,15 @@
                        var t = Object.keys(obj2);
                        for(name in t){
                          parent2 = tree.addFromJSON(parent,t[name],name,depth);
-                         //console.log(parent2);
                          if(t[name]!=undefined){
                           callback(t[name]);
                         }
-                          recursiveGetProperty(obj2, t[name], callback,parent2,depth);
+
+                          recursiveGetProperty(obj2, t[name], callback,parent2,depth,treeNames);
                        }
                      }
                      else if (obj[property] instanceof Object) {
-                         recursiveGetProperty(obj[property], lookup, callback,parent2,depth);
+                         recursiveGetProperty(obj[property], lookup, callback,parent2,depth,treeNames);
                      }
 
                      //if(obj.property!=null)
@@ -560,7 +582,7 @@
 	            initialise = function () {
 
 	                //add the root node
-	                tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
+	                tree.nodes.push({ id: '00', text: 'Sentence', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
 
 	                //create the svg
 	                d3.select("#tree-one").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree')
@@ -602,7 +624,7 @@
 
 	            initialise();
 	            //getJSON();
-              getStruc(example,example2);
+              //getStruc(example,example2);
 
 	            return tree;
 	        }
