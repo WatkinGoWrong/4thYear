@@ -78,7 +78,7 @@
 
               var comp = ['text','depth','parent','kids'];
 
-              var diff_count = 0;
+              //var diff_count = 0;
 
 	            //With x,y positions
               var example = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"A","x":420,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"B","x":420,"y":135,"parent":"A","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"C","x":420,"y":195,"parent":"B","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"back-end","x":420,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":660,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"C","x":600,"y":135,"parent":"B","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id7.5","text":"back-end","x":540,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":4,"kids":[]},{"id":"id9.5","text":"version","x":660,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id8.5","text":"C","x":780,"y":255,"parent":"B","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
@@ -509,6 +509,7 @@
               }
 
               function getStruc(teacher,student){//testing how to return json value and parameter names
+                var diff_count = 0;
                 teacher = JSON.stringify(teacher).slice(1,-1).replace(/\\/g, "");
                 student = JSON.stringify(student).slice(1,-1).replace(/\\/g, "");
 
@@ -624,7 +625,7 @@
 
 	            initialise();
 	            //getJSON();
-              //getStruc(example,example2);
+              getStruc(example,example2);
 
 	            return tree;
 	        }
