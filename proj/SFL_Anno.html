@@ -49,8 +49,10 @@
   <p><button class="button" id="dwnJson" style="display: none;">Download Annotation Data</button></p>
   <p><button class="button" id="themeAnalyse" style="display: none;" onclick="enterThemeMode();">Theme Analysis mode</button></p>
   <p><button class="button" id="grammarAnalyse" style="display: none;" onclick="enterGrammarMode();">Grammar Analysis mode</button></p>
-  <p><button class="button" id="AnnoToTree" style="display: none;" onclick="getJSON(WholeTree,num);">Generate Tree</button></p>
+  <p><button class="button" id="AnnoToTree" style="display: none;" onclick="">Generate Tree</button></p>
   <p><button class="button" id="CompareTree" style="display: none;" onclick="getStruc(WholeTree,student);">Compare Tree</button></p>
+  <input id="CurrentTree" type="range" min="0" max="0" step="1" style="display: none;">
+  <p><button class="button" id="SelectTree" style="display: none;" onclick="setTreeNum();">Select Tree</button></p>
 
 </div>
   <div id="allBoxes" style="display: none;">
@@ -60,7 +62,8 @@
     <!--Container to hold tree-->
   </div>
 
-  <!-- Tree div -->
+  <!-- createWholeTree();getJSON(WholeTree,num);
+  Tree div -->
   <!--<div id = "tree-one" class="col-lg-6" style="display: none;">
 
   </div>-->

@@ -1,11 +1,39 @@
   var anno_array = [];
   var text_array = [];
+  var sentence_array = [];
 
   var WholeTree = {};
 
   var num = 0;
+  var TreeNum = 0;
 
+  //Setting number of notches on slide - number of SFLs
+  setTreeNum = function(){
+    TreeNum = ($("#CurrentTree").val())*4;
+    console.log("TreeNum");
+    return TreeNum;
+  }
 
+  bubbleSortAnno = function(a){
+    for (var i=2; i < a.length-1; i+=4) {
+      if (a[i] > a[i+4]) {
+        var temp_1 = a[i-2];
+        var temp_2 = a[i-1];
+        var temp_3 = a[i];
+        var temp_4 = a[i+1];
+        a[i-2] = a[i+2];
+        a[i-1] = a[i+3];
+        a[i] = a[i+4];
+        a[i+1] = a[i+5];
+        //-----
+        a[i+2]=temp_1;
+        a[i+3]=temp_2;
+        a[i+4]=temp_3;
+        a[i+5]=temp_4;
+      }
+    }
+      return a
+  }
 
   $("#inputText").change(function(e){
     onTextChange(e);
@@ -78,10 +106,12 @@
       }
 
       $("#genNew").hide(0, function(){
-          $("#annotationInput").hide(0, function(){
-            $("#AnnoToTree").show(0,function(){
-              $("#CompareTree").hide(0);
+        $("#annotationInput").hide(0, function(){
+          $("#AnnoToTree").show(0,function(){
+            $("#CompareTree").hide(0,function(){
+              $("#CurrentTree").show(0);
             });
+          });
             //$("#generateTrees").show(250, function(){
               //$("#generateBoxes").show(250, function(){
                 //$("#generateTheme").show(250, function(){
@@ -112,7 +142,9 @@
     $("#genNew").hide(0, function(){
         $("#annotationInput").hide(0, function(){
           $("#AnnoToTree").show(0,function(){
-            $("#CompareTree").hide(0);
+            $("#CompareTree").hide(0,function(){
+              $("#CurrentTree").show(0);
+            });
           });
           //$("#generateTrees").show(250, function(){
             //$("#generateBoxes").show(250, function(){
@@ -188,33 +220,61 @@
     });
   }
 
+  createWholeTree = function(){
+    Treenum = setTreeNum();
+    WholeTree = {};
+
+    //changing i from 1 to 0
+    for(var i = 0 ; i<anno_array.length ; i+=4){
+
+      console.log(sentence_array[TreeNum+2], anno_array[i+2] , sentence_array[TreeNum+3] , anno_array[i+3]);
+
+      //if(sentence_array[TreeNum].indexOf(anno_array[i-1])!=-1){
+      if(sentence_array[TreeNum+2]<=anno_array[i+2]&&sentence_array[TreeNum+3]>=anno_array[i+3]){
+
+        var Tree = {
+          [anno_array[i]] : {}
+        };
+
+        texts = ((anno_array[i+1]).replace("[","").replace("]","")).split(",");
+
+        for(var pos = texts.length-1;pos>=0;pos--){
+          var curNode = {
+            [(texts[pos].replace("\"","")).slice(0,-1)] : Tree
+          };
+          Tree = curNode;
+        }
+        _.merge(WholeTree,Tree);
+        console.log(WholeTree);
+      }
+      else{
+        console.log(anno_array[i], "- is not in the sentence -", sentence_array[TreeNum]);
+      }
+    }
+  }
+
   Annotator.Plugin.fileStorage = function(element) {
         return {
             pluginInit: function() {
                 this.annotator.subscribe("annotationCreated", function(annotation) {
-
+                  console.log(annotation.text);
                     //current work area
-                    anno_array.push(annotation.quote);
-                    anno_array.push(annotation.text);
 
-                    for(var i = 1 ; i<anno_array.length ; i+=2){
-                      var Tree = {
-                        [anno_array[i-1]] : {}
-                      };
-                      texts = ((anno_array[i]).replace("[","").replace("]","")).split(",");
-
-                      for(var pos = texts.length-1;pos>=0;pos--){
-                        var curNode = {
-                          [(texts[pos].replace("\"","")).slice(0,-1)] : Tree
-                        };
-                        Tree = curNode;
-                      }
-                      //console.log("WholeTree : ",JSON.stringify(WholeTree));
-                      //console.log("Tree : ",JSON.stringify(Tree));
-                      _.merge(WholeTree,Tree);
-                      //console.log("WholeTree after merge : ",JSON.stringify(WholeTree));
-
+                    //Checks for sentence tag - which will add it to sentence array for cehcking against words
+                    if(((annotation.text).toUpperCase()).indexOf("SENTENCE")!=-1){
+                      sentence_array.push(annotation.quote);
+                      sentence_array.push(annotation.text);
+                      sentence_array.push(annotation.ranges[0].startOffset);
+                      sentence_array.push(annotation.ranges[0].endOffset);
+                      document.getElementById("CurrentTree").setAttribute("max",((sentence_array.length)/4)-1);
                     }
+                    else{
+                      anno_array.push(annotation.quote);
+                      anno_array.push(annotation.text);
+                      anno_array.push(annotation.ranges[0].startOffset);
+                      anno_array.push(annotation.ranges[0].endOffset);
+                    }
+                    anno_array = bubbleSortAnno(anno_array);
 
                     if (annotation.quote.length > 0 && annotation.text.length > 0) {
                         annotation.url = currentUrl;
@@ -246,7 +306,8 @@
                         $(annotation.highlights).attr("id", "annotation_" + annotation.id);
                         $(annotation.highlights).addClass("annotation_" + annotation.id);
 
-                        //console.log("data",data);
+                        console.log("range - start - ",annotation.ranges[0].startOffset);
+                        console.log("range - end - ",annotation.ranges[0].endOffset);
                         //console.log(JSON.stringify(Tree));
                         obj.push(annotation);
 
@@ -282,7 +343,7 @@
 
   var currentUrl = "1"; // Default mode is grammar analysis
 
-  var firstOrder = [/*"--",
+  var firstOrder = ["--",
                     "Carrier",
                     "Actor/Subject/Theme",
                     "Extent/Adjunct",
@@ -309,18 +370,22 @@
                     "Actor/Subject",
                     "Senser/Subject",
                     "Pr:Material/Theme",
-                    "A"*/];
+                    "A",
+                    "Particpant/Ngp",
+                    "q/PP",
+                    "cv/Ngp",
+                    "Sentence"];
 
-  var secondOrder= [/*"Ngp",
+  var secondOrder= ["Ngp",
                     "PP",
                     "Pgp",
                     "Clause",
                     "Adjgp",
                     "Qtgp",
                     "GP",
-                    "Vgp"*/];
+                    "Vgp"];
 
-  var thirdOrder = [/*"pd",  "v",
+  var thirdOrder = ["pd",  "v",
                     "qd",  "dd",
                     "m",   "th",
                     "q",   "P",
@@ -330,7 +395,7 @@
                     "am",  "po",
                     "g",   "F/Aux",
                     "Aux", "E",
-                    "N",   "F"*/];
+                    "N",   "F"];
 
   /*
   * Loads data for trees, and takes a function as an argument

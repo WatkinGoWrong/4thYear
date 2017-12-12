@@ -20,6 +20,8 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.static(__dirname));
+
 //MongoClient.connect(db.url, (err, database) => {
   //if (err) return console.log(err)
 require('./app/routes')(app);

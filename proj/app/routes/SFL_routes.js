@@ -10,10 +10,15 @@ module.exports = function(app, db) {
     const note = { text: req.body, title: req.body.title };
 
 		var myJSON = JSON.stringify(req.body.body).slice(1,-1).replace(/\\/g, "");
+
+		console.log("JSON Recieved - ",myJSON);
+
 		myJSON = JSON.stringify(treeStruc.tree(myJSON));
 
-		var TreeArray = [myJSON];
+		//var TreeArray = [myJSON];
 
 		res.send(myJSON);
+
+		console.log("JSON Response - ",myJSON);
   });
 };

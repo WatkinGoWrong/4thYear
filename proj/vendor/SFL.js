@@ -1,6 +1,5 @@
 function tree (){
 
-    var num;
     var svgWidth = 1000,
         svgHeight = svgWidth/2;
 
@@ -28,7 +27,7 @@ function tree (){
     var JSONData;
 
 
-    comp = ["text","parent","depth","kids"];
+    var comp = ["text","parent","depth","kids"];
     var diff_count = 0;
 
     //With x,y positions
@@ -36,13 +35,13 @@ function tree (){
 
     //{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}
 
-    var example2 = '[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+    var example2 = '[{"id":"00","text":"Clause","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
 
     var JSONTree= '{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}},"C1":{"C2":{"C3":{"in a web browser":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron":{}}}}}}}';
 
     var body = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{},"None":{}},"Participant 2":{"None":{}}}}';
 
-    var student = '[{"id":"00","text":"Sentence","x":500,"y":12.5,"isLeaf":false,"tWidth":58.71666717529297,"depth":0,"kids":[{"id":"id1.5","text":"A","x":400,"y":62.5,"parent":"Sentence","isLeaf":false,"tWidth":12.550000190734863,"depth":1,"kids":[{"id":"id2.5","text":"A1","x":400,"y":112.5,"parent":"A","isLeaf":false,"tWidth":20.549999237060547,"depth":2,"kids":[{"id":"id3.5","text":"A2","x":400,"y":162.5,"parent":"A1","isLeaf":false,"tWidth":20.549999237060547,"depth":3,"kids":[{"id":"id4.5","text":"One morning","x":400,"y":212.5,"parent":"A2","isLeaf":true,"tWidth":85.83333587646484,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":500,"y":62.5,"parent":"Sentence","isLeaf":false,"tWidth":11.666666984558105,"depth":1,"kids":[{"id":"id6.5","text":"B1","x":500,"y":112.5,"parent":"B","isLeaf":false,"tWidth":19.66666603088379,"depth":2,"kids":[{"id":"id7.5","text":"B2","x":500,"y":162.5,"parent":"B1","isLeaf":false,"tWidth":19.66666603088379,"depth":3,"kids":[{"id":"id8.5","text":"I shot","x":500,"y":212.5,"parent":"B2","isLeaf":true,"tWidth":37,"depth":4,"kids":[]}]}]}]},{"id":"id9.5","text":"C","x":600,"y":62.5,"parent":"Sentence","isLeaf":false,"tWidth":11.666666984558105,"depth":1,"kids":[{"id":"id10.5","text":"C1","x":600,"y":112.5,"parent":"C","isLeaf":false,"tWidth":19.66666603088379,"depth":2,"kids":[{"id":"id11.5","text":"C2","x":600,"y":162.5,"parent":"C1","isLeaf":false,"tWidth":19.66666603088379,"depth":3,"kids":[{"id":"id12.5","text":"an elephant","x":600,"y":212.5,"parent":"C2","isLeaf":true,"tWidth":74.30000305175781,"depth":4,"kids":[]}]}]}]}]}]'
+    var student = '[{"id":"00","text":"Clause","x":500,"y":12.5,"isLeaf":false,"tWidth":58.71666717529297,"depth":0,"kids":[{"id":"id1.5","text":"A","x":400,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":12.550000190734863,"depth":1,"kids":[{"id":"id2.5","text":"A1","x":400,"y":112.5,"parent":"A","isLeaf":false,"tWidth":20.549999237060547,"depth":2,"kids":[{"id":"id3.5","text":"A2","x":400,"y":162.5,"parent":"A1","isLeaf":false,"tWidth":20.549999237060547,"depth":3,"kids":[{"id":"id4.5","text":"One morning","x":400,"y":212.5,"parent":"A2","isLeaf":true,"tWidth":85.83333587646484,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":11.666666984558105,"depth":1,"kids":[{"id":"id6.5","text":"B1","x":500,"y":112.5,"parent":"B","isLeaf":false,"tWidth":19.66666603088379,"depth":2,"kids":[{"id":"id7.5","text":"B2","x":500,"y":162.5,"parent":"B1","isLeaf":false,"tWidth":19.66666603088379,"depth":3,"kids":[{"id":"id8.5","text":"I shot","x":500,"y":212.5,"parent":"B2","isLeaf":true,"tWidth":37,"depth":4,"kids":[]}]}]}]},{"id":"id9.5","text":"C","x":600,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":11.666666984558105,"depth":1,"kids":[{"id":"id10.5","text":"C1","x":600,"y":112.5,"parent":"C","isLeaf":false,"tWidth":19.66666603088379,"depth":2,"kids":[{"id":"id11.5","text":"C2","x":600,"y":162.5,"parent":"C1","isLeaf":false,"tWidth":19.66666603088379,"depth":3,"kids":[{"id":"id12.5","text":"an elephant","x":600,"y":212.5,"parent":"C2","isLeaf":true,"tWidth":74.30000305175781,"depth":4,"kids":[]}]}]}]}]}]'
 
     //get the nodes
     tree.getNodes = function () {
@@ -395,7 +394,7 @@ function tree (){
 
     resetTree = function () {
         tree.nodes = [];
-        tree.nodes.push({ id: '00', text: 'Sentence', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
+        tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
         //console.log(tree.nodes);
         refresh();
         reposition(tree.nodes[0]);
@@ -403,6 +402,8 @@ function tree (){
     }
 
     getJSON = function(json_tree,num){//testing how to return json value and parameter names
+      console.log("hi",JSON.stringify(json_tree));
+
       if(document.getElementById('tree-'+num) == null){
         var div = document.createElement("div");
         div.setAttribute("id", "tree-"+num);
@@ -410,6 +411,20 @@ function tree (){
         initialise(num);
       }
       resetTree();
+
+      //api call ---
+        body = JSON.stringify(json_tree)
+      $.ajax({
+        url: "http://localhost:8000/treetest",
+        type: "POST",
+        data: {body},
+        contentType: "application/json",
+        sucess:console.log("success"),
+        complete: function(data){
+          console.log(data);
+        }
+      });
+
       var myObj = json_tree;
       var treeNames = Object.keys(myObj);
       var parent = tree.nodes[0];
@@ -418,12 +433,9 @@ function tree (){
         recursiveGetProperty(myObj, treeNames[name],function(obj) {
         },parent,depth);
       }
-      TreeJSON();
 
-      /*if(document.getElementById('CompareTree').style.display == "none"){
-        document.getElementById('CompareTree').style.display = 'block';
-      }
-      */
+
+      TreeJSON();
     }
 
     function recursiveGetProperty(obj, lookup, callback, parent, depth) {
@@ -506,22 +518,49 @@ function tree (){
       //console.log(tree.nodes);
       JSONData = JSON.stringify(tree.nodes);
       console.log(JSONData);
-      getStruc(tree.nodes,student);
+      //getStruc(tree.nodes,student);
     }
 
       $(document).ready(function() {
-        $("#driver").click(function(event){
+        $("#AnnoToTree").click(function(event){
+
+          createWholeTree();
+
+          console.log("hi",JSON.stringify(WholeTree));
+
+          if(document.getElementById('tree-'+num) == null){
+            var div = document.createElement("div");
+            div.setAttribute("id", "tree-"+num);
+            document.getElementById("TreeArea").appendChild(div);
+            initialise(num);
+          }
+          resetTree();
+
+          body = JSON.stringify(WholeTree)
+
            $.post(
               "http://localhost:8000/treetest",
               {body},
               function(data) {
                 console.log(data);
-                reply  = JSON.stringify(data).slice(1,-1).replace(/\\/g, "");
-                tree.nodes = JSON.parse(reply);
+                var res  = JSON.stringify(data).slice(1,-1).replace(/\\/g, "");
+                tree.nodes = JSON.parse(res);
                 reposition(tree.nodes[0]);
                 redraw();
               }
            );
+
+           /*var myObj = WholeTree;
+           var treeNames = Object.keys(myObj);
+           var parent = tree.nodes[0];
+           var depth = 0;
+           for(name in treeNames){
+             recursiveGetProperty(myObj, treeNames[name],function(obj) {
+             },parent,depth);
+           }*/
+
+
+           TreeJSON();
         });
      });
 
@@ -529,7 +568,7 @@ function tree (){
     initialise = function (num) {
 
         //add the root node
-        tree.nodes.push({ id: '00', text: 'Sentence', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
+        tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
 
         //create the svg
         d3.select("#tree-"+num).style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree-'+num)

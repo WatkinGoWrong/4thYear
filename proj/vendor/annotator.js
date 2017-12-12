@@ -1109,7 +1109,7 @@
     });///////////////////////////////////////////////////////////////////
         var input = example1.getInput();
         var container = example1.getContainer();
-        /*jQuery(input).autocomplete({
+        jQuery(input).autocomplete({
             source: firstOrder.concat(secondOrder, thirdOrder),
             appendTo: container,
             position: { at: 'left bottom', of: container },
@@ -1120,7 +1120,7 @@
                     example1.add(v.item.value);
                 }
             }
-        });*/
+        });
       return this;
     };
 

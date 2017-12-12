@@ -1,15 +1,13 @@
 function tree (JSONTree){
-        //var d3 = require("d3");
-
-        var svgWidth = 1200,
-            svgHeight = svgWidth/2;
+      var num;
+      var svgWidth = 1000,
+          svgHeight = svgWidth/2;
 
         var devide = 2,
-            fontsize = svgWidth/80,
-            linkSpace = fontsize-1,
-            trainglepadding = fontsize
-            stroke_width = fontsize/15
-
+          fontsize = svgWidth/90,
+          linkSpace = fontsize-1,
+          trainglepadding = fontsize-2
+          stroke_width = fontsize/15
 
         var tree = {
             cx: svgHeight,
@@ -26,12 +24,11 @@ function tree (JSONTree){
         var removeNode = false;
         var changeText = false;
         var svgNodes;
-
-        var example = '[{"id":"00","text":"Clause","x":600,"y":15,"kids":[{"id":"id1.5","text":"Participant 1","x":480,"y":75,"parent":"Clause","kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","kids":[],"isLeaf":true,"tWidth":117.5,"depth":2}],"isLeaf":false,"tWidth":90.9000015258789,"depth":1},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","kids":[],"isLeaf":true,"tWidth":30.600000381469727,"depth":2}],"isLeaf":false,"tWidth":59.016666412353516,"depth":1},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","kids":[],"isLeaf":true,"tWidth":39.58333206176758,"depth":2}],"isLeaf":false,"tWidth":93.0999984741211,"depth":1}],"isLeaf":false,"tWidth":50.31666564941406}]';
-
         var JSONData;
 
-        var JSONTree2 = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+
+        var comp = ["text","parent","depth","kids"];
+        var diff_count = 0;
 
         tree.getNodes = function () {
             var n = [];
@@ -104,12 +101,21 @@ function tree (JSONTree){
       tree.addFromJSON = function (parent,child,pos,depth) {
         tree.size++;
               var node = parent;
-              //console.log(parent);
               function addLeaf(node) {
+                var draw = true;
                   if (node.id == parent.id) {
-                      node.kids.push({ id: 'id' + (tree.size - .5), text: child, x: node.x, y: node.y, parent:parent.text, isLeaf: true, tWidth: 0, depth:depth,  kids: [] }); node.isLeaf = false;
-                      reposition(tree.nodes[0]);
-                      return;
+                    if (node.kids!=null) {
+                      for(x in node.kids){
+                        if(node.kids[x].text==child){
+                          draw = false;
+                        }
+                      }
+                    }
+                      if(draw){
+                        node.kids.push({ id: 'id' + (tree.size - .5), text: child, x: node.x, y: node.y, parent:parent.text, isLeaf: true, tWidth: 0, depth:depth, kids: [] }); node.isLeaf = false;
+                        reposition(tree.nodes[0]);
+                        return;
+                    }
                   }
                   node.kids.forEach(addLeaf);
               }
@@ -144,24 +150,15 @@ function tree (JSONTree){
                  var obj2 = obj[property];
                  var t = Object.keys(obj2);
                  for(name in t){
-                   parent2 = tree.addFromJSON(parent,t[name],name,depth);
-                   //console.log(parent2);
+                   parent2 = tree.addFromJSON(parent, t[name], name, depth);
                    if(t[name]!=undefined){
                     callback(t[name]);
                   }
-                    recursiveGetProperty(obj2, t[name], callback,parent2,depth);
+
+                    recursiveGetProperty(obj2, t[name], callback, parent2, depth);
                  }
-
-
                }
-               else if (obj[property] instanceof Object) {
-                   recursiveGetProperty(obj[property], lookup, callback,parent2,depth);
-               }
-
-               //if(obj.property!=null)
-                //recursiveGetProperty(obj.property, lookup, callback);
            }
-           //console.log("<--->");
         }
 
         function getStruc(j_tree){//testing how to return json value and parameter names
@@ -170,7 +167,6 @@ function tree (JSONTree){
           for(name in treeNames){
             recursiveGetProperty(myObj, treeNames[name],function(obj) {
               console.debug(obj);
-
             });
           }
         }
@@ -244,7 +240,7 @@ function tree (JSONTree){
         //set up the page
         initialise = function () {
             //add the root node
-            tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
+            tree.nodes.push({ id: '00', text: 'Clause', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
         }
 
         initialise();
