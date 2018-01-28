@@ -8,8 +8,8 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
         #c1, c2, c3 {
             fill:black;
@@ -39,6 +39,15 @@
 
 
 <body>
+<div class="table-responsive">
+<table id="my-table-id" border=1>
+ <tbody style="cursor:pointer">
+  <tr><td>This little piggy had none</td></tr>
+  <tr><td>A good person for the job</td></tr>
+  <tr><td>Can you believe that</td></tr>
+ </tbody>
+</table>
+</div>
 
 <!--<div class="col-sm-6"/>-->
 
@@ -47,8 +56,40 @@
 
 	<div id = "tree-one" class="col-lg-6">
 	    <script class ="js-tree-one">
+	    	var sentence = "";
+
+	    	function onRowClick(tableId, callback) {
+			    var table = document.getElementById(tableId),
+			        rows = table.getElementsByTagName("tr"),
+			        i;
+			    for (i = 0; i < rows.length; i++) {
+			        table.rows[i].onclick = function (row) {
+			            return function () {
+			                callback(row);
+			            };
+			        }(table.rows[i]);
+			    }
+			};
+
+			onRowClick("my-table-id", function (row){
+			    var value = sentence = (row.getElementsByTagName("td")[0].innerHTML).toLowerCase().split(' ').join('');
+			    console.log("value>>", value, " | Sentence>>", sentence);
+			    genFromTable(test[value]);
+			    sentence = row.getElementsByTagName("td")[0].innerHTML;
+			});
+
+			var test = {
+            	"thislittlepiggyhadnone":'[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]',
+            	"agoodpersonforthejob":'[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"dd","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":200,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"a","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":550,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"for the job","x":550,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"person","x":650,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]',
+            	"canyoubelievethat":'[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Pr:mental | Vgp","x":400,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"F/Aux","x":350,"y":112.5,"parent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"Can","x":350,"y":162.5,"parent":"F/Aux","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id4.5","text":"E","x":450,"y":112.5,"parent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"believe","x":450,"y":162.5,"parent":"E","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id6.5","text":"Senser/Subject | Ngp","x":550,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id7.5","text":"th","x":550,"y":112.5,"parent":"Senser/Subject | Ngp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id8.5","text":"you","x":550,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id9.5","text":"Phenonenon/Complement | Ngp","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id10.5","text":"th","x":650,"y":112.5,"parent":"Phenonenon/Complement | Ngp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id11.5","text":"that","x":650,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]}]}]'
+            }
+			//console.log(test);
 
 	        function tree (){
+	        	var dash = 0;//use for setting true or false
+	        	var node_length = 3;
+	            var node_count = 0;
+	            var previous_x = 0;
 
 	            var svgWidth = 1000,
 	                svgHeight = svgWidth/2;
@@ -56,7 +97,7 @@
                 var devide = 2,
                   fontsize = svgWidth/90,
                   linkSpace = fontsize-1,
-                  trainglepadding = fontsize-2
+                  trainglepadding = fontsize,
                   stroke_width = fontsize/15
 
 	            var tree = {
@@ -78,10 +119,11 @@
 
               var comp = ['text','depth','parent','kids'];
 
+
               //var diff_count = 0;
 
 	            //With x,y positions
-              var example = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"A","x":420,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"B","x":420,"y":135,"parent":"A","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"C","x":420,"y":195,"parent":"B","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"back-end","x":420,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":660,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"C","x":600,"y":135,"parent":"B","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id7.5","text":"back-end","x":540,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":4,"kids":[]},{"id":"id9.5","text":"version","x":660,"y":255,"parent":"C","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id8.5","text":"C","x":780,"y":255,"parent":"B","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+              var example = '[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"dd","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":200,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"a","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":650,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"for the job","x":650,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":550,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"person","x":550,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
 
               //{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}
 
@@ -369,7 +411,7 @@
 
 	                nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
 	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5
-	                    .attr('fill', function (node) { if (node.isLeaf) { return 'red'; } else { return 'blue'; } });
+	                    .attr('fill', function (node) { if (node.isLeaf) { return 'black'; } else { return 'black'; } });//red/blue
 
 	                nodes.enter().append('text').attr('id', function (node) { /*console.log('id = ' + node.id);*/ return node.id; })
 	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
@@ -393,7 +435,7 @@
 	                links.enter().append('line')
 	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + linkSpace; })
 	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; })
-	                    .style({ 'stroke': 'black', 'stroke-width': stroke_width+'px' })
+	                    .style({ 'stroke': 'black', 'stroke-dasharray': dash ,'stroke-width': stroke_width+'px' })//'stroke-dasharray': 5 , -- Use for showing error in comparison
 	                    /*.transition().duration(500)*/
 	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; });
 
@@ -405,7 +447,7 @@
 
 	                triangles.enter().append('polygon')
 	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) })
-	                    .style({ 'stroke': 'black', 'stroke-width': stroke_width+'px', 'fill': 'white' })
+	                    .style({ 'stroke': 'black', 'stroke-dasharray': dash ,'stroke-width': stroke_width+'px', 'fill': 'white' })//'stroke-dasharray': 5 , -- Use for showing error in comparison
 	                    /*.transition().duration(500)*/
 	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) });
 	            }
@@ -436,6 +478,102 @@
 
 	            }
 
+	             getNodeLength = function (node) {
+	                node.kids.forEach(function (kid) {
+	                    getNodeLength(kid);
+	                    if((kid.kids).length==0){
+	                    	node_length++;
+	                	}
+	                });
+
+	            }
+
+	            //update node positions
+	            reposition_test = function (node) {
+
+
+	                if (uniformDepth) {
+	                    tree.nodeDepth();
+	                }
+	                var leafCount = getLeafCount(node),
+	                    left = node.x - tree.w * (leafCount - 1) / 2;
+	                    //console.log(node.text, " - - " ,node.kids)
+		                node.kids.forEach(function (kid) {
+
+		                //checking for kid of current node
+		                //console.log(kid.kids[0], " >> ",kid.kids[0].kids);
+
+		                if((kid.kids).length==0){
+	                    	var cur = (kid.text).split(' ').join('');
+
+	                    	if(cur.toLowerCase() == sentence.substring(0, cur.length)){
+	                    		node_count++;
+	                    		sentence = sentence.substring(cur.length,sentence.length);
+	                    		var w = tree.w * getLeafCount(kid);
+			                    left += w;
+			                    kid.x = left - (w + tree.w) / 2;
+			                    kid.y = node.y + tree.h;
+	                    		previous_x = left - (w + tree.w) / 2;
+			                    reposition_test(kid);
+			                    redraw();
+			                }
+
+			                else{
+			                	var w = tree.w * getLeafCount(kid);
+			                    left += w;
+			                    kid.x = left - (w + tree.w) / 2;//(left - (w + tree.w) / 2) + (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count+1));
+			                    kid.y = node.y + tree.h;
+                          previous_x = left - (w + tree.w) / 2;
+			                    reposition_test(kid);
+			                    redraw();
+			                }
+		                }
+
+		                else if(((kid.kids[0]).kids).length==0){
+	                    	var cur = (kid.kids[0].text).split(' ').join('');
+
+	                    	if(cur.toLowerCase() == sentence.substring(0, cur.length)){
+	                    		node_count++;
+	                    		sentence = sentence.substring(cur.length,sentence.length);
+	                    		var w = tree.w * getLeafCount(kid);
+			                    left += w;
+                          kid.x = left - (w + tree.w) / 2;
+
+                          //check incase current pos is pos of moved node
+                          if(previous_x == kid.x)
+                            kid.x-=100;
+			                    kid.y = node.y + tree.h;
+	                    		previous_x = left - (w + tree.w) / 2;
+			                    reposition_test(kid);
+			                    redraw();
+			                }
+
+			                else{
+			                	  var w = tree.w * getLeafCount(kid);
+			                    left += w;
+			                    var cur_x = (left - (w + tree.w) / 2);
+			                    previous_x = (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count-1));
+			                    kid.x = cur_x + previous_x;
+			                    kid.y = node.y + tree.h;
+			                    reposition_test(kid);
+			                    redraw();
+			                }
+		                }
+
+			           	else{
+			                var w = tree.w * getLeafCount(kid);
+			                left += w;
+			                kid.x = left - (w + tree.w) / 2;
+                      if(previous_x == kid.x)
+                        kid.x-=100;
+			                kid.y = node.y + tree.h;
+			                reposition_test(kid);
+			                redraw();
+			            }
+			        });
+
+	            }
+
 	            //save the tree structure as JSON
 	            saveTree = function () {
 	                console.log(tree.nodes);
@@ -444,10 +582,23 @@
 	            }
 
 	            exampleTree = function () {
-                reply  = example;//.slice(1,-1).replace(/\\/g, "");
-                //console.log(example);
+                	reply  = example;//.slice(1,-1).replace(/\\/g, "");
+                    console.log(example);
 	            	tree.nodes = JSON.parse(reply);
-	            	reposition(tree.nodes[0]);
+	            	//reposition(tree.nodes[0]);
+	            	redraw();
+	            }
+
+	            genFromTable = function (ex,sentence) {
+	            	node_length = 0;
+	            	node_count = 0;
+	            	previous_x = 0;
+                	reply  = ex;//.slice(1,-1).replace(/\\/g, "");
+                    console.log("ex", ex);
+	            	tree.nodes = JSON.parse(reply);
+	            	getNodeLength(tree.nodes[0]);
+	            	console.log(node_length);
+	            	reposition_test(tree.nodes[0],sentence);
 	            	redraw();
 	            }
 

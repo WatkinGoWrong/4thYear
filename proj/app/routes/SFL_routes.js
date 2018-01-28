@@ -1,7 +1,8 @@
-// routes/note_routes.js
+
 var d3 = require("d3");
 var treeStruc = require("./treeStruc");
 var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+var ex = require("./exampleTrees");
 
 //var ObjectID = require('mongodb').ObjectID;
 module.exports = function(app, db) {
@@ -20,5 +21,10 @@ module.exports = function(app, db) {
 		res.send(myJSON);
 
 		console.log("JSON Response - ",myJSON);
-  });
+	});
+
+	app.get('/exampleTrees/',(req,res) =>{
+		var ex_Trees = ex.examples;
+		res.send(ex_Trees);
+	});
 };

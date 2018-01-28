@@ -1,12 +1,14 @@
 function tree (){
 
+    var dash = 0;
+
     var svgWidth = 1000,
         svgHeight = svgWidth/2;
 
       var devide = 2,
         fontsize = svgWidth/90,
         linkSpace = fontsize-1,
-        trainglepadding = fontsize-2
+        trainglepadding = fontsize-2,
         stroke_width = fontsize/15
 
     var tree = {
@@ -301,7 +303,7 @@ function tree (){
 
         nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
             .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5
-            .attr('fill', function (node) { if (node.isLeaf) { return 'red'; } else { return 'blue'; } });
+            .attr('fill', function (node) { if (node.isLeaf) { return 'black'; } else { return 'black'; } });//red|blue
 
         nodes.enter().append('text').attr('id', function (node) { /*console.log('id = ' + node.id);*/ return node.id; })
             .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
@@ -325,7 +327,8 @@ function tree (){
         links.enter().append('line')
             .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + linkSpace; })
             .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; })
-            .style({ 'stroke': 'black', 'stroke-width': stroke_width+'px' })
+
+            .style({ 'stroke': 'black', 'stroke-width': stroke_width+'px' })//'stroke-dasharray': 5 , -- Use for showing error in comparison
             /*.transition().duration(500)*/
             .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; });
 
@@ -337,7 +340,7 @@ function tree (){
 
         triangles.enter().append('polygon')
             .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) })
-            .style({ 'stroke': 'black', 'stroke-width': stroke_width+'px', 'fill': 'white' })
+            .style({'stroke': 'black', 'stroke-dasharray': 5 ,'stroke-width': stroke_width+'px', 'fill': 'white' }) //'stroke-dasharray': 5 , -- Use for showing error in comparison
             /*.transition().duration(500)*/
             .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) });
     }

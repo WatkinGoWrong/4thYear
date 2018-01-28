@@ -270,7 +270,7 @@
 
             nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
                 .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5
-                .attr('fill', function (node) { if (node.isLeaf) { return 'red'; } else { return 'blue'; } });
+                .attr('fill', function (node) { if (node.isLeaf) { return 'black'; } else { return 'black'; } });//red|blue
 
             nodes.enter().append('text').attr('id', function (node) { /*console.log('id = ' + node.id);*/ return node.id; })
                 .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })

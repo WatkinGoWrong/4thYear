@@ -21,6 +21,7 @@
         var temp_2 = a[i-1];
         var temp_3 = a[i];
         var temp_4 = a[i+1];
+        //-----
         a[i-2] = a[i+2];
         a[i-1] = a[i+3];
         a[i] = a[i+4];
@@ -316,7 +317,25 @@
                 .subscribe("annotationDeleted", function(annotation) {
                     // Check if the annotation actually exists (workaround annotatorjs bug #258).
                     if(annotation.id) {
+                      console.log(annotation);
 
+                      if(((annotation.text).toUpperCase()).indexOf("SENTENCE")!=-1){
+                        for(var i = 0;i<sentence_array.length;i=i+4){
+                          if(annotation.quote==sentence_array[i]){
+                            sentence_array.splice(i,i+4);
+                          }
+                        }
+                        document.getElementById("CurrentTree").setAttribute("max",((sentence_array.length)/4)-1);
+                      }
+
+                      else{
+                        for(var i = 0;i<anno_array.length;i=i+4){
+                          if(annotation.quote==anno_array[i]){
+                            anno_array.splice(i,i+4);
+                          }
+                        }
+                      }
+                    
                       for(var i = 0;i<obj.length;i++){
                         if(annotation.id==obj[i].id){
                           obj.splice(i,1);
@@ -328,6 +347,12 @@
                     }
                 })
                 .subscribe("annotationUpdated", function(annotation) {
+
+                    for(var i = 2;i<anno_array.length;i=i+4){
+                          if(annotation.ranges[0].startOffset==anno_array[i]){
+                            anno_array.splice(i-2,i+2,annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset);
+                        }
+                    }
 
                     for(var i = 0;i<obj.length;i++){
                       if(annotation.id==obj[i].length){
