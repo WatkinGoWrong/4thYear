@@ -1,11 +1,13 @@
 function tree (){
 
-    var dash = 0;
+    var node_length = 3;
+    var node_count = 0;
+    var previous_x = 0;
 
     var svgWidth = 1000,
         svgHeight = svgWidth/2;
 
-      var devide = 2,
+    var devide = 2,
         fontsize = svgWidth/90,
         linkSpace = fontsize-1,
         trainglepadding = fontsize-2,
@@ -93,14 +95,6 @@ function tree (){
         return n;
     }
 
-    //get text width of node
-/*            tree.getTextWidth = function (node) {
-        var n = tree.getNode(node);
-        var nodes = d3.select('text#' + n.id);
-        n.tWidth = nodes.node().getBBox().width;
-        return nodes.node().getBBox().width;
-    }
-*/
     //add a new leaf - have to look into refactoring this code
     tree.addLeaf = function (parent) {
         tree.size++;
@@ -155,111 +149,7 @@ function tree (){
           }
           addLeaf(node);
           return node.kids[pos];
- }
-
-    //remove leaf
-    tree.removeLeaf = function (nodeClicked) {
-        var parent = tree.nodes[0];
-        var visited = [];
-        function removeLeaf(p) {
-            function arrangeKids(index, numOfKids) {
-                parent.kids.splice(index, 1);
-                if (parent.kids.length == 0) { parent.isLeaf = true; }
-
-                //console.log(parent.kids);
-
-            }
-            if (p.id == parent.id) {
-                for (var i = 0; i < parent.kids.length; i++) {
-                    if (parent.kids[i].id == nodeClicked.id) {
-                        arrangeKids(i, parent.kids.length);
-                        reposition(tree.nodes[0]);
-                        redraw();
-                        return;
-                    }
-                }
-            }
-            p.kids.forEach(removeLeaf);
-        }
-        function findParent(node) { //finds the parent object of the leaf clicked and saves it to parent variable
-            visited.push(node);
-            if (node.id == nodeClicked.id) { visited.pop(); parent = visited[visited.length - 1]; removeLeaf(tree.nodes[0]); }
-            else {
-                node.kids.forEach(findParent);
-                visited.pop(); //remove nodes down visited paths
-            }
-
-            //console.log(visited);
-        }
-
-        if (nodeClicked.isLeaf) {
-            findParent(tree.nodes[0]);
-        }
-        refresh();
-        reposition(tree.nodes[0]);
-        redraw();
     }
-
-    //change node text - CHANGE SIZE OF TEXT BOX HERE
-    tree.changeText = function (node) {
-        var newText = '';
-        var num = 0;
-        var textBox = d3.select("#nodes").append("foreignObject").attr("x", node.x + 50).attr("y", node.y)
-                        .attr("width", 150).attr("height", 25).append("xhtml:form")
-                        .append("input").attr("value", function () { this.focus(); return node.text })
-                        .on("blur", function () {
-                            newText = textBox.node().value;
-                            function changeText(n) {
-                                if (n.id == node.id) {
-                                    n.text = newText;
-                                    /*var nodes = d3.select('text#' + n.id);
-                                    nodes.text(newText);
-                                    //tree.getTextWidth(n);
-                                    nodes.attr('tWidth', tree.getTextWidth(n));
-                                    reposition(tree.nodes[0]);
-                                    */
-                                    refresh();
-                                    redraw();
-                                   return;
-                                }
-                                n.kids.forEach(changeText);
-                            }
-                            changeText(tree.nodes[0]);
-                            redraw();
-                            d3.select("foreignObject").remove();
-
-                        })
-                        .on("keypress", function () {
-                            if (d3.event.keyCode == 13) {
-                                var e = d3.event;
-                                //prevents the entire tree from deleting when enter is pressed
-                                if (e.stopPropagation) { e.stopPropagation(); }
-                                e.preventDefault();
-
-                                newText = textBox.node().value;
-                                function changeText(n) {
-                                    if (n.id == node.id) {
-                                        n.text = newText;
-                                        /*var nodes = d3.select('text#' + n.id);
-                                        nodes.text(newText);
-                                        //tree.getTextWidth(n);
-                                        nodes.attr('tWidth', tree.getTextWidth(n));
-                                        reposition(tree.nodes[0]);
-                                        */
-                                        refresh();
-                                        redraw();
-                                        return;
-                                    }
-                                    n.kids.forEach(changeText);
-                                }
-                                changeText(tree.nodes[0]);
-                                redraw();
-                                d3.select("foreignObject").remove();
-                            }
-                        });
-        //tree.getTextWidth(node);
-    }
-
     //sets leafs depth to deepest leaf
     tree.nodeDepth = function () {
         var leafs = [];
@@ -313,7 +203,7 @@ function tree (){
             })
             //Change font below
             .style({ 'text-anchor': 'middle', 'cursor': 'pointer','font-size':fontsize })
-            .on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
+            //.on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
             /*.transition().duration(500)*/
             .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; });
 
@@ -352,7 +242,7 @@ function tree (){
     }
 
     //update node positions
-    reposition = function (node) {
+    /*reposition = function (node) {
 
         if (uniformDepth) {
             tree.nodeDepth();
@@ -369,7 +259,91 @@ function tree (){
             redraw();
         });
 
-    }
+    }*/
+
+    reposition = function (node) {
+
+                    if (uniformDepth) {
+                        tree.nodeDepth();
+                    }
+                    var leafCount = getLeafCount(node),
+                        left = node.x - tree.w * (leafCount - 1) / 2;
+                        //console.log(node.text, " - - " ,node.kids)
+                        node.kids.forEach(function (kid) {
+
+                        //checking for kid of current node
+                        //console.log(kid.kids[0], " >> ",kid.kids[0].kids);
+
+                        if((kid.kids).length==0){
+                            var cur = (kid.text).split(' ').join('');
+
+                            if(cur.toLowerCase() == sentence.substring(0, cur.length)){
+                                node_count++;
+                                sentence = sentence.substring(cur.length,sentence.length);
+                                var w = tree.w * getLeafCount(kid);
+                                left += w;
+                                kid.x = left - (w + tree.w) / 2;
+                                kid.y = node.y + tree.h;
+                                previous_x = left - (w + tree.w) / 2;
+                                reposition(kid);
+                                redraw();
+                            }
+
+                            else{
+                                var w = tree.w * getLeafCount(kid);
+                                left += w;
+                                kid.x = left - (w + tree.w) / 2;//(left - (w + tree.w) / 2) + (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count+1));
+                                kid.y = node.y + tree.h;
+                                previous_x = left - (w + tree.w) / 2;
+                                reposition(kid);
+                                redraw();
+                            }
+                        }
+
+                        else if(((kid.kids[0]).kids).length==0){
+                            var cur = (kid.kids[0].text).split(' ').join('');
+
+                            if(cur.toLowerCase() == sentence.substring(0, cur.length)){
+                                node_count++;
+                                sentence = sentence.substring(cur.length,sentence.length);
+                                var w = tree.w * getLeafCount(kid);
+                                left += w;
+                          kid.x = left - (w + tree.w) / 2;
+
+                          //check incase current pos is pos of moved node
+                          if(previous_x == kid.x)
+                            kid.x-=100;
+                                kid.y = node.y + tree.h;
+                                previous_x = left - (w + tree.w) / 2;
+                                reposition(kid);
+                                redraw();
+                            }
+
+                            else{
+                                  var w = tree.w * getLeafCount(kid);
+                                left += w;
+                                var cur_x = (left - (w + tree.w) / 2);
+                                previous_x = (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count-1));
+                                kid.x = cur_x + previous_x;
+                                kid.y = node.y + tree.h;
+                                reposition(kid);
+                                redraw();
+                            }
+                        }
+
+                        else{
+                            var w = tree.w * getLeafCount(kid);
+                            left += w;
+                            kid.x = left - (w + tree.w) / 2;
+                      if(previous_x == kid.x)
+                        kid.x-=100;
+                            kid.y = node.y + tree.h;
+                            reposition(kid);
+                            redraw();
+                        }
+                    });
+
+                }
 
     //save the tree structure as JSON
     saveTree = function () {
@@ -584,7 +558,7 @@ function tree (){
             .text(function (node) { return node.text; })
             .attr('tWidth', function (node) { var n = tree.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width; /*return tree.getTextWidth(node);*/ })
             .style({ 'text-anchor': 'middle', 'cursor': 'pointer' })
-            .on('click', function (node) { return tree.addLeaf(node.id); });
+            //.on('click', function (node) { return tree.addLeaf(node.id); });
 
         //create group of links
         d3.select('#svgTree-'+num).append('g').attr('id', 'links').selectAll('line').data(tree.getLinks())

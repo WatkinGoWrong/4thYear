@@ -1,332 +1,435 @@
-<DOCTYPE>
+<doctype>
 
-<html lang="en">
-  <head>
+	<html lang="en">
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+	<head>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style>
-        #c1, c2, c3 {
-            fill:black;
-        }
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+		<script src="http://d3js.org/d3.v3.min.js"></script>
 
-        #left {
-		    text-align: center;
-		    text-decoration: none;
-		    display: inline-block;
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<style>
+			#c1,
+			c2,
+			c3 {
+				fill: black;
+			}
 
-		}
+			#left {
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
 
-		#right {
+			}
 
-		    text-align: center;
-		    text-decoration: none;
-		    display: inline-block;
+			#right {
 
-		}
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
 
-		#svgTree,#svgTree-two{
-			border:1px solid black;
-		}
-    </style>
+			}
 
-</head>
+			#svgTree,
+			#svgTree-two {
+				border: 1px solid black;
+			}
+		</style>
 
+	</head>
 
-<body>
-<div class="table-responsive">
-<table id="my-table-id" border=1>
- <tbody style="cursor:pointer">
-  <tr><td>This little piggy had none</td></tr>
-  <tr><td>A good person for the job</td></tr>
-  <tr><td>Can you believe that</td></tr>
- </tbody>
-</table>
-</div>
+	<body>
+		<div class="table-responsive">
+			<table id="my-table-id" border="1">
+				<tbody style="cursor:pointer">
+					<tr>
+						<td>This little piggy had none</td>
+						<td>% -
+						</td>
+					</tr>
+					<tr>
+						<td>A good person for the job</td>
+						<td>% -
+						</td>
+					</tr>
+					<tr>
+						<td>Can you believe that</td>
+						<td>% -
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-<!--<div class="col-sm-6"/>-->
+		<!--<div class="col-sm-6"/>-->
 
-<div class="container-fluid">
-<div class="row">
+		<div class="container-fluid">
+			<div class="row">
 
-	<div id = "tree-one" class="col-lg-6">
-	    <script class ="js-tree-one">
-	    	var sentence = "";
+				<div id="tree-one" class="col-lg-6">
+					<script class="js-tree-one">
+						var sentence = "";
+						var percentage = ['%']
 
-	    	function onRowClick(tableId, callback) {
-			    var table = document.getElementById(tableId),
-			        rows = table.getElementsByTagName("tr"),
-			        i;
-			    for (i = 0; i < rows.length; i++) {
-			        table.rows[i].onclick = function (row) {
-			            return function () {
-			                callback(row);
-			            };
-			        }(table.rows[i]);
-			    }
-			};
+						function onRowClick(tableId, callback) {
+							var table = document.getElementById(tableId),
+								rows = table.getElementsByTagName("tr"),
+								i;
+							for (i = 0; i < rows.length; i++) {
+								table.rows[i].onclick = function(row) {
+									return function() {
+										callback(row);
+									};
+								}(table.rows[i]);
+							}
+						};
 
-			onRowClick("my-table-id", function (row){
-			    var value = sentence = (row.getElementsByTagName("td")[0].innerHTML).toLowerCase().split(' ').join('');
-			    console.log("value>>", value, " | Sentence>>", sentence);
-			    genFromTable(test[value]);
-			    sentence = row.getElementsByTagName("td")[0].innerHTML;
-			});
+						onRowClick("my-table-id", function(row) {
+							var value = sentence = (row.getElementsByTagName("td")[0].innerHTML).toLowerCase().split(' ').join('');
+							console.log("value>>", value, " | Sentence>>", sentence);
+							genFromTable(test[value]);
+							row.getElementsByTagName("td")[1].innerHTML = percentage[0] + percentage[1];
+							sentence = row.getElementsByTagName("td")[0].innerHTML;
+						});
 
-			var test = {
-            	"thislittlepiggyhadnone":'[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]',
-            	"agoodpersonforthejob":'[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"dd","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":200,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"a","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":550,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"for the job","x":550,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"person","x":650,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]',
-            	"canyoubelievethat":'[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Pr:mental | Vgp","x":400,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"F/Aux","x":350,"y":112.5,"parent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"Can","x":350,"y":162.5,"parent":"F/Aux","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id4.5","text":"E","x":450,"y":112.5,"parent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"believe","x":450,"y":162.5,"parent":"E","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id6.5","text":"Senser/Subject | Ngp","x":550,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id7.5","text":"th","x":550,"y":112.5,"parent":"Senser/Subject | Ngp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id8.5","text":"you","x":550,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id9.5","text":"Phenonenon/Complement | Ngp","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id10.5","text":"th","x":650,"y":112.5,"parent":"Phenonenon/Complement | Ngp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id11.5","text":"that","x":650,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]}]}]'
-            }
-			//console.log(test);
+						var test = {
+							"thislittlepiggyhadnone": '[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Li' +
+								'ttle Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":' +
+								'135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participa' +
+								'nt 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]',
+							"agoodpersonforthejob": '[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"dd","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":2' +
+								'00,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"a","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":fa' +
+								'lse,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":550,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":' +
+								'[{"id":"id7.5","text":"for the job","x":550,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"p' +
+								'erson","x":650,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]',
+							"canyoubelievethat": '[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Pr:mental | Vgp","x":400,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"F/A' +
+								'ux","x":350,"y":112.5,"parent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"Can","x":350,"y":162.5,"parent":"F/Aux","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id4.5","text":"E","x":450,"y":112.5,"p' +
+								'arent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"believe","x":450,"y":162.5,"parent":"E","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id6.5","text":"Senser/Subject | Ngp","x":550,"y":62.5,"paren' +
+								't":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id7.5","text":"th","x":550,"y":112.5,"parent":"Senser/Subject | Ngp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id8.5","text":"you","x":550,"y":162.5,"parent":"th","isLeaf":true' +
+								',"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id9.5","text":"Phenonenon/Complement | Ngp","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id10.5","text":"th","x":650,"y":112.5,"parent":"Phenonenon/Complement | Ng' +
+								'p","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id11.5","text":"that","x":650,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]}]}]'
+						}
+						//console.log(test[0]);
 
-	        function tree (){
-	        	var dash = 0;//use for setting true or false
-	        	var node_length = 3;
-	            var node_count = 0;
-	            var previous_x = 0;
+						function tree() {
+							//var dash = 0;//use for setting true or false
+							var node_length = 3;
+							var node_count = 0;
+							var previous_x = 0;
 
-	            var svgWidth = 1000,
-	                svgHeight = svgWidth/2;
+							var teacher_segmented_sentence = [];
+							var student_segmented_sentence = [];
 
-                var devide = 2,
-                  fontsize = svgWidth/90,
-                  linkSpace = fontsize-1,
-                  trainglepadding = fontsize,
-                  stroke_width = fontsize/15
+							var diff_array = [];
 
-	            var tree = {
-	                cx: svgHeight,
-	                cy: svgHeight/40,
-	                w: svgHeight/5,
-	                h: svgHeight/10,
-	                size: 1,
-	                leafDepth: Infinity,
-	                nodes: []
-	            };
+							var svgWidth = 1000,
+								svgHeight = svgWidth / 2;
 
-	            var uniformDepth = true;
-	            var addNode = false;
-	            var removeNode = false;
-	            var changeText = false;
-	            var svgNodes;
-              var JSONData;
+							var devide = 2,
+								fontsize = svgWidth / 90,
+								linkSpace = fontsize - 1,
+								trainglepadding = fontsize,
+								stroke_width = fontsize / 15
 
-              var comp = ['text','depth','parent','kids'];
+							var tree = {
+								cx: svgHeight,
+								cy: svgHeight / 40,
+								w: svgHeight / 5,
+								h: svgHeight / 10,
+								size: 1,
+								leafDepth: Infinity,
+								nodes: []
+							};
 
+							var uniformDepth = true;
+							var addNode = false;
+							var removeNode = false;
+							var changeText = false;
+							var svgNodes;
+							var JSONData;
 
-              //var diff_count = 0;
+							var comp = ['text', 'depth', 'parent', 'kids'];
 
-	            //With x,y positions
-              var example = '[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"dd","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":200,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"a","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":650,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"for the job","x":650,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":550,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"person","x":550,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+							//var diff_count = 0; With x,y positions
+							var example =
+								'[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"dd","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":2' +
+								'00,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"a","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":fa' +
+								'lse,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":650,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":' +
+								'[{"id":"id7.5","text":"for the job","x":650,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":550,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"p' +
+								'erson","x":550,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
 
-              //{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}
+							//{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}
 
-              var example2 = '[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":600,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Participant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
+							var example2 =
+								'[{"id":"00","text":"Sentence","x":600,"y":15,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"Participant 1 - test","x":480,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"' +
+								'This Little Piggy","x":480,"y":135,"parent":"Participant 1","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"Process","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"Had","x":6' +
+								'00,"y":135,"parent":"Process","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id5.5","text":"Participant 2","x":720,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"None","x":720,"y":135,"parent":"Pa' +
+								'rticipant 2","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]';
 
-              /*var sampleTree = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"A","x":420,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A1","x":420,"y":135,"parent":"A","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"A2","x":420,"y":195,"parent":"A1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"His room,","x":420,"y":255,"parent":"A2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"B1","x":600,"y":135,"parent":"B","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"B2","x":540,"y":195,"parent":"B1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id8.5","text":"a","x":540,"y":255,"parent":"B2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]},{"id":"id9.5","text":"B3","x":660,"y":195,"parent":"B1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id10.5","text":"proper","x":660,"y":255,"parent":"B3","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id11.5","text":"C","x":780,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id12.5","text":"C1","x":780,"y":135,"parent":"C","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id13.5","text":"C2","x":780,"y":195,"parent":"C1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id14.5","text":"human room","x":780,"y":255,"parent":"C2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]}]}]'
+							/*var sampleTree = '[{"id":"00","text":"Clause","x":600,"y":15,"isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"A","x":420,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A1","x":420,"y":135,"parent":"A","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id3.5","text":"A2","x":420,"y":195,"parent":"A1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id4.5","text":"His room,","x":420,"y":255,"parent":"A2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id5.5","text":"B","x":600,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id6.5","text":"B1","x":600,"y":135,"parent":"B","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id7.5","text":"B2","x":540,"y":195,"parent":"B1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id8.5","text":"a","x":540,"y":255,"parent":"B2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]},{"id":"id9.5","text":"B3","x":660,"y":195,"parent":"B1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id10.5","text":"proper","x":660,"y":255,"parent":"B3","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]},{"id":"id11.5","text":"C","x":780,"y":75,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id12.5","text":"C1","x":780,"y":135,"parent":"C","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id13.5","text":"C2","x":780,"y":195,"parent":"C1","isLeaf":false,"tWidth":0,"depth":3,"kids":[{"id":"id14.5","text":"human room","x":780,"y":255,"parent":"C2","isLeaf":true,"tWidth":0,"depth":4,"kids":[]}]}]}]}]}]'
 
-              //var JSONTree = '{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron":{}}}}}}}';
-              /*var JSONTree = '{'+
-                '"tree1":{'+
-                  '"Clause":['+
-                    '"left":[],'+
-                    '"middle":[],'+
-                    '"right":[]'+
-                ']}'+
-              '}';*/
+							//var JSONTree = '{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron":{}}}}}}}';
+							/*var JSONTree = '{'+
+							  '"tree1":{'+
+							    '"Clause":['+
+							      '"left":[],'+
+							      '"middle":[],'+
+							      '"right":[]'+
+							  ']}'+
+							  '}';*/
 
-              //var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
-              //var JSONTree2 = '{"tree1":{"Participant 1":{"This Little Piggy":{},"test":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
+							// var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}'; var JSONTree2 = '{"tree1":{"Participant 1":{"This Little Piggy":{},"test":{}},"Process":{"Had":{}},"Participant
+							// 2":{"None":{}}}}';  var JSONTree= '{"Placeholder Tag":{"A":{"A1":{"A2":{"His room,":{}}}},"B":{"B1":{"B2":{"a":{}},"B3":{"proper":{}}}},"C":{"C1":{"C2":{"human room":{}}}}}}';
+							var JSONTree =
+								'{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}},"C1":{"C2":{"C3":{"in a web browser":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron' +
+								'":{}}}}}}}';
 
-            //  var JSONTree= '{"Placeholder Tag":{"A":{"A1":{"A2":{"His room,":{}}}},"B":{"B1":{"B2":{"a":{}},"B3":{"proper":{}}}},"C":{"C1":{"C2":{"human room":{}}}}}}';
-            var JSONTree= '{"Placeholder Tag":{"T1":{"A1":{"A2":{"A3":{"The":{}},"A4":{"offline":{}}}},"B1":{"B2":{"B3":{"version can be run":{}}}},"C1":{"C2":{"C3":{"in a web browser":{}}}}},"T2":{"A1":{"A2":{"A3":{"Electron-q":{}}}},"B1":{"B2":{"B3":{"contains the Electron":{}}}}}}}';
+							var body = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{},"None":{}},"Participant 2":{"None":{}}}}';
 
-              var body = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{},"None":{}},"Participant 2":{"None":{}}}}';
+							// var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy_Left":{},"InnerPiggy_Right":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}'; -- Add to inner piggy to demo : "T":{"I":{"Th":{"In":{}}}}
+							// get the nodes
+							tree.getNodes = function() {
+								var n = [];
 
-              //var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{"InnerPiggy_Left":{},"InnerPiggy_Right":{}}},"Process":{"Had":{"InnerHad":{}}},"Participant 2":{"None":{"InnerNone":{}}}}}';
-              //-- Add to inner piggy to demo : "T":{"I":{"Th":{"In":{}}}}
+								function getNodes(node) {
+									n.push({
+										id: node.id,
+										text: node.text,
+										x: node.x,
+										y: node.y,
+										kids: node.kids,
+										isLeaf: node.isLeaf,
+										tWidth: node.tWidth
+									});
+									node.kids.forEach(function(kid) {
+										return getNodes(kid);
+									});
+								}
+								getNodes(tree.nodes[0]);
+								return n.sort(function(a, b) {
+									return a.id - b.id;
+								});
+							}
 
-	            //get the nodes
-	            tree.getNodes = function () {
-	                var n = [];
-	                function getNodes(node) {
-	                    n.push({ id: node.id, text: node.text, x: node.x, y: node.y, kids: node.kids, isLeaf: node.isLeaf, tWidth: node.tWidth });
-	                    node.kids.forEach(function (kid) { return getNodes(kid); });
-	                }
-	                getNodes(tree.nodes[0]);
-	                return n.sort(function (a, b) { return a.id - b.id; });
-	            }
+							//get the links
+							tree.getLinks = function() {
+								var l = [];
 
-	            //get the links
-	            tree.getLinks = function () {
-	                var l = [];
-	                function getLinks(node) {
-	                    node.kids.forEach(function (kid) { if (!kid.isLeaf) { l.push({ fromId: node.id, fromX: node.x, fromY: node.y, toId: kid.id, toX: kid.x, toY: kid.y }); } });
-	                    node.kids.forEach(getLinks);
-	                }
-	                getLinks(tree.nodes[0]);
-	                return l.sort(function (a, b) { return a.toId - b.toId });
-	            }
+								function getLinks(node) {
+									node.kids.forEach(function(kid) {
+										if (!kid.isLeaf) {
+											l.push({
+												fromId: node.id,
+												fromX: node.x,
+												fromY: node.y,
+												toId: kid.id,
+												toX: kid.x,
+												toY: kid.y,
+												error: diff_array[0]
+											});
+										}
+									});
+									diff_array = diff_array.splice(1, 0);
+									node.kids.forEach(getLinks);
+								}
+								getLinks(tree.nodes[0]);
+								return l.sort(function(a, b) {
+									return a.toId - b.toId
+								});
+							}
 
-	            //get the triangles -- size of the trees
-	            tree.getTriangles = function () {
-	                var t = [];
-	                function getTriangles(node) {
-	                    node.kids.forEach(function (kid) { if (kid.isLeaf) { t.push({ fromId: node.id, toId: kid.id, topX: node.x, topY: (node.y + 10), leftX: (kid.x - (kid.tWidth / 3)), leftY: (kid.y - 10), rightX: (kid.x + (kid.tWidth / 3)), rightY: (kid.y - 10) }); } });//10
-	                    node.kids.forEach(getTriangles);
-	                }
-	                getTriangles(tree.nodes[0]);
-	                return t.sort(function (a, b) { return a.toId - b.toId });
-	            }
+							//get the triangles -- size of the trees
+							tree.getTriangles = function() {
+								var t = [];
 
-	            //returns node object from nodes array
-	            tree.getNode = function (thisNode) {
-	                var n;
-	                //console.log('thisNode');
-	                //console.log(thisNode);
-	                function getNode(node) {
-	                    if (node.id == thisNode.id) { n = node; }
-	                    node.kids.forEach(getNode);
-	                }
-	                getNode(tree.nodes[0]);
-	                //console.log('n');
-	                //console.log(n);
-	                return n;
-	            }
+								function getTriangles(node) {
+									node.kids.forEach(function(kid) {
+										if (kid.isLeaf) {
+											t.push({
+												fromId: node.id,
+												toId: kid.id,
+												topX: node.x,
+												topY: (node.y + 10),
+												leftX: (kid.x - (kid.tWidth / 3)),
+												leftY: (kid.y - 10),
+												rightX: (kid.x + (kid.tWidth / 3)),
+												rightY: (kid.y - 10)
+											});
+										}
+									}); //10
+									node.kids.forEach(getTriangles);
+								}
+								getTriangles(tree.nodes[0]);
+								return t.sort(function(a, b) {
+									return a.toId - b.toId
+								});
+							}
 
-	            //get text width of node
-	/*            tree.getTextWidth = function (node) {
-	                var n = tree.getNode(node);
-	                var nodes = d3.select('text#' + n.id);
-	                n.tWidth = nodes.node().getBBox().width;
-	                return nodes.node().getBBox().width;
-	            }
-	*/
-	            //add a new leaf - have to look into refactoring this code
-	            tree.addLeaf = function (parent) {
-	                tree.size++;
-                  //console.log(parent);
-	                function addLeaf(node) {
-                    //console.log(parent);
-                    //console.log(node);
-	                    if (node.id == parent) {
-                        //console.log("addLeaf");
-	                        //console.log('id' + (tree.size - 1));
-                          node.kids.push({ id: 'id' + (tree.size), text: 'Node' + (tree.size), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
-	                        refresh();
-	                        reposition(tree.nodes[0]);
-	                        redraw(); return;
-	                    }
-	                    node.kids.forEach(addLeaf);
-	                }
-	                addLeaf(tree.nodes[0]);
-	//                reposition(tree.nodes[0]);
-	//                redraw();
-	            }
+							//returns node object from nodes array
+							tree.getNode = function(thisNode) {
+								var n;
+								//console.log('thisNode'); console.log(thisNode);
+								function getNode(node) {
+									if (node.id == thisNode.id) {
+										n = node;
+									}
+									node.kids.forEach(getNode);
+								}
+								getNode(tree.nodes[0]);
+								//console.log('n'); console.log(n);
+								return n;
+							}
 
-            //add a new leaf - have to look into refactoring this code
-            tree.addFromJSON = function (parent,child,pos,depth) {
-              tree.size++;
-                    var node = parent;
-                  //  console.log("parent- ",parent.text);
-                  //  console.log("child- ",child);
+							//get text width of node
+							/*            tree.getTextWidth = function (node) {
+							                var n = tree.getNode(node);
+							                var nodes = d3.select('text#' + n.id);
+							                n.tWidth = nodes.node().getBBox().width;
+							                return nodes.node().getBBox().width;
+							            }
+							            */
+							//add a new leaf - have to look into refactoring this code
+							tree.addLeaf = function(parent) {
+								tree.size++;
+								//console.log(parent);
+								function addLeaf(node) {
+									//console.log(parent); console.log(node);
+									if (node.id == parent) {
+										//console.log("addLeaf"); console.log('id' + (tree.size - 1));
+										node.kids.push({
+											id: 'id' + (
+												tree.size
+											),
+											text: 'Node' + (
+												tree.size
+											),
+											x: node.x,
+											y: node.y,
+											kids: [],
+											isLeaf: true,
+											tWidth: 0
+										});
+										node.isLeaf = false;
+										refresh();
+										reposition(tree.nodes[0]);
+										redraw();
+										return;
+									}
+									node.kids.forEach(addLeaf);
+								}
+								addLeaf(tree.nodes[0]);
+								//                reposition(tree.nodes[0]);                redraw();
+							}
 
+							//add a new leaf - have to look into refactoring this code
+							tree.addFromJSON = function(parent, child, pos, depth) {
+								tree.size++;
+								var node = parent;
+								//  console.log("parent- ",parent.text);  console.log("child- ",child); /console.log(parent);
+								function addLeaf(node) {
+									var draw = true;
+									if (node.id == parent.id) {
+										if (node.kids != null) {
+											//console.log('node : ', node , ' | kid :' , node.kids);
+											for (x in node.kids) {
+												if (node.kids[x].text == child) {
+													//console.log("hi");
+													draw = false;
+												}
+											}
+										}
+										if (draw) {
+											node.kids.push({
+												id: 'id' + (
+													tree.size - .5
+												),
+												text: child,
+												x: node.x,
+												y: node.y,
+												parent: parent.text,
+												isLeaf: true,
+												tWidth: 0,
+												depth: depth,
+												kids: []
+											});
+											node.isLeaf = false;
+											refresh();
+											reposition(tree.nodes[0]);
+											redraw();
+											return;
+										}
+									}
+									node.kids.forEach(addLeaf);
+								}
+								addLeaf(node);
+								return node.kids[pos];
+							}
 
-                    // /console.log(parent);
-                    function addLeaf(node) {
-                      var draw = true;
-                        if (node.id == parent.id) {
-                          if (node.kids!=null) {
-                            //console.log('node : ', node , ' | kid :' , node.kids);
-                            for(x in node.kids){
-                              if(node.kids[x].text==child){
-                                //console.log("hi");
-                                draw = false;
-                              }
-                            }
-                          }
-                            if(draw){
-                              node.kids.push({ id: 'id' + (tree.size - .5), text: child, x: node.x, y: node.y, parent:parent.text, isLeaf: true, tWidth: 0, depth:depth, kids: [] }); node.isLeaf = false;
-                              refresh();
-                              reposition(tree.nodes[0]);
-                              redraw();
-                              return;
-                            }
-                        }
-                        node.kids.forEach(addLeaf);
-                    }
-                    addLeaf(node);
-                    return node.kids[pos];
-           }
+							//remove leaf
+							/*tree.removeLeaf = function (nodeClicked) {
+							    var parent = tree.nodes[0];
+							    var visited = [];
+							    function removeLeaf(p) {
+							        function arrangeKids(index, numOfKids) {
+							            parent.kids.splice(index, 1);
+							            if (parent.kids.length == 0) { parent.isLeaf = true; }
 
-	            //remove leaf
-	            tree.removeLeaf = function (nodeClicked) {
-	                var parent = tree.nodes[0];
-	                var visited = [];
-	                function removeLeaf(p) {
-	                    function arrangeKids(index, numOfKids) {
-	                        parent.kids.splice(index, 1);
-	                        if (parent.kids.length == 0) { parent.isLeaf = true; }
+							            //console.log(parent.kids);
 
-	                        //console.log(parent.kids);
+							        }
+							        if (p.id == parent.id) {
+							            for (var i = 0; i < parent.kids.length; i++) {
+							                if (parent.kids[i].id == nodeClicked.id) {
+							                    arrangeKids(i, parent.kids.length);
+							                    reposition(tree.nodes[0]);
+							                    redraw();
+							                    return;
+							                }
+							            }
+							        }
+							        p.kids.forEach(removeLeaf);
+							    }
+							    function findParent(node) { //finds the parent object of the leaf clicked and saves it to parent variable
+							        visited.push(node);
+							        if (node.id == nodeClicked.id) { visited.pop(); parent = visited[visited.length - 1]; removeLeaf(tree.nodes[0]); }
+							        else {
+							            node.kids.forEach(findParent);
+							            visited.pop(); //remove nodes down visited paths
+							        }
 
-	                    }
-	                    if (p.id == parent.id) {
-	                        for (var i = 0; i < parent.kids.length; i++) {
-	                            if (parent.kids[i].id == nodeClicked.id) {
-	                                arrangeKids(i, parent.kids.length);
-	                                reposition(tree.nodes[0]);
-	                                redraw();
-	                                return;
-	                            }
-	                        }
-	                    }
-	                    p.kids.forEach(removeLeaf);
-	                }
-	                function findParent(node) { //finds the parent object of the leaf clicked and saves it to parent variable
-	                    visited.push(node);
-	                    if (node.id == nodeClicked.id) { visited.pop(); parent = visited[visited.length - 1]; removeLeaf(tree.nodes[0]); }
-	                    else {
-	                        node.kids.forEach(findParent);
-	                        visited.pop(); //remove nodes down visited paths
-	                    }
+							        //console.log(visited);
+							    }
 
-	                    //console.log(visited);
-	                }
+							    if (nodeClicked.isLeaf) {
+							        findParent(tree.nodes[0]);
+							    }
+							    refresh();
+							    reposition(tree.nodes[0]);
+							    redraw();
+							}*/
 
-	                if (nodeClicked.isLeaf) {
-	                    findParent(tree.nodes[0]);
-	                }
-	                refresh();
-	                reposition(tree.nodes[0]);
-	                redraw();
-	            }
-
-	            //change node text - CHANGE SIZE OF TEXT BOX HERE
-	            tree.changeText = function (node) {
-	                var newText = '';
-	                var num = 0;
-	                var textBox = d3.select("#nodes").append("foreignObject").attr("x", node.x + 50).attr("y", node.y)
-	                                .attr("width", 150).attr("height", 25).append("xhtml:form")
-	                                .append("input").attr("value", function () { this.focus(); return node.text })
-	                                .on("blur", function () {
-	                                    newText = textBox.node().value;
-	                                    function changeText(n) {
-	                                        if (n.id == node.id) {
-	                                            n.text = newText;
-	                                            /*var nodes = d3.select('text#' + n.id);
-	                                            nodes.text(newText);
-	                                            //tree.getTextWidth(n);
-	                                            nodes.attr('tWidth', tree.getTextWidth(n));
-	                                            reposition(tree.nodes[0]);
-	                                            */
-	                                            refresh();
+							//change node text - CHANGE SIZE OF TEXT BOX HERE
+							/*tree.changeText = function (node) {
+							    var newText = '';
+							    var num = 0;
+							    var textBox = d3.select("#nodes").append("foreignObject").attr("x", node.x + 50).attr("y", node.y)
+							                    .attr("width", 150).attr("height", 25).append("xhtml:form")
+							                    .append("input").attr("value", function () { this.focus(); return node.text })
+							                    .on("blur", function () {
+							                        newText = textBox.node().value;
+							                        function changeText(n) {
+							                            if (n.id == node.id) {
+							                                n.text = newText;
+							                                /*var nodes = d3.select('text#' + n.id);
+							                                nodes.text(newText);
+							                                //tree.getTextWidth(n);
+							                                nodes.attr('tWidth', tree.getTextWidth(n));
+							                                reposition(tree.nodes[0]);
+							                                */
+							/*refresh();
 	                                            redraw();
 	                                           return;
 	                                        }
@@ -354,7 +457,7 @@
 	                                                nodes.attr('tWidth', tree.getTextWidth(n));
 	                                                reposition(tree.nodes[0]);
 	                                                */
-	                                                refresh();
+							/*refresh();
 	                                                redraw();
 	                                                return;
 	                                            }
@@ -366,846 +469,647 @@
 	                                    }
 	                                });
 	                //tree.getTextWidth(node);
-	            }
-
-	            //sets leafs depth to deepest leaf
-	            tree.nodeDepth = function () {
-	                var leafs = [];
-	                var depth = 0;
-
-	                //check if nodes are leafs
-	                function nodeDepth(n) {
-	                    n.kids.forEach(function (kid) {
-	                        if (kid.isLeaf) { leafs.push({ id: kid.id });
-	                            if (kid.y > depth) { depth = kid.y; }
-	                        }
-	                    });
-	                    n.kids.forEach(nodeDepth);
-	                }
-	                nodeDepth(tree.nodes[0]);
-	                function changeDepth(n) {
-	                    n.kids.forEach(function (kid) {
-	                        leafs.forEach(function (leaf) { if (kid.id == leaf.id) { kid.y = depth; } })
-
-	                    });
-	                    n.kids.forEach(changeDepth);
-	                }
-	                changeDepth(tree.nodes[0]);
-	                tree.leafDepth = depth;
-	            }
-
-	            //update/refresh svg
-	            refresh = function () {
-	                d3.select('#nodes').selectAll('text').data(tree.getNodes()).remove();
-	                d3.select('#links').selectAll('line').data(tree.getLinks()).remove();
-	                d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).remove();
-	            }
-
-	            //redraw the tree
-	            redraw = function () {
-	                d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
-	                d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
-	                d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
-
-	                var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
-
-	                nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5
-	                    .attr('fill', function (node) { if (node.isLeaf) { return 'black'; } else { return 'black'; } });//red/blue
-
-	                nodes.enter().append('text').attr('id', function (node) { /*console.log('id = ' + node.id);*/ return node.id; })
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
-	                    .text(function (node) { return node.text; })
-	                    .attr('tWidth', function (node) {
-	                        var n = tree.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width;
-	                    })
-	                    //Change font below
-	                    .style({ 'text-anchor': 'middle', 'cursor': 'pointer','font-size':fontsize })
-	                    .on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
-	                    /*.transition().duration(500)*/
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; });
-
-
-	                var links = d3.select('#links').selectAll('line').data(tree.getLinks());
-
-	                links/*.transition().duration(500)*/
-	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + linkSpace; })//10
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; });
-
-	                links.enter().append('line')
-	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + linkSpace; })
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; })
-	                    .style({ 'stroke': 'black', 'stroke-dasharray': dash ,'stroke-width': stroke_width+'px' })//'stroke-dasharray': 5 , -- Use for showing error in comparison
-	                    /*.transition().duration(500)*/
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - linkSpace; });
-
-
-	                var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
-
-	                triangles/*.transition().duration(500)*/
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) });
-
-	                triangles.enter().append('polygon')
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) })
-	                    .style({ 'stroke': 'black', 'stroke-dasharray': dash ,'stroke-width': stroke_width+'px', 'fill': 'white' })//'stroke-dasharray': 5 , -- Use for showing error in comparison
-	                    /*.transition().duration(500)*/
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX-trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX+trainglepadding) + ',' + triangle.rightY) });
-	            }
-
-	            //get leaf count for node
-	            getLeafCount = function (node) {
-	                if (node.kids.length == 0) { return 1; }
-	                else { return node.kids.map(getLeafCount).reduce(function (a, b) { return a + b; }); }
-	            }
-
-	            //update node positions
-	            reposition = function (node) {
-
-	                if (uniformDepth) {
-	                    tree.nodeDepth();
-	                }
-
-	                var leafCount = getLeafCount(node),
-	                    left = node.x - tree.w * (leafCount - 1) / 2;
-	                node.kids.forEach(function (kid) {
-	                    var w = tree.w * getLeafCount(kid);
-	                    left += w;
-	                    kid.x = left - (w + tree.w) / 2;
-	                    kid.y = node.y + tree.h;
-	                    reposition(kid);
-	                    redraw();
-	                });
-
-	            }
-
-	             getNodeLength = function (node) {
-	                node.kids.forEach(function (kid) {
-	                    getNodeLength(kid);
-	                    if((kid.kids).length==0){
-	                    	node_length++;
-	                	}
-	                });
-
-	            }
-
-	            //update node positions
-	            reposition_test = function (node) {
-
-
-	                if (uniformDepth) {
-	                    tree.nodeDepth();
-	                }
-	                var leafCount = getLeafCount(node),
-	                    left = node.x - tree.w * (leafCount - 1) / 2;
-	                    //console.log(node.text, " - - " ,node.kids)
-		                node.kids.forEach(function (kid) {
-
-		                //checking for kid of current node
-		                //console.log(kid.kids[0], " >> ",kid.kids[0].kids);
-
-		                if((kid.kids).length==0){
-	                    	var cur = (kid.text).split(' ').join('');
-
-	                    	if(cur.toLowerCase() == sentence.substring(0, cur.length)){
-	                    		node_count++;
-	                    		sentence = sentence.substring(cur.length,sentence.length);
-	                    		var w = tree.w * getLeafCount(kid);
-			                    left += w;
-			                    kid.x = left - (w + tree.w) / 2;
-			                    kid.y = node.y + tree.h;
-	                    		previous_x = left - (w + tree.w) / 2;
-			                    reposition_test(kid);
-			                    redraw();
-			                }
-
-			                else{
-			                	var w = tree.w * getLeafCount(kid);
-			                    left += w;
-			                    kid.x = left - (w + tree.w) / 2;//(left - (w + tree.w) / 2) + (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count+1));
-			                    kid.y = node.y + tree.h;
-                          previous_x = left - (w + tree.w) / 2;
-			                    reposition_test(kid);
-			                    redraw();
-			                }
-		                }
-
-		                else if(((kid.kids[0]).kids).length==0){
-	                    	var cur = (kid.kids[0].text).split(' ').join('');
-
-	                    	if(cur.toLowerCase() == sentence.substring(0, cur.length)){
-	                    		node_count++;
-	                    		sentence = sentence.substring(cur.length,sentence.length);
-	                    		var w = tree.w * getLeafCount(kid);
-			                    left += w;
-                          kid.x = left - (w + tree.w) / 2;
-
-                          //check incase current pos is pos of moved node
-                          if(previous_x == kid.x)
-                            kid.x-=100;
-			                    kid.y = node.y + tree.h;
-	                    		previous_x = left - (w + tree.w) / 2;
-			                    reposition_test(kid);
-			                    redraw();
-			                }
-
-			                else{
-			                	  var w = tree.w * getLeafCount(kid);
-			                    left += w;
-			                    var cur_x = (left - (w + tree.w) / 2);
-			                    previous_x = (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count-1));
-			                    kid.x = cur_x + previous_x;
-			                    kid.y = node.y + tree.h;
-			                    reposition_test(kid);
-			                    redraw();
-			                }
-		                }
-
-			           	else{
-			                var w = tree.w * getLeafCount(kid);
-			                left += w;
-			                kid.x = left - (w + tree.w) / 2;
-                      if(previous_x == kid.x)
-                        kid.x-=100;
-			                kid.y = node.y + tree.h;
-			                reposition_test(kid);
-			                redraw();
-			            }
-			        });
-
-	            }
-
-	            //save the tree structure as JSON
-	            saveTree = function () {
-	                console.log(tree.nodes);
-	                JSONData = JSON.stringify(tree.nodes);
-	                console.log(JSONData);
-	            }
-
-	            exampleTree = function () {
-                	reply  = example;//.slice(1,-1).replace(/\\/g, "");
-                    console.log(example);
-	            	tree.nodes = JSON.parse(reply);
-	            	//reposition(tree.nodes[0]);
-	            	redraw();
-	            }
-
-	            genFromTable = function (ex,sentence) {
-	            	node_length = 0;
-	            	node_count = 0;
-	            	previous_x = 0;
-                	reply  = ex;//.slice(1,-1).replace(/\\/g, "");
-                    console.log("ex", ex);
-	            	tree.nodes = JSON.parse(reply);
-	            	getNodeLength(tree.nodes[0]);
-	            	console.log(node_length);
-	            	reposition_test(tree.nodes[0],sentence);
-	            	redraw();
-	            }
-
-	            //save the tree structure as JSON
-	            loadTree = function () {
-	                tree.nodes = JSON.parse(JSONData);
-	                console.log(tree.nodes);
-	                refresh();
-	                reposition(tree.nodes[0]);
-	                redraw();
-	            }
-
-	            resetTree = function () {
-	                tree.nodes = [];
-                  tree.nodes.push({ id: '00', text: 'Sentence', x: tree.cx, y: tree.cy, isLeaf: false, tWidth: 0, depth:0, kids: [] });
-	                //console.log(tree.nodes);
-	                refresh();
-	                reposition(tree.nodes[0]);
-	                redraw();
-	            }
-
-              getJSON = function(){//testing how to return json value and parameter names
-                resetTree();
-                var myObj = JSON.parse(JSONTree);
-                //console.log(JSON.parse(JSONTree));
-                var treeNames = Object.keys(myObj);
-                var parent = tree.nodes[0];
-                var depth = 0;
-                for(name in treeNames){
-                  recursiveGetProperty(myObj, treeNames[name],function(obj) {
-                  },parent,depth,treeNames);
-                }
-                TreeJSON();
-              }
-
-              function recursiveGetProperty(obj, lookup, callback, parent, depth,treeNames) {
-                 depth++;
-                 for (property in obj) {
-                     if (property == lookup) {
-                       var obj2 = obj[property];
-                       var t = Object.keys(obj2);
-                       for(name in t){
-                         parent2 = tree.addFromJSON(parent,t[name],name,depth);
-                         if(t[name]!=undefined){
-                          callback(t[name]);
-                        }
-
-                          recursiveGetProperty(obj2, t[name], callback,parent2,depth,treeNames);
-                       }
-                     }
-                     else if (obj[property] instanceof Object) {
-                         recursiveGetProperty(obj[property], lookup, callback,parent2,depth,treeNames);
-                     }
-
-                     //if(obj.property!=null)
-                      //recursiveGetProperty(obj.property, lookup, callback);
-                 }
-                 //console.log("<--->");
-              }
-
-              function getStruc(teacher,student){//testing how to return json value and parameter names
-                var diff_count = 0;
-                teacher = JSON.stringify(teacher).slice(1,-1).replace(/\\/g, "");
-                student = JSON.stringify(student).slice(1,-1).replace(/\\/g, "");
-
-                var tea = JSON.parse(teacher);
-                var stu = JSON.parse(student);
-
-                console.log('Teacher : ' ,tea[0]);
-                console.log('Student : ' ,stu[0]);
-                scan(tea[0],stu[0]);
-
-                console.log('Finished Comparing - Number of Differences :',diff_count);
-              }
-
-              function scan(obj,obj2){
-                  var k;
-                  if(obj instanceof Object & obj2 instanceof Object){
-                      for(k in comp){
-                        if(obj.hasOwnProperty(comp[k]) & obj2.hasOwnProperty(comp[k])){
-                          if(comp[k]=='kids' && obj[comp[k]].length>0){
-
-                            var length = (obj[comp[k]].length>=obj2[comp[k]].length)? obj[comp[k]].length:obj2[comp[k]].length
-
-                            for(var i = 0;i<length;i++){
-                              console.log('Teacher : ' ,(obj[comp[k]])[i]);
-                              console.log('Student : ' ,(obj2[comp[k]])[i]);
-                              scan((obj[comp[k]])[i],(obj2[comp[k]])[i]);
-                            }
-                          }else{
-                              scan( obj[comp[k]],obj2[comp[k]] );
-                          }
-                        }
-                        else{
-                          scan( obj[comp[k]],obj2[comp[k]] );
-                        }
-                      }
-                  }
-                  else{
-                    if(obj!=obj2){
-                      console.log('Difference found in values')
-                      console.log('Teacher : ',obj)
-                      console.log('Student : ',obj2)
-                      console.log('Lose marks - TBD')
-                      diff_count++;
-                    }
-                  };
-              };
-
-              TreeJSON = function(){
-                //console.log(tree.nodes);
-                JSONData = JSON.stringify(tree.nodes);
-                console.log(JSONData);
-              }
-
-                $(document).ready(function() {
-                  $("#driver").click(function(event){
-                     $.post(
-                        "http://localhost:8000/treetest",
-                        {body},
-                        function(data) {
-                          console.log(data);
-                          reply  = JSON.stringify(data).slice(1,-1).replace(/\\/g, "");
-           	            	tree.nodes = JSON.parse(reply);
-           	            	reposition(tree.nodes[0]);
-           	            	redraw();
-                        }
-                     );
-                  });
-               });
-
-	            //set up the page
-	            initialise = function () {
-
-	                //add the root node
-	                tree.nodes.push({ id: '00', text: 'Sentence', x: tree.cx, y: tree.cy, parent:'none',isLeaf: false, tWidth: 0, depth:0, kids: [] });
-
-	                //create the svg
-	                d3.select("#tree-one").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree')
-	                    ;
-
-	                //create group of nodes
-	                d3.select('#svgTree').append('g').attr('id', 'nodes').selectAll('text').data(tree.getNodes())
-	                    .enter().append('text').attr('id', function (node) { return node.id; })
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
-	                    .text(function (node) { return node.text; })
-	                    .attr('tWidth', function (node) { var n = tree.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width; /*return tree.getTextWidth(node);*/ })
-	                    .style({ 'text-anchor': 'middle', 'cursor': 'pointer' })
-	                    .on('click', function (node) { return tree.addLeaf(node.id); });
-
-	                //create group of links
-	                d3.select('#svgTree').append('g').attr('id', 'links').selectAll('line').data(tree.getLinks())
-	                    .enter().append('line')
-	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY; })
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY; });
-
-	                //create group of triangles
-	                d3.select('#svgTree').append('g').attr('id', 'triangles').selectAll('polygon').data(tree.getTriangles())
-	                    .enter().append('polygon')
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) });
-
-
-	                //Show the legend in top left corner
-	                var controlsInfo = [
-	                    //{ id: 'c1', action: 'Add Leaf : ', buttons: ' Click on a Node', x: 5, y: 15 },
-	                    //{ id: 'c2', action: 'Remove Leaf : ', buttons: ' Hold Ctrl & Click on a Leaf', x: 5, y: 30 },
-	                    //{ id: 'c3', action: 'Change Node Text : ', buttons: ' Hold Shift & Click on a Node', x: 5, y: 45 }
-	                ];
-	                d3.select('#svgTree').append('g').attr('id', 'legend').selectAll('text').data(controlsInfo)
-	                    .enter().append('text').attr('id', function (c) { return c.id; })
-	                    .attr('x', function (c) { return c.x; }).attr('y', function (c) { return c.y; }).text(function (c) { return c.action; })
-	                    .attr('style', 'font-size:6; fill:black;').append('tspan').attr('x', 100).attr('y', function (c) { return c.y; }).text(function (c) { return c.buttons; });
-	                redraw();
-	            }
-
-	            initialise();
-	            //getJSON();
-              getStruc(example,example2);
-
-	            return tree;
-	        }
-	        var tree = tree();
-
-	    </script>
-
-	    <input id="left" class="btn btn-success" type="button" value="SaveTree-left" onclick="saveTree();" />
-		<input id="left" class="btn btn-success" type="button" value="LoadTree-left" onclick="loadTree();" />
-		<input id="left" class="btn btn-success" type="button" value="ResetTree-left" onclick="resetTree();" />
-		<input id="left" class="btn btn-success" type="button" value="ExampleTree-left" onclick="exampleTree()"/>
-    <input id="left" class="btn btn-success" type="button" value="Get JSON" onclick="getJSON();" />
-    <input id="left" class="btn btn-success" type="button" value="Compare JSON" onclick="compareJSON();" />
-    <input id="left" class="btn btn-success" type="button" value="TEST" onclick="TEST();" />
-    <input type = "button" id = "driver" value = "Load Data" />
-
-      </div>
-
-
-	  <!-- <div id = "tree-two" class="col-lg-6" >
-	    <script class = "js-tree-two">
-
-	        function tree2 () {
-
-	        	var devide = 2;
-
-	            var svgWidth = 1200/2,
-	                svgHeight = 600/2;
-
-	            var tree2 = {
-	                cx: 600/2,
-	                cy: 30/2,
-	                w: 100,
-	                h: 60/1.5,
-	                size: 1,
-	                leafDepth: Infinity,
-	                nodes_two: []
-	            };
-
-	            var uniformDepth = true;
-	            var addNode = false;
-	            var removeNode = false;
-	            var changeText = false;
-	            var svgNodes;
-
-	            var JSONDatatwo;
-
-
-	            //get the nodes
-	            tree2.getNodes = function () {
-	                var n_two = [];
-	                function getNodes(node) {
-	                    n_two.push({ id: node.id, text: node.text, x: node.x, y: node.y, kids: node.kids, isLeaf: node.isLeaf, tWidth: node.tWidth });
-	                    node.kids.forEach(function (kid) { return getNodes(kid); });
-	                }
-	                getNodes(tree2.nodes_two[0]);
-	                return n_two.sort(function (a, b) { return a.id - b.id; });
-	            }
-
-	            //get the links
-	            tree2.getLinks = function () {
-	                var l_two = [];
-	                function getLinks(node) {
-	                    node.kids.forEach(function (kid) { if (!kid.isLeaf) { l_two.push({ fromId: node.id, fromX: node.x, fromY: node.y, toId: kid.id, toX: kid.x, toY: kid.y }); } });
-	                    node.kids.forEach(getLinks);
-	                }
-	                getLinks(tree2.nodes_two[0]);
-	                return l_two.sort(function (a, b) { return a.toId - b.toId });
-	            }
-
-	            //get the triangles -- size of the trees
-	            tree2.getTriangles = function () {
-	                var t_two = [];
-	                function getTriangles(node) {
-	                    node.kids.forEach(function (kid) { if (kid.isLeaf) { t_two.push({ fromId: node.id, toId: kid.id, topX: node.x, topY: (node.y + 10), leftX: (kid.x - (kid.tWidth / 4)), leftY: (kid.y - 10), rightX: (kid.x + (kid.tWidth / 4)), rightY: (kid.y - 10) }); } });//10
-	                    node.kids.forEach(getTriangles);
-	                }
-	                getTriangles(tree2.nodes_two[0]);
-	                return t_two.sort(function (a, b) { return a.toId - b.toId });
-	            }
-
-	            //returns node object from nodes array
-	            tree2.getNode = function (thisNode) {
-	                var n_two;
-	                //console.log('thisNode');
-	                //console.log(thisNode);
-	                function getNode(node) {
-	                    if (node.id == thisNode.id) { n_two = node; }
-	                    node.kids.forEach(getNode);
-	                }
-	                getNode(tree2.nodes_two[0]);
-	                //console.log('n');
-	                //console.log(n);
-	                return n_two;
-	            }
-
-	            //get text width of node
-	/*            tree.getTextWidth = function (node) {
-	                var n = tree.getNode(node);
-	                var nodes = d3.select('text#' + n.id);
-	                n.tWidth = nodes.node().getBBox().width;
-	                return nodes.node().getBBox().width;
-	            }
-	*/
-	            //add a new leaf
-	            tree2.addLeaf = function (parent) {
-	                tree2.size++;
-	                function addLeaf(node) {
-	                    if (node.id == parent) {
-	                        console.log('id' + (tree2.size - 1)); node.kids.push({ id: 'id' + (tree2.size - 1), text: 'Node ' + (tree2.size - 1), x: node.x, y: node.y, kids: [], isLeaf: true, tWidth: 0 }); node.isLeaf = false;
-	                        refresh2();
-	                        reposition2(tree2.nodes_two[0]);
-	                        redraw2(); return;
-	                    }
-	                    node.kids.forEach(addLeaf);
-	                }
-	                addLeaf(tree2.nodes_two[0]);
-	//                reposition(tree.nodes[0]);
-	//                redraw();
-
-	            }
-
-	            //remove leaf
-	            tree2.removeLeaf = function (nodeClicked) {
-	                var parent_two = tree2.nodes_two[0];
-	                var visited_two = [];
-	                function removeLeaf(p) {
-	                    function arrangeKids(index, numOfKids) {
-	                        parent_two.kids.splice(index, 1);
-	                        if (parent_two.kids.length == 0) { parent_two.isLeaf = true; }
-
-	                        //console.log(parent.kids);
-
-	                    }
-	                    if (p.id == parent_two.id) {
-	                        for (var i = 0; i < parent_two.kids.length; i++) {
-	                            if (parent_two.kids[i].id == nodeClicked.id) {
-	                                arrangeKids(i, parent_two.kids.length);
-	                                reposition2(tree2.nodes_two[0]);
-	                                redraw2();
-	                                return;
-	                            }
-	                        }
-	                    }
-	                    p.kids.forEach(removeLeaf);
-	                }
-	                function findParent(node) { //finds the parent object of the leaf clicked and saves it to parent variable
-	                    visited_two.push(node);
-	                    if (node.id == nodeClicked.id) { visited_two.pop(); parent = visited_two[visited_two.length - 1]; removeLeaf(tree2.nodes_two[0]); }
-	                    else {
-	                        node.kids.forEach(findParent);
-	                        visited_two.pop(); //remove nodes down visited paths
-	                    }
-
-	                    //console.log(visited);
-	                }
-
-	                if (nodeClicked.isLeaf) {
-	                    findParent(tree2.nodes_two[0]);
-	                }
-	                refresh2();
-	                reposition2(tree2.nodes_two[0]);
-	                redraw2();
-	            }
-
-	            //change node text
-	            tree2.changeText = function (node) {
-	                var newText = '';
-	                var num = 0;
-	                var textBox = d3.select("#nodes_two").append("foreignObject").attr("x", node.x + 50).attr("y", node.y)
-	                                .attr("width", 200).attr("height", 25).append("xhtml:form")
-	                                .append("input").attr("value", function () { this.focus(); return node.text })
-	                                .on("blur", function () {
-	                                    newText = textBox.node().value;
-	                                    function changeText(n) {
-	                                        if (n.id == node.id) {
-	                                            n.text = newText;
-	                                            /*var nodes = d3.select('text#' + n.id);
-	                                            nodes.text(newText);
-	                                            //tree.getTextWidth(n);
-	                                            nodes.attr('tWidth', tree.getTextWidth(n));
-	                                            reposition(tree.nodes[0]);
-	                                            */
-	                                            refresh();
-	                                            redraw();
-	                                           return;
-	                                        }
-	                                        n.kids.forEach(changeText);
-	                                    }
-	                                    changeText(tree2.nodes_two[0]);
-	                                    redraw();
-	                                    d3.select("foreignObject").remove();
-
-	                                })
-	                                .on("keypress", function () {
-	                                    if (d3.event.keyCode == 13) {
-	                                        var e = d3.event;
-	                                        //prevents the entire tree from deleting when enter is pressed
-	                                        if (e.stopPropagation) { e.stopPropagation(); }
-	                                        e.preventDefault();
-
-	                                        newText = textBox.node().value;
-	                                        function changeText(n) {
-	                                            if (n.id == node.id) {
-	                                                n.text = newText;
-	                                                /*var nodes = d3.select('text#' + n.id);
-	                                                nodes.text(newText);
-	                                                //tree.getTextWidth(n);
-	                                                nodes.attr('tWidth', tree.getTextWidth(n));
-	                                                reposition(tree.nodes[0]);
-	                                                */
-	                                                refresh();
-	                                                redraw();
-	                                                return;
-	                                            }
-	                                            n.kids.forEach(changeText);
-	                                        }
-	                                        changeText(tree2.nodes_two[0]);
-	                                        redraw();
-	                                        d3.select("foreignObject").remove();
-	                                    }
-	                                });
-	                //tree.getTextWidth(node);
-	            }
-
-	            //sets leafs depth to deepest leaf
-	            tree2.nodeDepth = function () {
-	                var leafs_two = [];
-	                var depth_two = 0;
-
-	                //check if nodes are leafs
-	                function nodeDepth(n) {
-	                    n.kids.forEach(function (kid) {
-	                        if (kid.isLeaf) { leafs_two.push({ id: kid.id });
-	                            if (kid.y > depth_two) { depth_two = kid.y; }
-	                        }
-	                    });
-	                    n.kids.forEach(nodeDepth);
-	                }
-	                nodeDepth(tree2.nodes_two[0]);
-	                function changeDepth(n) {
-	                    n.kids.forEach(function (kid) {
-	                        leafs_two.forEach(function (leaf) { if (kid.id == leaf.id) { kid.y = depth_two; } })
-
-	                    });
-	                    n.kids.forEach(changeDepth);
-	                }
-	                changeDepth(tree2.nodes_two[0]);
-	                tree2.leafDepth = depth_two;
-	            }
-
-	            //update/refresh svg
-	            refresh2 = function () {
-	                d3.select('#nodes_two').selectAll('text').data(tree2.getNodes()).remove();
-	                d3.select('#links_two').selectAll('line').data(tree2.getLinks()).remove();
-	                d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles()).remove();
-	            }
-
-	            //redraw the tree
-	            redraw2 = function () {
-	                d3.select('#nodes_two').selectAll('text').data(tree2.getNodes()).exit().remove();
-	                d3.select('#links_two').selectAll('line').data(tree2.getLinks()).exit().remove();
-	                d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles()).exit().remove();
-
-	                var nodes = d3.select('#nodes_two').selectAll('text').data(tree2.getNodes());
-
-	                nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5
-	                    .attr('fill', function (node) { if (node.isLeaf) { return 'red'; } else { return 'blue'; } });
-
-	                nodes.enter().append('text').attr('id', function (node) { console.log('id = ' + node.id); return node.id; })
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
-	                    .text(function (node) { return node.text; })
-	                    .attr('tWidth', function (node) {
-	                        var n = tree2.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width;
-	                    })
-	                    .style({ 'text-anchor': 'middle', 'cursor': 'pointer' })
-	                    .on('click', function (node) { if (d3.event.shiftKey) { return tree2.changeText(node); } else if (d3.event.ctrlKey) { return tree2.removeLeaf(node); } else { return tree2.addLeaf(node.id); } })
-	                    /*.transition().duration(500)*/
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; });
-
-
-	                var links = d3.select('#links_two').selectAll('line').data(tree2.getLinks());
-
-	                links/*.transition().duration(500)*/
-	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + 10; })//10
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - 10; });
-
-	                links.enter().append('line')
-	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + 10; })
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - 10; })
-	                    .style({ 'stroke': 'black', 'stroke-width': '1px' })
-	                    /*.transition().duration(500)*/
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY - 10; });
-
-
-	                var triangles = d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles());
-
-	                triangles/*.transition().duration(500)*/
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) });
-
-	                triangles.enter().append('polygon')
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) })
-	                    .style({ 'stroke': 'black', 'stroke-width': '1px', 'fill': 'white' })
-	                    /*.transition().duration(500)*/
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) });
-
-
-	            }
-
-	            //get leaf count for node
-	            getLeafCount2 = function (node) {
-	                if (node.kids.length == 0) { return 1; }
-	                else { return node.kids.map(getLeafCount).reduce(function (a, b) { return a + b; }); }
-	            }
-
-	            //update node positions
-	            reposition2 = function (node) {
-
-	                if (uniformDepth) {
-	                    tree2.nodeDepth();
-	                }
-
-	                var leafCount = getLeafCount(node),
-	                    left = node.x - tree2.w * (leafCount - 1) / 2;
-	                node.kids.forEach(function (kid) {
-	                    var w = tree2.w * getLeafCount(kid);
-	                    left += w;
-	                    kid.x = left - (w + tree2.w) / 2;
-	                    kid.y = node.y + tree2.h;
-	                    reposition2(kid);
-	                    redraw2();
-	                });
-
-	            }
-	            //save the tree structure as JSON
-	            saveTree2 = function () {
-	                console.log(tree2.nodes_two);
-	                JSONDatatwo = JSON.stringify(tree2.nodes_two);
-	                console.log(JSONDatatwo);
-	            }
-
-	            //save the tree structure as JSON
-	            loadTree2 = function () {
-	                tree2.nodes_two = JSON.parse(JSONDatatwo);
-	                console.log(tree2.nodes_two);
-	                refresh2();
-	                reposition2(tree2.nodes_two[0]);
-	                redraw2();
-	            }
-
-	            resetTree2 = function () {
-	                tree2.nodes_two = [];
-	                tree2.nodes_two.push({ id: '00', text: 'Right Tree', x: tree2.cx, y: tree2.cy, kids: [], isLeaf: false, tWidth: 0 });
-	                console.log(tree2.nodes_two);
-	                refresh2();
-	                reposition2(tree2.nodes_two[0]);
-	                redraw2();
-	            }
-
-	            //set up the page
-	            initialise2 = function () {
-
-
-	                //add the root node
-	                tree2.nodes_two.push({ id: '00', text: 'Right Tree', x: tree2.cx, y: tree2.cy, kids: [], isLeaf: false, tWidth: 0 });
-
-	                //create the svg
-	                d3.select("#tree-two").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree-two')
-	                    ;
-
-	                //create group of nodes
-	                d3.select('#svgTree-two').append('g').attr('id', 'nodes_two').selectAll('text').data(tree2.getNodes())
-	                    .enter().append('text').attr('id', function (node) { return node.id; })
-	                    .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })
-	                    .text(function (node) { return node.text; })
-	                    .attr('tWidth', function (node) { var n = tree2.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width; /*return tree.getTextWidth(node);*/ })
-	                    .style({ 'text-anchor': 'middle', 'cursor': 'pointer' })
-	                    .on('click', function (node) { return tree2.addLeaf(node.id); });
-
-	                //create group of links
-	                d3.select('#svgTree-two').append('g').attr('id', 'links_two').selectAll('line').data(tree2.getLinks())
-	                    .enter().append('line')
-	                    .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY; })
-	                    .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY; });
-
-	                //create group of triangles
-	                d3.select('#svgTree-two').append('g').attr('id', 'triangles_two').selectAll('polygon').data(tree2.getTriangles())
-	                    .enter().append('polygon')
-	                    .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) });
-
-
-	                //Show the legend in top left corner
-	                var controlsInfo = [
-	                    //{ id: 'c1', action: 'Add Leaf : ', buttons: ' Click on a Node', x: 5, y: 15 },
-	                    //{ id: 'c2', action: 'Remove Leaf : ', buttons: ' Hold Ctrl & Click on a Leaf', x: 5, y: 30 },
-	                    //{ id: 'c3', action: 'Change Node Text : ', buttons: ' Hold Shift & Click on a Node', x: 5, y: 45 }
-	                ];
-	                d3.select('#svgTree-two').append('g').attr('id', 'legend').selectAll('text').data(controlsInfo)
-	                    .enter().append('text').attr('id', function (c) { return c.id; })
-	                    .attr('x', function (c) { return c.x; }).attr('y', function (c) { return c.y; }).text(function (c) { return c.action; })
-	                    .attr('style', 'font-size:6; fill:black;').append('tspan').attr('x', 100).attr('y', function (c) { return c.y; }).text(function (c) { return c.buttons; });
-
-	                redraw2();
-	            }
-
-	            initialise2();
-
-	            return tree2;
-	        }
-	        var tree2 = tree2();
-
-	    </script>
-
-	    <input id="right" class="btn btn-info" type="button" value="SaveTree-right" onclick="saveTree2();" />
-		<input id="right" class="btn btn-info" type="button" value="LoadTree-right" onclick="loadTree2();" />
-		<input id="right" class="btn btn-info" type="button" value="ResetTree-right" onclick="resetTree2();" />
-
-  </div>-->
-	    </div>
-	    <br>
-	    <!--<div>
-			<textarea id ="mytextarea" rows="4" cols="50">
-			</textarea>
-
-		</div>
-  </div>-->
-
-</body>
-
-
-</html>
+	            }*/
+
+							//sets leafs depth to deepest leaf
+							tree.nodeDepth = function() {
+								var leafs = [];
+								var depth = 0;
+
+								//check if nodes are leafs
+								function nodeDepth(n) {
+									n.kids.forEach(function(kid) {
+										if (kid.isLeaf) {
+											leafs.push({
+												id: kid.id
+											});
+											if (kid.y > depth) {
+												depth = kid.y;
+											}
+										}
+									});
+									n.kids.forEach(nodeDepth);
+								}
+								nodeDepth(tree.nodes[0]);
+
+								function changeDepth(n) {
+									n.kids.forEach(function(kid) {
+										leafs.forEach(function(leaf) {
+											if (kid.id == leaf.id) {
+												kid.y = depth;
+											}
+										})
+
+									});
+									n.kids.forEach(changeDepth);
+								}
+								changeDepth(tree.nodes[0]);
+								tree.leafDepth = depth;
+							}
+
+							//update/refresh svg
+							refresh = function() {
+								d3.select('#nodes').selectAll('text').data(tree.getNodes()).remove();
+								d3.select('#links').selectAll('line').data(tree.getLinks()).remove();
+								d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).remove();
+							}
+
+							//redraw the tree
+							redraw = function() {
+								d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
+								d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
+								d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
+
+								var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
+
+								nodes.text(function(node) {
+										return node.text
+									}) /*.transition().duration(500)*/
+									.attr('x', function(node) {
+										return node.x;
+									}).attr('y', function(node) {
+										return node.y + 5;
+									}). //5
+								attr('fill', function(node) {
+									if (node.isLeaf) {
+										return 'black';
+									}
+									else {
+										return 'black';
+									}
+								}); //red/blue
+
+								nodes.enter().append('text').attr('id', function(node) { /*console.log('id = ' + node.id);*/
+										return node.id;
+									}).attr('x', function(node) {
+										return node.x;
+									}).attr('y', function(node) {
+										return node.y + 5;
+									}).text(function(node) {
+										return node.text;
+									}).attr('tWidth', function(node) {
+										var n = tree.getNode(node);
+										n.tWidth = this.getBBox().width;
+										return this.getBBox().width;
+									})
+									//Change font below
+									.style({
+										'text-anchor': 'middle',
+										'cursor': 'pointer',
+										'font-size': fontsize
+									})
+									//.on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
+									/*.transition().duration(500)*/
+									.attr('x', function(node) {
+										return node.x;
+									}).attr('y', function(node) {
+										return node.y + 5;
+									});
+
+								var links = d3.select('#links').selectAll('line').data(tree.getLinks());
+
+								links /*.transition().duration(500)*/
+									.attr('x1', function(link) {
+										return link.fromX;
+									}).attr('y1', function(link) {
+										return link.fromY + linkSpace;
+									}). //10
+								attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY - linkSpace;
+								});
+
+								links.enter().append('line').attr('x1', function(link) {
+										return link.fromX;
+									}).attr('y1', function(link) {
+										return link.fromY + linkSpace;
+									}).attr('x2', function(link) {
+										return link.toX;
+									}).attr('y2', function(link) {
+										return link.toY - linkSpace;
+									}).attr('dash', function(link) {
+										dash = (link.error == true) ?
+											dash = 0 :
+											dash = 5;
+										return dash
+									}).style({
+										'stroke': 'black',
+										'stroke-dasharray': 'dash',
+										'stroke-width': stroke_width + 'px'
+									}) //'stroke-dasharray': 5 , -- Use for showing error in comparison
+									/*.transition().duration(500)*/
+									.attr('x2', function(link) {
+										return link.toX;
+									}).attr('y2', function(link) {
+										return link.toY - linkSpace;
+									});
+
+								var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
+
+								triangles /*.transition().duration(500)*/
+									.attr('points', function(triangle) {
+										return (triangle.topX + ',' + triangle.topY + ' ' + (
+											triangle.leftX - trainglepadding
+										) + ',' + triangle.leftY + ' ' + (
+											triangle.rightX + trainglepadding
+										) + ',' + triangle.rightY)
+									});
+
+								triangles.enter().append('polygon').attr('points', function(triangle) {
+										return (triangle.topX + ',' + triangle.topY + ' ' + (
+											triangle.leftX - trainglepadding
+										) + ',' + triangle.leftY + ' ' + (
+											triangle.rightX + trainglepadding
+										) + ',' + triangle.rightY)
+									}).style({
+										'stroke': 'black',
+										'stroke-dasharray': 'dash',
+										'stroke-width': stroke_width + 'px',
+										'fill': 'white'
+									}) //'stroke-dasharray': 5 , -- Use for showing error in comparison
+									/*.transition().duration(500)*/
+									.attr('points', function(triangle) {
+										return (triangle.topX + ',' + triangle.topY + ' ' + (
+											triangle.leftX - trainglepadding
+										) + ',' + triangle.leftY + ' ' + (
+											triangle.rightX + trainglepadding
+										) + ',' + triangle.rightY)
+									});
+							}
+
+							//get leaf count for node
+							getLeafCount = function(node) {
+								if (node.kids.length == 0) {
+									return 1;
+								}
+								else {
+									return node.kids.map(getLeafCount).reduce(function(a, b) {
+										return a + b;
+									});
+								}
+							}
+
+							//update node positions
+							/*reposition = function (node) {
+
+							    if (uniformDepth) {
+							        tree.nodeDepth();
+							    }
+
+							    var leafCount = getLeafCount(node),
+							        left = node.x - tree.w * (leafCount - 1) / 2;
+							    node.kids.forEach(function (kid) {
+							        var w = tree.w * getLeafCount(kid);
+							        left += w;
+							        kid.x = left - (w + tree.w) / 2;
+							        kid.y = node.y + tree.h;
+							        reposition(kid);
+							        redraw();
+							    });
+
+							}*/
+
+							getNodeLength = function(node) {
+								node.kids.forEach(function(kid) {
+									getNodeLength(kid);
+									if ((kid.kids).length == 0) {
+										node_length++;
+									}
+								});
+
+							}
+
+							//update node positions
+							reposition = function(node) {
+
+								if (uniformDepth) {
+									tree.nodeDepth();
+								}
+								var leafCount = getLeafCount(node),
+									left = node.x - tree.w * (leafCount - 1) / 2;
+								//console.log(node.text, " - - " ,node.kids)
+								node.kids.forEach(function(kid) {
+
+									//checking for kid of current node console.log(kid.kids[0], " >> ",kid.kids[0].kids);
+
+									if ((kid.kids).length == 0) {
+										var cur = (kid.text).split(' ').join('');
+
+										if (cur.toLowerCase() == sentence.substring(0, cur.length)) {
+											node_count++;
+											sentence = sentence.substring(cur.length, sentence.length);
+											var w = tree.w * getLeafCount(kid);
+											left += w;
+											kid.x = left - (w + tree.w) / 2;
+											kid.y = node.y + tree.h;
+											previous_x = left - (w + tree.w) / 2;
+											reposition(kid);
+											redraw();
+										}
+										else {
+											var w = tree.w * getLeafCount(kid);
+											left += w;
+											kid.x = left - (w + tree.w) / 2; //(left - (w + tree.w) / 2) + (((left - (w + tree.w) / 2) - previous_x)*(node_length-node_count+1));
+											kid.y = node.y + tree.h;
+											previous_x = left - (w + tree.w) / 2;
+											reposition(kid);
+											redraw();
+										}
+									}
+									else if (((kid.kids[0]).kids).length == 0) {
+										var cur = (kid.kids[0].text).split(' ').join('');
+
+										if (cur.toLowerCase() == sentence.substring(0, cur.length)) {
+											node_count++;
+											sentence = sentence.substring(cur.length, sentence.length);
+											var w = tree.w * getLeafCount(kid);
+											left += w;
+											kid.x = left - (w + tree.w) / 2;
+
+											//check incase current pos is pos of moved node - need to love over this
+											if (previous_x == kid.x)
+												kid.x -= 100;
+											kid.y = node.y + tree.h;
+											previous_x = left - (w + tree.w) / 2;
+											reposition(kid);
+											redraw();
+										}
+										else {
+											var w = tree.w * getLeafCount(kid);
+											left += w;
+											var cur_x = (left - (w + tree.w) / 2);
+											previous_x = (((left - (w + tree.w) / 2) - previous_x) * (node_length - node_count - 1));
+											kid.x = cur_x + previous_x;
+											kid.y = node.y + tree.h;
+											reposition(kid);
+											redraw();
+										}
+									}
+									else {
+										var w = tree.w * getLeafCount(kid);
+										left += w;
+										kid.x = left - (w + tree.w) / 2;
+										//if(previous_x == kid.x) kid.x-=100;
+										kid.y = node.y + tree.h;
+										reposition(kid);
+										redraw();
+									}
+								});
+
+							}
+
+							//save the tree structure as JSON
+							saveTree = function() {
+								console.log(tree.nodes);
+								JSONData = JSON.stringify(tree.nodes);
+								console.log(JSONData);
+							}
+
+							exampleTree = function() {
+								reply = example; //.slice(1,-1).replace(/\\/g, "");
+								console.log(example);
+								tree.nodes = JSON.parse(reply);
+								//reposition(tree.nodes[0]);
+								redraw();
+							}
+
+							genFromTable = function(ex, sentence) {
+								percentage = ['%'];
+								var count = 0;
+								teacher_segmented_sentence = [];
+								student_segmented_sentence = [];
+								//var diff_array = [];
+								node_length = 0;
+								node_count = 0;
+								previous_x = 0;
+								reply = ex; //.slice(1,-1).replace(/\\/g, "");
+								//console.log("ex", ex);
+								tree.nodes = JSON.parse(reply);
+								getNodeLength(tree.nodes[0]);
+								//console.log(node_length);
+								compareJSON(tree.nodes[0], (JSON.parse(example))[0], diff_array);
+								console.log(diff_array)
+
+								for (i in diff_array) {
+									if (diff_array[i] == true) {
+										count++;
+									}
+								}
+
+								var tree_diff = (count / diff_array.length) * 100;
+
+								var sentence_like = 0;
+								var len = (teacher_segmented_sentence.length >= student_segmented_sentence) ?
+									teacher_segmented_sentence.length :
+									student_segmented_sentence.length;
+
+								for (var i = 0; i < len; i++) {
+
+									if ((teacher_segmented_sentence[i]) == (student_segmented_sentence[i])) {
+										sentence_like++;
+									}
+								}
+								sentence_like = (sentence_like / len) * 100;
+
+								percentage.push(((tree_diff + sentence_like) / 200) * 100);
+								reposition(tree.nodes[0]);
+								redraw();
+
+								console.log("teacher >> ", teacher_segmented_sentence);
+								console.log("student >> ", student_segmented_sentence);
+
+							}
+
+							//save the tree structure as JSON
+							loadTree = function() {
+								tree.nodes = JSON.parse(JSONData);
+								console.log(tree.nodes);
+								refresh();
+								reposition(tree.nodes[0]);
+								redraw();
+							}
+
+							resetTree = function() {
+								tree.nodes = [];
+								tree.nodes.push({
+									id: '00',
+									text: 'Sentence',
+									x: tree.cx,
+									y: tree.cy,
+									isLeaf: false,
+									tWidth: 0,
+									depth: 0,
+									kids: []
+								});
+								//console.log(tree.nodes);
+								refresh();
+								reposition(tree.nodes[0]);
+								redraw();
+							}
+
+							getJSON = function() { //testing how to return json value and parameter names
+								resetTree();
+								var myObj = JSON.parse(JSONTree);
+								//console.log(JSON.parse(JSONTree));
+								var treeNames = Object.keys(myObj);
+								var parent = tree.nodes[0];
+								var depth = 0;
+								for (name in treeNames) {
+									recursiveGetProperty(myObj, treeNames[name], function(obj) {}, parent, depth, treeNames);
+								}
+								TreeJSON();
+							}
+
+							function recursiveGetProperty(obj, lookup, callback, parent, depth, treeNames) {
+								depth++;
+								for (property in obj) {
+									if (property == lookup) {
+										var obj2 = obj[property];
+										var t = Object.keys(obj2);
+										for (name in t) {
+											parent2 = tree.addFromJSON(parent, t[name], name, depth);
+											if (t[name] != undefined) {
+												callback(t[name]);
+											}
+
+											recursiveGetProperty(obj2, t[name], callback, parent2, depth, treeNames);
+										}
+									}
+									else if (obj[property] instanceof Object) {
+										recursiveGetProperty(obj[property], lookup, callback, parent2, depth, treeNames);
+									}
+								}
+							}
+
+							compareJSON = function(node, node_two, diff_array) {
+
+								var teacher = [];
+								var student = [];
+
+								if (node != undefined) {
+									node.kids.forEach(function(kid) {
+										if ((kid.kids).length == 0)
+											teacher_segmented_sentence.push(kid.text);
+										teacher.push(kid);
+									});
+								}
+
+								if (node_two != undefined) {
+									node_two.kids.forEach(function(kid) {
+										if ((kid.kids).length == 0)
+											student_segmented_sentence.push(kid.text);
+										student.push(kid);
+									});
+								}
+
+								console.log("teacher << ", node);
+								console.log("student << ", node_two);
+
+								if (node == undefined && node_two != undefined) {
+									console.log("Teacher doesn't contain this node\nStudent node text :", node_two.text, "\nStudent node parent :", node_two.parent);
+									diff_array.push(false);
+								}
+								else if (node != undefined && node_two == undefined) {
+									console.log("Student doesn't contain this node\nTeacher node text :", node.text, "\nTeacher node parent :", node.parent);
+									diff_array.push(false);
+								}
+								else if (node.text != node_two.text && node.parent != node_two.parent) {
+									console.log("Parents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent, "\nTexts Differ\nTeacher :", node.text, "\nStudent :", node_two.text);
+									diff_array.push(false);
+								}
+								else if (node.text == node_two.text && node.parent != node_two.parent) {
+									console.log("Both texts Equal :", node.text, "\nParents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent);
+									diff_array.push(false);
+								}
+								else if (node.text != node_two.text && node.parent == node_two.parent) {
+									console.log("Both Parents Equal :", node.parent, "\nTexts Differ\nTeacher :", node.text, "\nStudent :", node_two.text);
+									diff_array.push(false);
+								}
+								else if (node.text == node_two.text && node.parent == node_two.parent) {
+									console.log("Both Texts Equal :", node.text, "\nBoth Parents Equal :", node.parent)
+									diff_array.push(true);
+								}
+
+								var pos = (teacher >= student) ?
+									teacher :
+									student;
+								for (i in pos) {
+									console.log("< - >");
+									compareJSON(teacher[i], student[i], diff_array);
+								}
+							}
+
+							TreeJSON = function() {
+								//console.log(tree.nodes);
+								JSONData = JSON.stringify(tree.nodes);
+								console.log(JSONData);
+							}
+
+							$(document).ready(function() {
+								$("#driver").click(function(event) {
+									$.post("http://localhost:8000/treetest", {
+										body
+									}, function(data) {
+										console.log(data);
+										reply = JSON.stringify(data).slice(1, -1).replace(/\\/g, "");
+										tree.nodes = JSON.parse(reply);
+										reposition(tree.nodes[0]);
+										redraw();
+									});
+								});
+							});
+
+							//set up the page
+							initialise = function() {
+
+								//add the root node
+								tree.nodes.push({
+									id: '00',
+									text: 'Sentence',
+									x: tree.cx,
+									y: tree.cy,
+									parent: 'none',
+									isLeaf: false,
+									tWidth: 0,
+									depth: 0,
+									kids: []
+								});
+
+								//create the svg
+								d3.select("#tree-one").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree');
+
+								//create group of nodes
+								d3.select('#svgTree').append('g').attr('id', 'nodes').selectAll('text').data(tree.getNodes()).enter().append('text').attr('id', function(node) {
+									return node.id;
+								}).attr('x', function(node) {
+									return node.x;
+								}).attr('y', function(node) {
+									return node.y + 5;
+								}).text(function(node) {
+									return node.text;
+								}).attr('tWidth', function(node) {
+									var n = tree.getNode(node);
+									n.tWidth = this.getBBox().width;
+									return this.getBBox().width; /*return tree.getTextWidth(node);*/
+								}).style({
+									'text-anchor': 'middle',
+									'cursor': 'pointer'
+								})
+								//.on('click', function (node) { return tree.addLeaf(node.id); }); create group of links
+								d3.select('#svgTree').append('g').attr('id', 'links').selectAll('line').data(tree.getLinks()).enter().append('line').attr('x1', function(link) {
+									return link.fromX;
+								}).attr('y1', function(link) {
+									return link.fromY;
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY;
+								});
+
+								//create group of triangles
+								d3.select('#svgTree').append('g').attr('id', 'triangles').selectAll('polygon').data(tree.getTriangles()).enter().append('polygon').attr('points', function(triangle) {
+									return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY)
+								});
+
+								//Show the legend in top left corner
+								var controlsInfo = [
+									// { id: 'c1', action: 'Add Leaf : ', buttons: ' Click on a Node', x: 5, y: 15 }, { id: 'c2', action: 'Remove Leaf : ', buttons: ' Hold Ctrl & Click on a Leaf', x: 5, y: 30 }, { id: 'c3', action: 'Change Node Text : ', buttons: ' Hold Shift & Click
+									// on a Node', x: 5, y: 45 }
+								];
+								d3.select('#svgTree').append('g').attr('id', 'legend').selectAll('text').data(controlsInfo).enter().append('text').attr('id', function(c) {
+									return c.id;
+								}).attr('x', function(c) {
+									return c.x;
+								}).attr('y', function(c) {
+									return c.y;
+								}).text(function(c) {
+									return c.action;
+								}).attr('style', 'font-size:6; fill:black;').append('tspan').attr('x', 100).attr('y', function(c) {
+									return c.y;
+								}).text(function(c) {
+									return c.buttons;
+								});
+								redraw();
+							}
+
+							initialise();
+							//getJSON(); compareJSON((JSON.parse(example))[0]);
+
+							return tree;
+						}
+						var tree = tree();
+					</script>
+
+					<input id="left" class="btn btn-success" type="button" value="SaveTree-left" onclick="saveTree();" />
+					<input id="left" class="btn btn-success" type="button" value="LoadTree-left" onclick="loadTree();" />
+					<input id="left" class="btn btn-success" type="button" value="ResetTree-left" onclick="resetTree();" />
+					<input id="left" class="btn btn-success" type="button" value="ExampleTree-left" onclick="exampleTree()" />
+					<input id="left" class="btn btn-success" type="button" value="Get JSON" onclick="getJSON();" />
+					<input id="left" class="btn btn-success" type="button" value="Compare JSON" onclick="compareJSON(example);" />
+					<input id="left" class="btn btn-success" type="button" value="TEST" onclick="TEST();" />
+					<input type="button" id="driver" value="Load Data" />
+
+				</div>
+
+				<!-- <div id = "tree-two" class="col-lg-6" > <script class = "js-tree-two"> function tree2 () { var devide = 2; var svgWidth = 1200/2, svgHeight = 600/2; var tree2 = { cx: 600/2, cy: 30/2, w: 100, h: 60/1.5, size: 1, leafDepth: Infinity, nodes_two:
+					[] }; var uniformDepth = true; var addNode = false; var removeNode = false; var changeText = false; var svgNodes; var JSONDatatwo; //get the nodes tree2.getNodes = function () { var n_two = []; function getNodes(node) { n_two.push({ id: node.id,
+					text: node.text, x: node.x, y: node.y, kids: node.kids, isLeaf: node.isLeaf, tWidth: node.tWidth }); node.kids.forEach(function (kid) { return getNodes(kid); }); } getNodes(tree2.nodes_two[0]); return n_two.sort(function (a, b) { return a.id - b.id;
+					}); } //get the links tree2.getLinks = function () { var l_two = []; function getLinks(node) { node.kids.forEach(function (kid) { if (!kid.isLeaf) { l_two.push({ fromId: node.id, fromX: node.x, fromY: node.y, toId: kid.id, toX: kid.x, toY: kid.y });
+					} }); node.kids.forEach(getLinks); } getLinks(tree2.nodes_two[0]); return l_two.sort(function (a, b) { return a.toId - b.toId }); } //get the triangles -- size of the trees tree2.getTriangles = function () { var t_two = []; function
+					getTriangles(node) { node.kids.forEach(function (kid) { if (kid.isLeaf) { t_two.push({ fromId: node.id, toId: kid.id, topX: node.x, topY: (node.y + 10), leftX: (kid.x - (kid.tWidth / 4)), leftY: (kid.y - 10), rightX: (kid.x + (kid.tWidth / 4)),
+					rightY: (kid.y - 10) }); } });//10 node.kids.forEach(getTriangles); } getTriangles(tree2.nodes_two[0]); return t_two.sort(function (a, b) { return a.toId - b.toId }); } //returns node object from nodes array tree2.getNode = function (thisNode) { var
+					n_two; //console.log('thisNode'); //console.log(thisNode); function getNode(node) { if (node.id == thisNode.id) { n_two = node; } node.kids.forEach(getNode); } getNode(tree2.nodes_two[0]); //console.log('n'); //console.log(n); return n_two; } //get
+					text width of node /* tree.getTextWidth = function (node) { var n = tree.getNode(node); var nodes = d3.select('text#' + n.id); n.tWidth = nodes.node().getBBox().width; return nodes.node().getBBox().width; } */ //add a new leaf tree2.addLeaf =
+					function (parent) { tree2.size++; function addLeaf(node) { if (node.id == parent) { console.log('id' + (tree2.size - 1)); node.kids.push({ id: 'id' + (tree2.size - 1), text: 'Node ' + (tree2.size - 1), x: node.x, y: node.y, kids: [], isLeaf: true,
+					tWidth: 0 }); node.isLeaf = false; refresh2(); reposition2(tree2.nodes_two[0]); redraw2(); return; } node.kids.forEach(addLeaf); } addLeaf(tree2.nodes_two[0]); // reposition(tree.nodes[0]); // redraw(); } //remove leaf tree2.removeLeaf = function
+					(nodeClicked) { var parent_two = tree2.nodes_two[0]; var visited_two = []; function removeLeaf(p) { function arrangeKids(index, numOfKids) { parent_two.kids.splice(index, 1); if (parent_two.kids.length == 0) { parent_two.isLeaf = true; }
+					//console.log(parent.kids); } if (p.id == parent_two.id) { for (var i = 0; i < parent_two.kids.length; i++) { if (parent_two.kids[i].id == nodeClicked.id) { arrangeKids(i, parent_two.kids.length); reposition2(tree2.nodes_two[0]); redraw2(); return; }
+					} } p.kids.forEach(removeLeaf); } function findParent(node) { //finds the parent object of the leaf clicked and saves it to parent variable visited_two.push(node); if (node.id == nodeClicked.id) { visited_two.pop(); parent =
+					visited_two[visited_two.length - 1]; removeLeaf(tree2.nodes_two[0]); } else { node.kids.forEach(findParent); visited_two.pop(); //remove nodes down visited paths } //console.log(visited); } if (nodeClicked.isLeaf) { findParent(tree2.nodes_two[0]); }
+					refresh2(); reposition2(tree2.nodes_two[0]); redraw2(); } //change node text tree2.changeText = function (node) { var newText = ''; var num = 0; var textBox = d3.select("#nodes_two").append("foreignObject").attr("x", node.x + 50).attr("y", node.y)
+					.attr("width", 200).attr("height", 25).append("xhtml:form") .append("input").attr("value", function () { this.focus(); return node.text }) .on("blur", function () { newText = textBox.node().value; function changeText(n) { if (n.id == node.id) {
+					n.text = newText; /*var nodes = d3.select('text#' + n.id); nodes.text(newText); //tree.getTextWidth(n); nodes.attr('tWidth', tree.getTextWidth(n)); reposition(tree.nodes[0]); */ refresh(); redraw(); return; } n.kids.forEach(changeText); }
+					changeText(tree2.nodes_two[0]); redraw(); d3.select("foreignObject").remove(); }) .on("keypress", function () { if (d3.event.keyCode == 13) { var e = d3.event; //prevents the entire tree from deleting when enter is pressed if (e.stopPropagation) {
+					e.stopPropagation(); } e.preventDefault(); newText = textBox.node().value; function changeText(n) { if (n.id == node.id) { n.text = newText; /*var nodes = d3.select('text#' + n.id); nodes.text(newText); //tree.getTextWidth(n); nodes.attr('tWidth',
+					tree.getTextWidth(n)); reposition(tree.nodes[0]); */ refresh(); redraw(); return; } n.kids.forEach(changeText); } changeText(tree2.nodes_two[0]); redraw(); d3.select("foreignObject").remove(); } }); //tree.getTextWidth(node); } //sets leafs depth to
+					deepest leaf tree2.nodeDepth = function () { var leafs_two = []; var depth_two = 0; //check if nodes are leafs function nodeDepth(n) { n.kids.forEach(function (kid) { if (kid.isLeaf) { leafs_two.push({ id: kid.id }); if (kid.y > depth_two) {
+					depth_two = kid.y; } } }); n.kids.forEach(nodeDepth); } nodeDepth(tree2.nodes_two[0]); function changeDepth(n) { n.kids.forEach(function (kid) { leafs_two.forEach(function (leaf) { if (kid.id == leaf.id) { kid.y = depth_two; } }) });
+					n.kids.forEach(changeDepth); } changeDepth(tree2.nodes_two[0]); tree2.leafDepth = depth_two; } //update/refresh svg refresh2 = function () { d3.select('#nodes_two').selectAll('text').data(tree2.getNodes()).remove();
+					d3.select('#links_two').selectAll('line').data(tree2.getLinks()).remove(); d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles()).remove(); } //redraw the tree redraw2 = function () {
+					d3.select('#nodes_two').selectAll('text').data(tree2.getNodes()).exit().remove(); d3.select('#links_two').selectAll('line').data(tree2.getLinks()).exit().remove();
+					d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles()).exit().remove(); var nodes = d3.select('#nodes_two').selectAll('text').data(tree2.getNodes()); nodes.text(function (node) { return node.text })/*.transition().duration(500)*/
+					.attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; })//5 .attr('fill', function (node) { if (node.isLeaf) { return 'red'; } else { return 'blue'; } }); nodes.enter().append('text').attr('id', function (node)
+					{ console.log('id = ' + node.id); return node.id; }) .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; }) .text(function (node) { return node.text; }) .attr('tWidth', function (node) { var n =
+					tree2.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width; }) .style({ 'text-anchor': 'middle', 'cursor': 'pointer' }) .on('click', function (node) { if (d3.event.shiftKey) { return tree2.changeText(node); } else if
+					(d3.event.ctrlKey) { return tree2.removeLeaf(node); } else { return tree2.addLeaf(node.id); } }) /*.transition().duration(500)*/ .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; }); var links =
+					d3.select('#links_two').selectAll('line').data(tree2.getLinks()); links/*.transition().duration(500)*/ .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + 10; })//10 .attr('x2', function (link) {
+					return link.toX; }).attr('y2', function (link) { return link.toY - 10; }); links.enter().append('line') .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return link.fromY + 10; }) .attr('x2', function (link) { return
+					link.toX; }).attr('y2', function (link) { return link.toY - 10; }) .style({ 'stroke': 'black', 'stroke-width': '1px' }) /*.transition().duration(500)*/ .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY -
+					10; }); var triangles = d3.select('#triangles_two').selectAll('polygon').data(tree2.getTriangles()); triangles/*.transition().duration(500)*/ .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX +
+					',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) }); triangles.enter().append('polygon') .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' +
+					triangle.rightX + ',' + triangle.rightY) }) .style({ 'stroke': 'black', 'stroke-width': '1px', 'fill': 'white' }) /*.transition().duration(500)*/ .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX
+					+ ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY) }); } //get leaf count for node getLeafCount2 = function (node) { if (node.kids.length == 0) { return 1; } else { return node.kids.map(getLeafCount).reduce(function (a, b) {
+					return a + b; }); } } //update node positions reposition2 = function (node) { if (uniformDepth) { tree2.nodeDepth(); } var leafCount = getLeafCount(node), left = node.x - tree2.w * (leafCount - 1) / 2; node.kids.forEach(function (kid) { var w =
+					tree2.w * getLeafCount(kid); left += w; kid.x = left - (w + tree2.w) / 2; kid.y = node.y + tree2.h; reposition2(kid); redraw2(); }); } //save the tree structure as JSON saveTree2 = function () { console.log(tree2.nodes_two); JSONDatatwo =
+					JSON.stringify(tree2.nodes_two); console.log(JSONDatatwo); } //save the tree structure as JSON loadTree2 = function () { tree2.nodes_two = JSON.parse(JSONDatatwo); console.log(tree2.nodes_two); refresh2(); reposition2(tree2.nodes_two[0]); redraw2();
+					} resetTree2 = function () { tree2.nodes_two = []; tree2.nodes_two.push({ id: '00', text: 'Right Tree', x: tree2.cx, y: tree2.cy, kids: [], isLeaf: false, tWidth: 0 }); console.log(tree2.nodes_two); refresh2(); reposition2(tree2.nodes_two[0]);
+					redraw2(); } //set up the page initialise2 = function () { //add the root node tree2.nodes_two.push({ id: '00', text: 'Right Tree', x: tree2.cx, y: tree2.cy, kids: [], isLeaf: false, tWidth: 0 }); //create the svg
+					d3.select("#tree-two").style().append('svg').attr('width', svgWidth).attr('height', svgHeight).attr('id', 'svgTree-two') ; //create group of nodes d3.select('#svgTree-two').append('g').attr('id', 'nodes_two').selectAll('text').data(tree2.getNodes())
+					.enter().append('text').attr('id', function (node) { return node.id; }) .attr('x', function (node) { return node.x; }).attr('y', function (node) { return node.y + 5; }) .text(function (node) { return node.text; }) .attr('tWidth', function (node) {
+					var n = tree2.getNode(node); n.tWidth = this.getBBox().width; return this.getBBox().width; /*return tree.getTextWidth(node);*/ }) .style({ 'text-anchor': 'middle', 'cursor': 'pointer' }) .on('click', function (node) { return tree2.addLeaf(node.id);
+					}); //create group of links d3.select('#svgTree-two').append('g').attr('id', 'links_two').selectAll('line').data(tree2.getLinks()) .enter().append('line') .attr('x1', function (link) { return link.fromX; }).attr('y1', function (link) { return
+					link.fromY; }) .attr('x2', function (link) { return link.toX; }).attr('y2', function (link) { return link.toY; }); //create group of triangles d3.select('#svgTree-two').append('g').attr('id',
+					'triangles_two').selectAll('polygon').data(tree2.getTriangles()) .enter().append('polygon') .attr('points', function (triangle) { return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ','
+					+ triangle.rightY) }); //Show the legend in top left corner var controlsInfo = [ //{ id: 'c1', action: 'Add Leaf : ', buttons: ' Click on a Node', x: 5, y: 15 }, //{ id: 'c2', action: 'Remove Leaf : ', buttons: ' Hold Ctrl & Click on a Leaf', x: 5,
+					y: 30 }, //{ id: 'c3', action: 'Change Node Text : ', buttons: ' Hold Shift & Click on a Node', x: 5, y: 45 } ]; d3.select('#svgTree-two').append('g').attr('id', 'legend').selectAll('text').data(controlsInfo) .enter().append('text').attr('id',
+					function (c) { return c.id; }) .attr('x', function (c) { return c.x; }).attr('y', function (c) { return c.y; }).text(function (c) { return c.action; }) .attr('style', 'font-size:6; fill:black;').append('tspan').attr('x', 100).attr('y', function (c) {
+					return c.y; }).text(function (c) { return c.buttons; }); redraw2(); } initialise2(); return tree2; } var tree2 = tree2(); </script> <input id="right" class="btn btn-info" type="button" value="SaveTree-right" onclick="saveTree2();" /> <input
+					id="right" class="btn btn-info" type="button" value="LoadTree-right" onclick="loadTree2();" /> <input id="right" class="btn btn-info" type="button" value="ResetTree-right" onclick="resetTree2();" /> </div>-->
+			</div>
+			<br>
+			<!--<div> <textarea id ="mytextarea" rows="4" cols="50"> </textarea> </div> </div>-->
+
+	</body>
+
+	</html>

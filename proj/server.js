@@ -1,9 +1,9 @@
 // server.js
-const express        = require('express');
+const express = require('express');
 //const MongoClient    = require('mongodb').MongoClient;
-const bodyParser     = require('body-parser');
-const db             = require('./config/db');
-const app            = express();
+const bodyParser = require('body-parser');
+const db = require('./config/db');
+const app = express();
 
 var assert = require('assert');
 const d3 = require("d3");
@@ -18,23 +18,25 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.use(express.static(__dirname));
 
 //MongoClient.connect(db.url, (err, database) => {
-  //if (err) return console.log(err)
+//if (err) return console.log(err)
 require('./app/routes')(app);
 
 //require('./app/vendor')(app);
 
-  app.listen(port, () => {
-    console.log('We are live on ' + port);
-  });
+app.listen(port, () => {
+  console.log('We are live on ' + port);
+});
 //})
 
-app.get('/SFL', function (req, res) {
-   res.sendFile( __dirname + "/" + "SFL_Anno.html" );
+app.get('/SFL', function(req, res) {
+  res.sendFile(__dirname + "/" + "SFL_Anno.html");
 })
 
 
