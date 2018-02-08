@@ -73,6 +73,9 @@
 					<script class="js-tree-one">
 						var sentence = "";
 						var percentage = ['%']
+						var diff_array = [];
+						var c_diff_array = [];
+						var in_diff_array = [];
 
 						function onRowClick(tableId, callback) {
 							var table = document.getElementById(tableId),
@@ -123,7 +126,7 @@
 							var teacher_segmented_sentence = [];
 							var student_segmented_sentence = [];
 
-							var diff_array = [];
+							//var diff_array = [];
 
 							var svgWidth = 1000,
 								svgHeight = svgWidth / 2;
@@ -217,10 +220,21 @@
 							//get the links
 							tree.getLinks = function() {
 								var l = [];
+								c_diff_array = diff_array.slice(1);
+								console.log("l_diff > ", c_diff_array)
+								getLinks(tree.nodes[0], l);
+								c_diff_array = diff_array.slice(1);
+								console.log("l_diff_2 > ", c_diff_array)
+								//console.log("link >> ", l);
+								return l.sort(function(a, b) {
+									return a.toId - b.toId
+								});
+							}
 
-								function getLinks(node) {
-									node.kids.forEach(function(kid) {
-										if (!kid.isLeaf) {
+							function getLinks(node, l) {
+								node.kids.forEach(function(kid) {
+									if (!kid.isLeaf) {
+										if (c_diff_array[0]) {
 											l.push({
 												fromId: node.id,
 												fromX: node.x,
@@ -228,16 +242,76 @@
 												toId: kid.id,
 												toX: kid.x,
 												toY: kid.y,
-												error: diff_array[0]
 											});
+											//c_diff_array = c_diff_array.slice(1);
+											//console.log(">> ", c_diff_array)
+
 										}
-									});
-									diff_array = diff_array.splice(1, 0);
-									node.kids.forEach(getLinks);
-								}
-								getLinks(tree.nodes[0]);
+									}
+									c_diff_array = c_diff_array.slice(1);
+									console.log(">> ", c_diff_array)
+									getLinks(kid, l);
+								});
+							}
+
+							tree.getincorrectLinks = function() {
+								var l_in = [];
+								in_diff_array = diff_array.slice(1);
+								console.log("l-I_diff > ", in_diff_array)
+								getincorrectLinks(tree.nodes[0], l_in);
+								link_diff_array = diff_array.slice(1);
+								console.log("l-I_diff_2 > ", in_diff_array)
+								//console.log("link_in >> ", l_in);
+								return l_in.sort(function(a, b) {
+									return a.toId - b.toId
+								});
+							}
+
+							function getincorrectLinks(node, l_in) {
+								node.kids.forEach(function(kid) {
+									if (!kid.isLeaf) {
+										if (!in_diff_array[0]) {
+											l_in.push({
+												fromId: node.id,
+												fromX: node.x,
+												fromY: node.y,
+												toId: kid.id,
+												toX: kid.x,
+												toY: kid.y,
+											});
+											//in_diff_array = in_diff_array.slice(1);
+										}
+										else {
+											//console.log(kid.text, " : is wrong")
+											//in_diff_array = in_diff_array.slice(1);
+										}
+									}
+									in_diff_array = in_diff_array.slice(1);
+									getincorrectLinks(kid, l_in);
+								});
+							}
+
+							tree.removeLinks = function() {
+								var l = [];
+								removeLinks(tree.nodes[0], l);
 								return l.sort(function(a, b) {
 									return a.toId - b.toId
+								});
+							}
+
+							function removeLinks(node, l) {
+								node.kids.forEach(function(kid) {
+									if (!kid.isLeaf) {
+										l.push({
+											fromId: node.id,
+											fromX: node.x,
+											fromY: node.y,
+											toId: kid.id,
+											toX: kid.x,
+											toY: kid.y,
+										});
+									}
+									removeLinks(kid, l);
 								});
 							}
 
@@ -512,6 +586,7 @@
 								d3.select('#nodes').selectAll('text').data(tree.getNodes()).remove();
 								d3.select('#links').selectAll('line').data(tree.getLinks()).remove();
 								d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).remove();
+								d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks()).exit().remove();
 							}
 
 							//redraw the tree
@@ -519,6 +594,10 @@
 								d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
 								d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
 								d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
+								d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks()).exit().remove();
+
+
+								console.log("-- 1");
 
 								var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
 
@@ -565,46 +644,69 @@
 									}).attr('y', function(node) {
 										return node.y + 5;
 									});
-
+								var links = [];
 								var links = d3.select('#links').selectAll('line').data(tree.getLinks());
-
-								links /*.transition().duration(500)*/
-									.attr('x1', function(link) {
-										return link.fromX;
-									}).attr('y1', function(link) {
-										return link.fromY + linkSpace;
-									}). //10
-								attr('x2', function(link) {
+								console.log("links>>", links);
+								links.attr('x1', function(link) {
+									return link.fromX;
+								}).attr('y1', function(link) {
+									return link.fromY + linkSpace;
+								}).attr('x2', function(link) {
 									return link.toX;
 								}).attr('y2', function(link) {
 									return link.toY - linkSpace;
 								});
 
 								links.enter().append('line').attr('x1', function(link) {
-										return link.fromX;
-									}).attr('y1', function(link) {
-										return link.fromY + linkSpace;
-									}).attr('x2', function(link) {
-										return link.toX;
-									}).attr('y2', function(link) {
-										return link.toY - linkSpace;
-									}).attr('dash', function(link) {
-										dash = (link.error == true) ?
-											dash = 0 :
-											dash = 5;
-										return dash
-									}).style({
-										'stroke': 'black',
-										'stroke-dasharray': 'dash',
-										'stroke-width': stroke_width + 'px'
-									}) //'stroke-dasharray': 5 , -- Use for showing error in comparison
-									/*.transition().duration(500)*/
-									.attr('x2', function(link) {
-										return link.toX;
-									}).attr('y2', function(link) {
-										return link.toY - linkSpace;
-									});
+									return link.fromX;
+								}).attr('y1', function(link) {
+									return link.fromY + linkSpace;
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY - linkSpace;
+								}).style({
+									'stroke': 'black',
+									'stroke-dasharray': 'dash',
+									'stroke-width': stroke_width + 'px'
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY - linkSpace;
+								});
+								var links_2 = [];
+								var links_2 = d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks());
+								console.log("links_incorrect>>", links_2);
 
+								links_2.attr('x1', function(link) {
+									return link.fromX;
+								}).attr('y1', function(link) {
+									return link.fromY + linkSpace;
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY - linkSpace;
+								});
+
+								links_2.enter().append('line').attr('x1', function(link) {
+									return link.fromX;
+								}).attr('y1', function(link) {
+									return link.fromY + linkSpace;
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY - linkSpace;
+								}).style({
+									'stroke': 'black',
+									'stroke-dasharray': 5,
+									'stroke-width': stroke_width + 'px'
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY - linkSpace;
+								});
+
+								console.log("diff >> ", diff_array);
 								var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
 
 								triangles /*.transition().duration(500)*/
@@ -705,7 +807,7 @@
 											kid.y = node.y + tree.h;
 											previous_x = left - (w + tree.w) / 2;
 											reposition(kid);
-											redraw();
+											//redraw();
 										}
 										else {
 											var w = tree.w * getLeafCount(kid);
@@ -714,7 +816,7 @@
 											kid.y = node.y + tree.h;
 											previous_x = left - (w + tree.w) / 2;
 											reposition(kid);
-											redraw();
+											//redraw();
 										}
 									}
 									else if (((kid.kids[0]).kids).length == 0) {
@@ -733,7 +835,7 @@
 											kid.y = node.y + tree.h;
 											previous_x = left - (w + tree.w) / 2;
 											reposition(kid);
-											redraw();
+											//redraw();
 										}
 										else {
 											var w = tree.w * getLeafCount(kid);
@@ -743,7 +845,7 @@
 											kid.x = cur_x + previous_x;
 											kid.y = node.y + tree.h;
 											reposition(kid);
-											redraw();
+											//redraw();
 										}
 									}
 									else {
@@ -753,7 +855,7 @@
 										//if(previous_x == kid.x) kid.x-=100;
 										kid.y = node.y + tree.h;
 										reposition(kid);
-										redraw();
+										//redraw();
 									}
 								});
 
@@ -775,6 +877,7 @@
 							}
 
 							genFromTable = function(ex, sentence) {
+								diff_array = [];
 								percentage = ['%'];
 								var count = 0;
 								teacher_segmented_sentence = [];
@@ -789,7 +892,7 @@
 								getNodeLength(tree.nodes[0]);
 								//console.log(node_length);
 								compareJSON(tree.nodes[0], (JSON.parse(example))[0], diff_array);
-								console.log(diff_array)
+								console.log("diff > ", diff_array)
 
 								for (i in diff_array) {
 									if (diff_array[i] == true) {
@@ -814,7 +917,9 @@
 
 								percentage.push(((tree_diff + sentence_like) / 200) * 100);
 								reposition(tree.nodes[0]);
+								//refresh();
 								redraw();
+								console.log("diff > ", diff_array)
 
 								console.log("teacher >> ", teacher_segmented_sentence);
 								console.log("student >> ", student_segmented_sentence);
@@ -931,7 +1036,7 @@
 									diff_array.push(true);
 								}
 
-								var pos = (teacher >= student) ?
+								var pos = (teacher.length >= student.length) ?
 									teacher :
 									student;
 								for (i in pos) {
@@ -998,6 +1103,16 @@
 								})
 								//.on('click', function (node) { return tree.addLeaf(node.id); }); create group of links
 								d3.select('#svgTree').append('g').attr('id', 'links').selectAll('line').data(tree.getLinks()).enter().append('line').attr('x1', function(link) {
+									return link.fromX;
+								}).attr('y1', function(link) {
+									return link.fromY;
+								}).attr('x2', function(link) {
+									return link.toX;
+								}).attr('y2', function(link) {
+									return link.toY;
+								});
+
+								d3.select('#svgTree').append('g').attr('id', 'links_2').selectAll('line').data(tree.getLinks()).enter().append('line').attr('x1', function(link) {
 									return link.fromX;
 								}).attr('y1', function(link) {
 									return link.fromY;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset=utf-8 />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,53 +8,102 @@
 
   <link rel="stylesheet" href="css/annotator.css" />
   <link rel="stylesheet" type="text/css" href="css/taggle.css">
-  <link rel="stylesheet" href="css/basic-example.css"> <!--CSS for basic example of tree generation-->
-  <link rel="stylesheet" href="css/Treant.css"> <!--CSS for treant-->
+  <link rel="stylesheet" href="css/basic-example.css">
+  <!--CSS for basic example of tree generation-->
+  <link rel="stylesheet" href="css/Treant.css">
+  <!--CSS for treant-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
   <style>
-      [id^=svg]{
-        border:1px solid black;
-      }
-
-
+    [id^=svg] {
+      border: 1px solid black;
+    }
   </style>
 
 
 </head>
+
 <body>
+
+  <h1 id="AnalysisMode" style="align-content:center;width:100%;text-align: center;">Functional Grammar Analysis Mode</h1>
+
+  <div class="table-responsive">
+    <table id="my-table-id" border="1">
+      <tbody style="cursor:pointer">
+        <tr>
+          <td>This little piggy had none</td>
+          <td>% -
+          </td>
+        </tr>
+        <tr>
+          <td>A good person for the job</td>
+          <td>% -
+          </td>
+        </tr>
+        <tr>
+          <td>Can you believe that</td>
+          <td>% -
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <p id="tempStore1"></p>
 
-  <h1 id="AnalysisMode" style="text-align: center; font-size: 56px; display: none;" >Functional Grammar Analysis Mode</h1>
+  <div id="content">
+    <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly <big>domed</big> and
+      divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.</p>
 
-  <div id="content" style="display: none;">
+    <p>"What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling
+      salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered
+      the whole of her lower arm towards the viewer. In a high altitude emergency an oxygen mask will drop in front of you from the panel above.</p>
 
+    <p>Gregor then turned to look out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something
+      he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was. He must have tried it a hundred times,
+      shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before. They are watching a movie now, and Jane is at a sleepover Birthday party. One morning
+      I shot an elephant in my pajamas. as I saw some cute things.</p>
   </div>
 
   <div id="content2" style="display: none;">
+    <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly <big>domed</big> and
+      divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.</p>
 
+    <p>"What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling
+      salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered
+      the whole of her lower arm towards the viewer. In a high altitude emergency an oxygen mask will drop in front of you from the panel above.</p>
+
+    <p>Gregor then turned to look out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something
+      he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was. He must have tried it a hundred times,
+      shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before. They are watching a movie now, and Jane is at a sleepover Birthday party. One morning
+      I shot an elephant in my pajamas. as I saw some cute things.</p>
   </div>
 
   <a id="downloadAnchorElem" style="display:none"></a>
 
   <!-- <div id="example1" style="width:100px;height:100px"></div> -->
-<div style="align-content:center;width:100%;text-align: center;">
+  <div style="align-content:center;width:100%;text-align: center;">
 
-  <label class="button" id="textInputLabel"><span class="inputSpan">Upload A Text</span><input type="file" id="inputText" value="Import" /><br/></label>
-  <p><button class="button" id="generateTrees" style="display: none;" onclick="loadDataForTrees(addTreesToDocument,'1');">Generate Trees</button></p>
-  <p><button class="button" id="generateBoxes" style="display: none;" onclick="loadDataForTrees(addBoxDiagramsToDocument,'1');">Generate Box Diagrams</button></p>
-  <p><button class="button" id="generateTheme" style="display: none;" onclick="loadDataForTrees(addThemeDiagramsToDocument,'1t');">Generate Theme Diagrams</button></p>
-  <p><button class="button" id="genNew" style="display: none;">Create New Annotation Data</button></p>
-  <label class="button" id="annotationInput" style="display: none;"><span class="inputSpan">Upload Annotation Data</span><input type="file" id="inputFile" value="Import" /><br/></label>
-  <p><button class="button" id="dwnJson" style="display: none;">Download Annotation Data</button></p>
-  <p><button class="button" id="themeAnalyse" style="display: none;" onclick="enterThemeMode();">Theme Analysis mode</button></p>
-  <p><button class="button" id="grammarAnalyse" style="display: none;" onclick="enterGrammarMode();">Grammar Analysis mode</button></p>
-  <p><button class="button" id="AnnoToTree" style="display: none;" onclick="">Generate Tree</button></p>
-  <p><button class="button" id="CompareTree" style="display: none;" onclick="getStruc(WholeTree,student);">Compare Tree</button></p>
-  <input id="CurrentTree" type="range" min="0" max="0" step="1" style="display: none;">
-  <p><button class="button" id="SelectTree" style="display: none;" onclick="setTreeNum();">Select Tree</button></p>
 
-</div>
+
+    <!--<label class="btn btn-primary" id="textInputLabel"><span class="inputSpan">Upload A Text</span><input type="file" id="inputText" value="Import" /><br/></label>
+    <p><button class="button" id="generateTrees" style="display: none;" onclick="loadDataForTrees(addTreesToDocument,'1');">Generate Trees</button></p>
+    <p><button class="button" id="generateBoxes" style="display: none;" onclick="loadDataForTrees(addBoxDiagramsToDocument,'1');">Generate Box Diagrams</button></p>
+    <p><button class="button" id="generateTheme" style="display: none;" onclick="loadDataForTrees(addThemeDiagramsToDocument,'1t');">Generate Theme Diagrams</button></p>
+  -->
+
+
+    <p><button class="button" id="genNew">Create New Annotation Data</button></p>
+    <label class="button" id="annotationInput" style="display: none;"><span class="inputSpan">Upload Annotation Data</span><input type="file" id="inputFile" value="Import" /><br/></label>
+    <p><button class="button" id="dwnJson" style="display: none;">Download Annotation Data</button></p>
+    <p><button class="button" id="themeAnalyse" style="display: none;" onclick="enterThemeMode();">Theme Analysis mode</button></p>
+    <p><button class="button" id="grammarAnalyse" style="display: none;" onclick="enterGrammarMode();">Grammar Analysis mode</button></p>
+    <p><button class="button" id="AnnoToTree" style="display: none;" onclick="">Generate Tree</button></p>
+    <p><button class="button" id="CompareTree" style="display: none;" onclick="getStruc(WholeTree,student);">Compare Tree</button></p>
+    <input id="CurrentTree" type="range" min="0" max="0" step="1" style="display: none;">
+    <p><button class="button" id="SelectTree" style="display: none;" onclick="setTreeNum();">Select Tree</button></p>
+
+  </div>
   <div id="allBoxes" style="display: none;">
     <!--Container to hold box diagrams-->
   </div>
@@ -66,64 +116,51 @@
   <!--<div id = "tree-one" class="col-lg-6" style="display: none;">
 
   </div>-->
-
   <div class="container">
-    <div id = "TreeArea">
+    <div class="row">
+      <div id="TreeArea" class="container text-center ">
+      </div>
     </div>
   </div>
 
 
 
-  <script src="vendor/jquery.js">          </script>
+  <script src=" vendor/jquery.js ">
+  </script>
 
   <!-- The following line of code should be uncommented for use with electron in generating desktop application -->
-   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js " onload="window.$=w indow.jQuery=m odule.exports; "></script> -->
 
-  <script src="vendor/annotator.js">       </script>
-  <script src="vendor/highlighter.js">     </script>
-  <script src="vendor/rainbow-custom.min.js"></script>
+  <script src="vendor/annotator.js ">
+  </script>
+  <script src="vendor/highlighter.js ">
+  </script>
+  <script src="vendor/rainbow-custom.min.js "></script>
 
-  <script src="vendor/raphael.js"> // Treant related </script>
-  <script src="vendor/Treant.js">  // Treant related </script>
-  <script src="vendor/js.cookie.js"></script>
+  <script src="vendor/raphael.js ">
+    // Treant related
+  </script>
+  <script src="vendor/Treant.js ">
+    // Treant related
+  </script>
+  <script src="vendor/js.cookie.js "></script>
 
-  <script src="vendor/taggle.min.js"></script>
-  <script src="vendor/jquery-ui.js"> </script>
+  <script src="vendor/taggle.min.js "></script>
+  <script src="vendor/jquery-ui.js ">
+  </script>
 
-  <script src="vendor/main.js"></script>
-  <script src="vendor/lodash.js"></script>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <!--<script src="vendor/SFL.js"></script>
+  <script src="vendor/main.js "></script>
+  <script src="vendor/lodash.js "></script>
+  <script src="http://d3js.org/d3.v3.min.js "></script>
+  <!--<script src="vendor/SFL.js "></script>
 -->
 
 
-  <script type="text/coffeescript">
-    # Attept at error handling for touch devices.
-    window.onerror = (msg, file, line) ->
-      alert(msg + ' ' + file + ' ' + line)
-
-    jQuery.ajaxSetup async: false
-
-    modules = jQuery.trim """
-    touch touch/utils touch/editor touch/viewer
-    """
-    modules = modules.split(/\s+/)
-
-    run = (file, source) ->
-      filename = file.replace /coffee$/, "js"
-      compiled = "#{CoffeeScript.compile(source)}\n//@ sourceURL=#{filename}"
-      eval(compiled)
-
-    sources = ("./src/#{script}.coffee" for script in modules)
-    requests = jQuery.map sources, (script) ->
-      jQuery.get script, jQuery.proxy(run, this, script)
-
-    jQuery.when.apply(jQuery, requests).done ->
-      jQuery("#content").annotator().annotator('addPlugin', 'Touch', {
-        force: location.search.indexOf('force') > -1,
-        useHighlighter: location.search.indexOf('highlighter') > -1
-      })
-      window.annotator = jQuery("#content").data('annotator')
+  <script type="text/coffeescript ">
+    # Attept at error handling for touch devices. window.onerror = (msg, file, line) -> alert(msg + ' ' + file + ' ' + line) jQuery.ajaxSetup async: false modules = jQuery.trim " "" touch touch/utils touch/editor touch/viewer "" " modules = modules.split(/\s+/)
+    run = (file, source) -> filename = file.replace /coffee$/, "js " compiled = "#{CoffeeScript.compile(source)}\n//@ sourceURL=#{filename} " eval(compiled) sources = ("./src/#{script}.coffee " for script in modules) requests = jQuery.map sources, (script)
+    -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content ").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
+    > -1 }) window.annotator = jQuery("#content ").data('annotator')
   </script>
 </body>
 
