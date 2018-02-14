@@ -56,6 +56,11 @@
 						</td>
 					</tr>
 					<tr>
+						<td>A good person for the job(TEST)</td>
+						<td>% -
+						</td>
+					</tr>
+					<tr>
 						<td>Can you believe that</td>
 						<td>% -
 						</td>
@@ -72,6 +77,7 @@
 				<div id="tree-one" class="col-lg-6">
 					<script class="js-tree-one">
 						var sentence = "";
+						var stu_sentence = "";
 						var percentage = ['%']
 						var diff_array = [];
 						var c_diff_array = [];
@@ -113,7 +119,12 @@
 								'arent":"Pr:mental | Vgp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"believe","x":450,"y":162.5,"parent":"E","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id6.5","text":"Senser/Subject | Ngp","x":550,"y":62.5,"paren' +
 								't":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id7.5","text":"th","x":550,"y":112.5,"parent":"Senser/Subject | Ngp","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id8.5","text":"you","x":550,"y":162.5,"parent":"th","isLeaf":true' +
 								',"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id9.5","text":"Phenonenon/Complement | Ngp","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id10.5","text":"th","x":650,"y":112.5,"parent":"Phenonenon/Complement | Ng' +
-								'p","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id11.5","text":"that","x":650,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]}]}]'
+								'p","isLeaf":false,"tWidth":0,"depth":2,"kids":[{"id":"id11.5","text":"that","x":650,"y":162.5,"parent":"th","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]}]}]',
+							"agoodpersonforthejob(test)": '[{"id":"00","text":"Clause","x":500,"y":12.5,"parent":"none","isLeaf":false,"tWidth":0,"depth":0,"kids":[{"id":"id1.5","text":"TEST","x":350,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id2.5","text":"A","x":350,"y":2' +
+								'00,"parent":"dd","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]},{"id":"id3.5","text":"m/Adgjp","x":500,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id4.5","text":"TEST","x":450,"y":112.5,"parent":"m/Adgjp","isLeaf":fa' +
+								'lse,"tWidth":0,"depth":2,"kids":[{"id":"id5.5","text":"good","x":450,"y":200,"parent":"a","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]},{"id":"id6.5","text":"sc/Pgp","x":550,"y":112.5,"parent":"m/Adgjp","isLeaf":false,"tWidth":0,"depth":2,"kids":' +
+								'[{"id":"id7.5","text":"for the dance","x":550,"y":200,"parent":"sc/Pgp","isLeaf":true,"tWidth":0,"depth":3,"kids":[]}]}]},{"id":"id8.5","text":"th","x":650,"y":62.5,"parent":"Clause","isLeaf":false,"tWidth":0,"depth":1,"kids":[{"id":"id9.5","text":"p' +
+								'erson","x":650,"y":200,"parent":"th","isLeaf":true,"tWidth":0,"depth":2,"kids":[]}]}]}]'
 						}
 						//console.log(test[0]);
 
@@ -196,22 +207,59 @@
 							// get the nodes
 							tree.getNodes = function() {
 								var n = [];
+								c_diff_array = diff_array.slice(0);
 
 								function getNodes(node) {
-									n.push({
-										id: node.id,
-										text: node.text,
-										x: node.x,
-										y: node.y,
-										kids: node.kids,
-										isLeaf: node.isLeaf,
-										tWidth: node.tWidth
-									});
+									//node.kids.forEach(function(kid) {
+									if (c_diff_array[0]) {
+										n.push({
+											id: node.id,
+											text: node.text,
+											x: node.x,
+											y: node.y,
+											kids: node.kids,
+											isLeaf: node.isLeaf,
+											tWidth: node.tWidth
+										});
+									}
 									node.kids.forEach(function(kid) {
+										c_diff_array = c_diff_array.slice(1);
 										return getNodes(kid);
 									});
+									//console.log("kid >> ", kid);
+									//c_diff_array = c_diff_array.slice(1);
+									//getNodes(kid);
+									//});
 								}
 								getNodes(tree.nodes[0]);
+								return n.sort(function(a, b) {
+									return a.id - b.id;
+								});
+							}
+
+							tree.getincorrectNodes = function() {
+								var n = [];
+								in_diff_array = diff_array.slice(0);
+
+								function getincorrectNodes(node) {
+									if (!in_diff_array[0]) {
+										n.push({
+											id: node.id,
+											text: ('-' + node.text + '-'),
+											x: node.x,
+											y: node.y,
+											kids: node.kids,
+											isLeaf: node.isLeaf,
+											tWidth: node.tWidth
+										});
+									}
+									node.kids.forEach(function(kid) {
+										in_diff_array = in_diff_array.slice(1);
+										return getincorrectNodes(kid);
+									});
+
+								}
+								getincorrectNodes(tree.nodes[0]);
 								return n.sort(function(a, b) {
 									return a.id - b.id;
 								});
@@ -221,10 +269,8 @@
 							tree.getLinks = function() {
 								var l = [];
 								c_diff_array = diff_array.slice(1);
-								console.log("l_diff > ", c_diff_array)
+								//console.log("l_diff > ", c_diff_array)
 								getLinks(tree.nodes[0], l);
-								c_diff_array = diff_array.slice(1);
-								console.log("l_diff_2 > ", c_diff_array)
 								//console.log("link >> ", l);
 								return l.sort(function(a, b) {
 									return a.toId - b.toId
@@ -249,7 +295,7 @@
 										}
 									}
 									c_diff_array = c_diff_array.slice(1);
-									console.log(">> ", c_diff_array)
+									//console.log(">> ", c_diff_array)
 									getLinks(kid, l);
 								});
 							}
@@ -257,10 +303,8 @@
 							tree.getincorrectLinks = function() {
 								var l_in = [];
 								in_diff_array = diff_array.slice(1);
-								console.log("l-I_diff > ", in_diff_array)
+								//console.log("l-I_diff > ", in_diff_array)
 								getincorrectLinks(tree.nodes[0], l_in);
-								link_diff_array = diff_array.slice(1);
-								console.log("l-I_diff_2 > ", in_diff_array)
 								//console.log("link_in >> ", l_in);
 								return l_in.sort(function(a, b) {
 									return a.toId - b.toId
@@ -279,11 +323,6 @@
 												toX: kid.x,
 												toY: kid.y,
 											});
-											//in_diff_array = in_diff_array.slice(1);
-										}
-										else {
-											//console.log(kid.text, " : is wrong")
-											//in_diff_array = in_diff_array.slice(1);
 										}
 									}
 									in_diff_array = in_diff_array.slice(1);
@@ -291,52 +330,64 @@
 								});
 							}
 
-							tree.removeLinks = function() {
-								var l = [];
-								removeLinks(tree.nodes[0], l);
-								return l.sort(function(a, b) {
-									return a.toId - b.toId
-								});
-							}
-
-							function removeLinks(node, l) {
-								node.kids.forEach(function(kid) {
-									if (!kid.isLeaf) {
-										l.push({
-											fromId: node.id,
-											fromX: node.x,
-											fromY: node.y,
-											toId: kid.id,
-											toX: kid.x,
-											toY: kid.y,
-										});
-									}
-									removeLinks(kid, l);
-								});
-							}
-
 							//get the triangles -- size of the trees
 							tree.getTriangles = function() {
 								var t = [];
+								c_diff_array = diff_array.slice(1);
 
 								function getTriangles(node) {
 									node.kids.forEach(function(kid) {
 										if (kid.isLeaf) {
-											t.push({
-												fromId: node.id,
-												toId: kid.id,
-												topX: node.x,
-												topY: (node.y + 10),
-												leftX: (kid.x - (kid.tWidth / 3)),
-												leftY: (kid.y - 10),
-												rightX: (kid.x + (kid.tWidth / 3)),
-												rightY: (kid.y - 10)
-											});
+											if (c_diff_array[0]) {
+												t.push({
+													fromId: node.id,
+													toId: kid.id,
+													topX: node.x,
+													topY: (node.y + 10),
+													leftX: (kid.x - (kid.tWidth / 3)),
+													leftY: (kid.y - 10),
+													rightX: (kid.x + (kid.tWidth / 3)),
+													rightY: (kid.y - 10)
+												});
+											}
 										}
+										c_diff_array = c_diff_array.slice(1);
+										getTriangles(kid);
 									}); //10
-									node.kids.forEach(getTriangles);
+									//node.kids.forEach(getTriangles);
 								}
 								getTriangles(tree.nodes[0]);
+								return t.sort(function(a, b) {
+									return a.toId - b.toId
+								});
+							}
+
+							tree.getincorrectTriangles = function() {
+								var t = [];
+								in_diff_array = diff_array.slice(1);
+
+								function getincorrectTriangles(node) {
+									node.kids.forEach(function(kid) {
+										if (!in_diff_array[0]) {
+											if (kid.isLeaf) {
+												t.push({
+													fromId: node.id,
+													toId: kid.id,
+													topX: node.x,
+													topY: (node.y + 10),
+													leftX: (kid.x - (kid.tWidth / 3)),
+													leftY: (kid.y - 10),
+													rightX: (kid.x + (kid.tWidth / 3)),
+													rightY: (kid.y - 10)
+												});
+											}
+										}
+										in_diff_array = in_diff_array.slice(1);
+										getincorrectTriangles(kid);
+									}); //10
+									//node.kids.forEach(getTriangles);
+								}
+								getincorrectTriangles(tree.nodes[0]);
 								return t.sort(function(a, b) {
 									return a.toId - b.toId
 								});
@@ -595,9 +646,11 @@
 								d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
 								d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
 								d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks()).exit().remove();
+								d3.select('#triangles_2').selectAll('polygon').data(tree.getincorrectTriangles()).exit().remove();
+								d3.select('#nodes_2').selectAll('text').data(tree.getincorrectNodes()).exit().remove();
 
 
-								console.log("-- 1");
+								//console.log("-- 1");
 
 								var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
 
@@ -636,17 +689,60 @@
 										'text-anchor': 'middle',
 										'cursor': 'pointer',
 										'font-size': fontsize
-									})
-									//.on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
-									/*.transition().duration(500)*/
-									.attr('x', function(node) {
+									}).attr('x', function(node) {
 										return node.x;
 									}).attr('y', function(node) {
 										return node.y + 5;
 									});
-								var links = [];
+
+								var nodes = d3.select('#nodes_2').selectAll('text').data(tree.getincorrectNodes());
+
+								nodes.text(function(node) {
+										return node.text
+									}) /*.transition().duration(500)*/
+									.attr('x', function(node) {
+										return node.x;
+									}).attr('y', function(node) {
+										return node.y + 5;
+									}). //5
+								attr('fill', function(node) {
+									if (node.isLeaf) {
+										return 'black';
+									}
+									else {
+										return 'black';
+									}
+								}); //red/blue
+
+								nodes.enter().append('text').attr('id', function(node) { /*console.log('id = ' + node.id);*/
+										return node.id;
+									}).attr('x', function(node) {
+										return node.x;
+									}).attr('y', function(node) {
+										return node.y + 5;
+									}).text(function(node) {
+										return node.text;
+									}).attr('tWidth', function(node) {
+										var n = tree.getNode(node);
+										n.tWidth = this.getBBox().width;
+										//console.log(n.tWidth);
+										return this.getBBox().width;
+									})
+									//Change font below
+									.style({
+										'text-anchor': 'middle',
+										'cursor': 'pointer',
+										'font-size': fontsize,
+										'font-weight': 'bold',
+										'font-style': 'italic'
+									}).attr('x', function(node) {
+										return node.x;
+									}).attr('y', function(node) {
+										return node.y + 5;
+									});
+								//var links = [];
 								var links = d3.select('#links').selectAll('line').data(tree.getLinks());
-								console.log("links>>", links);
+								//console.log("links>>", links);
 								links.attr('x1', function(link) {
 									return link.fromX;
 								}).attr('y1', function(link) {
@@ -674,9 +770,9 @@
 								}).attr('y2', function(link) {
 									return link.toY - linkSpace;
 								});
-								var links_2 = [];
+								//var links_2 = [];
 								var links_2 = d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks());
-								console.log("links_incorrect>>", links_2);
+								//console.log("links_incorrect>>", links_2);
 
 								links_2.attr('x1', function(link) {
 									return link.fromX;
@@ -706,7 +802,7 @@
 									return link.toY - linkSpace;
 								});
 
-								console.log("diff >> ", diff_array);
+								//console.log("diff >> ", diff_array);
 								var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
 
 								triangles /*.transition().duration(500)*/
@@ -727,6 +823,38 @@
 									}).style({
 										'stroke': 'black',
 										'stroke-dasharray': 'dash',
+										'stroke-width': stroke_width + 'px',
+										'fill': 'white'
+									}) //'stroke-dasharray': 5 , -- Use for showing error in comparison
+									/*.transition().duration(500)*/
+									.attr('points', function(triangle) {
+										return (triangle.topX + ',' + triangle.topY + ' ' + (
+											triangle.leftX - trainglepadding
+										) + ',' + triangle.leftY + ' ' + (
+											triangle.rightX + trainglepadding
+										) + ',' + triangle.rightY)
+									});
+
+								var triangles = d3.select('#triangles_2').selectAll('polygon').data(tree.getincorrectTriangles());
+
+								triangles /*.transition().duration(500)*/
+									.attr('points', function(triangle) {
+										return (triangle.topX + ',' + triangle.topY + ' ' + (
+											triangle.leftX - trainglepadding
+										) + ',' + triangle.leftY + ' ' + (
+											triangle.rightX + trainglepadding
+										) + ',' + triangle.rightY)
+									});
+
+								triangles.enter().append('polygon').attr('points', function(triangle) {
+										return (triangle.topX + ',' + triangle.topY + ' ' + (
+											triangle.leftX - trainglepadding
+										) + ',' + triangle.leftY + ' ' + (
+											triangle.rightX + trainglepadding
+										) + ',' + triangle.rightY)
+									}).style({
+										'stroke': 'black',
+										'stroke-dasharray': 5,
 										'stroke-width': stroke_width + 'px',
 										'fill': 'white'
 									}) //'stroke-dasharray': 5 , -- Use for showing error in comparison
@@ -784,7 +912,7 @@
 
 							//update node positions
 							reposition = function(node) {
-
+								console.log(sentence);
 								if (uniformDepth) {
 									tree.nodeDepth();
 								}
@@ -830,8 +958,10 @@
 											kid.x = left - (w + tree.w) / 2;
 
 											//check incase current pos is pos of moved node - need to love over this
+											//console.log(cur, " <> ", teacher_segmented_sentence.indexOf(cur.toLowerCase(), 0));
+											//console.log(node_count, " <> ", teacher_segmented_sentence.indexOf(cur.toLowerCase(), 0));
 											if (previous_x == kid.x)
-												kid.x -= 100;
+												kid.x -= 100; //(node_count - teacher_segmented_sentence.indexOf(cur.toLowerCase(), 0)) * 100;
 											kid.y = node.y + tree.h;
 											previous_x = left - (w + tree.w) / 2;
 											reposition(kid);
@@ -892,6 +1022,7 @@
 								getNodeLength(tree.nodes[0]);
 								//console.log(node_length);
 								compareJSON(tree.nodes[0], (JSON.parse(example))[0], diff_array);
+
 								console.log("diff > ", diff_array)
 
 								for (i in diff_array) {
@@ -916,10 +1047,12 @@
 								sentence_like = (sentence_like / len) * 100;
 
 								percentage.push(((tree_diff + sentence_like) / 200) * 100);
+								stu_sentence = teacher_segmented_sentence.join('').toLowerCase().split(' ').join('');
+								console.log(stu_sentence);
 								reposition(tree.nodes[0]);
 								//refresh();
 								redraw();
-								console.log("diff > ", diff_array)
+								//console.log("diff > ", diff_array)
 
 								console.log("teacher >> ", teacher_segmented_sentence);
 								console.log("student >> ", student_segmented_sentence);
@@ -1101,6 +1234,23 @@
 									'text-anchor': 'middle',
 									'cursor': 'pointer'
 								})
+
+								d3.select('#svgTree').append('g').attr('id', 'nodes_2').selectAll('text').data(tree.getNodes()).enter().append('text').attr('id', function(node) {
+									return node.id;
+								}).attr('x', function(node) {
+									return node.x;
+								}).attr('y', function(node) {
+									return node.y + 5;
+								}).text(function(node) {
+									return node.text;
+								}).attr('tWidth', function(node) {
+									var n = tree.getNode(node);
+									n.tWidth = this.getBBox().width;
+									return this.getBBox().width; /*return tree.getTextWidth(node);*/
+								}).style({
+									'text-anchor': 'middle',
+									'cursor': 'pointer'
+								})
 								//.on('click', function (node) { return tree.addLeaf(node.id); }); create group of links
 								d3.select('#svgTree').append('g').attr('id', 'links').selectAll('line').data(tree.getLinks()).enter().append('line').attr('x1', function(link) {
 									return link.fromX;
@@ -1124,6 +1274,10 @@
 
 								//create group of triangles
 								d3.select('#svgTree').append('g').attr('id', 'triangles').selectAll('polygon').data(tree.getTriangles()).enter().append('polygon').attr('points', function(triangle) {
+									return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY)
+								});
+
+								d3.select('#svgTree').append('g').attr('id', 'triangles_2').selectAll('polygon').data(tree.getTriangles()).enter().append('polygon').attr('points', function(triangle) {
 									return (triangle.topX + ',' + triangle.topY + ' ' + triangle.leftX + ',' + triangle.leftY + ' ' + triangle.rightX + ',' + triangle.rightY)
 								});
 

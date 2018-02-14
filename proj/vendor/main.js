@@ -6,6 +6,45 @@
 
   var num = 0;
   var TreeNum = 0;
+  var cur_id = 0;
+
+  /*document.getElementById("Tree_list").addEventListener("click", function(e) {
+    if (e.target && e.target.nodeName == "LI") {
+      console.log(e.target.innerHTML);
+      console.log(e.target.id);
+      TreeNum = e.target.id * 4;
+    }
+    console.log(TreeNum);
+
+    createWholeTree();
+
+    if (document.getElementById('tree-' + num) == null) {
+      var div = document.createElement("div");
+      div.setAttribute("id", "tree-" + num);
+      document.getElementById("TreeArea").appendChild(div);
+      initialise(num);
+    }
+
+    body = JSON.stringify(WholeTree)
+
+    $.post(
+      "http://localhost:8000/treetest", {
+        body
+      },
+      function(data) {
+        console.log(sentence);
+        node_length = 0;
+        node_count = 0;
+        previous_x = 0;
+        var res = JSON.stringify(data).slice(1, -1).replace(/\\/g, "");
+        tree.nodes = JSON.parse(res);
+        getNodeLength(tree.nodes[0]);
+        reposition(tree.nodes[0]);
+        console.log(sentence);
+        redraw();
+      }
+    );
+  });*/
 
   //Setting number of notches on slide - number of SFLs
   setTreeNum = function() {
@@ -106,9 +145,9 @@
 
     $("#genNew").hide(0, function() {
       $("#annotationInput").hide(0, function() {
-        $("#AnnoToTree").show(0, function() {
+        $("#AnnoToTree").hide(0, function() {
           $("#CompareTree").hide(0, function() {
-            $("#CurrentTree").show(0);
+            $("#CurrentTree").hide(0);
           });
         });
         //$("#generateTrees").show(250, function(){
@@ -140,9 +179,9 @@
 
     $("#genNew").hide(0, function() {
       $("#annotationInput").hide(0, function() {
-        $("#AnnoToTree").show(0, function() {
+        $("#AnnoToTree").hide(0, function() {
           $("#CompareTree").hide(0, function() {
-            $("#CurrentTree").show(0);
+            $("#CurrentTree").hide(0);
           });
         });
         //$("#generateTrees").show(250, function(){
@@ -220,7 +259,7 @@
   }
 
   createWholeTree = function() {
-    Treenum = setTreeNum();
+    //Treenum = setTreeNum();
     WholeTree = {};
     sentence = sentence_array[TreeNum].split(' ').join('').toLowerCase();
 
@@ -260,11 +299,19 @@
 
             //Checks for sentence tag - which will add it to sentence array for cehcking against words
             if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1) {
+              var list = document.getElementById('Tree_list');
+              var entry = document.createElement('li');
+              entry.appendChild(document.createTextNode(annotation.quote));
+              entry.className = "list-group-item";
+              entry.setAttribute("id", cur_id);
+              cur_id++;
+              list.appendChild(entry);
+
               sentence_array.push(annotation.quote);
               sentence_array.push(annotation.text);
               sentence_array.push(annotation.ranges[0].startOffset);
               sentence_array.push(annotation.ranges[0].endOffset);
-              document.getElementById("CurrentTree").setAttribute("max", ((sentence_array.length) / 4) - 1);
+              //document.getElementById("CurrentTree").setAttribute("max", ((sentence_array.length) / 4) - 1);
             } else {
               anno_array.push(annotation.quote);
               anno_array.push(annotation.text);
@@ -316,7 +363,7 @@
                     sentence_array.splice(i, i + 4);
                   }
                 }
-                document.getElementById("CurrentTree").setAttribute("max", ((sentence_array.length) / 4) - 1);
+                //document.getElementById("CurrentTree").setAttribute("max", ((sentence_array.length) / 4) - 1);
               } else {
                 for (var i = 0; i < anno_array.length; i = i + 4) {
                   if (annotation.quote == anno_array[i]) {
@@ -1350,7 +1397,7 @@
         })
         .style({
           'stroke': 'black',
-          'stroke-dasharray': 5,
+          'stroke-dasharray': 0,
           'stroke-width': stroke_width + 'px',
           'fill': 'white'
         }) //'stroke-dasharray': 5 , -- Use for showing error in comparison
@@ -1456,8 +1503,8 @@
           left += w;
           console.log(left, " -- ", w)
           kid.x = left - (w + tree.w) / 2;
-          //if(previous_x == kid.x)
-          //kid.x-=100;
+          if (previous_x == kid.x)
+            kid.x -= 100;
           kid.y = node.y + tree.h;
           reposition(kid);
           redraw();
@@ -1586,7 +1633,15 @@
     }
 
     $(document).ready(function() {
-      $("#AnnoToTree").click(function(event) {
+      //$("#AnnoToTree").click(function(event) {
+      $("#Tree_list").click(function(e) {
+
+        if (e.target && e.target.nodeName == "LI") {
+          console.log(e.target.innerHTML);
+          console.log(e.target.id);
+          TreeNum = e.target.id * 4;
+        }
+        console.log(TreeNum);
 
         createWholeTree();
 
