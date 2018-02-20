@@ -28,23 +28,24 @@ compareJSON = function(node, node_two, diff_array) {
   console.log("teacher << ", node);
   console.log("student << ", node_two);
 
+
   if (node == undefined && node_two != undefined) {
-    console.log("Teacher doesn't contain this node\nStudent node text :", node_two.text, "\nStudent node parent :", node_two.parent);
+    console.log("Teacher doesn't contain this node\nStudent node text :", (node_two.text).toLowerCase(), "\nStudent node parent :", node_two.parent);
     diff_array.push(false);
   } else if (node != undefined && node_two == undefined) {
-    console.log("Student doesn't contain this node\nTeacher node text :", node.text, "\nTeacher node parent :", node.parent);
+    console.log("Student doesn't contain this node\nTeacher node text :", (node.text).toLowerCase(), "\nTeacher node parent :", node.parent);
     diff_array.push(false);
-  } else if (node.text != node_two.text && node.parent != node_two.parent) {
-    console.log("Parents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent, "\nTexts Differ\nTeacher :", node.text, "\nStudent :", node_two.text);
+  } else if ((node.text).toLowerCase() != (node_two.text).toLowerCase() && node.parent != node_two.parent) {
+    console.log("Parents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent, "\nTexts Differ\nTeacher :", (node.text).toLowerCase(), "\nStudent :", (node_two.text).toLowerCase());
     diff_array.push(false);
-  } else if (node.text == node_two.text && node.parent != node_two.parent) {
-    console.log("Both texts Equal :", node.text, "\nParents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent);
+  } else if ((node.text).toLowerCase() == (node_two.text).toLowerCase() && node.parent != node_two.parent) {
+    console.log("Both texts Equal :", (node.text).toLowerCase(), "\nParents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent);
     diff_array.push(false);
-  } else if (node.text != node_two.text && node.parent == node_two.parent) {
-    console.log("Both Parents Equal :", node.parent, "\nTexts Differ\nTeacher :", node.text, "\nStudent :", node_two.text);
+  } else if ((node.text).toLowerCase() != (node_two.text).toLowerCase() && node.parent == node_two.parent) {
+    console.log("Both Parents Equal :", node.parent, "\nTexts Differ\nTeacher :", (node.text).toLowerCase(), "\nStudent :", (node_two.text).toLowerCase());
     diff_array.push(false);
-  } else if (node.text == node_two.text && node.parent == node_two.parent) {
-    console.log("Both Texts Equal :", node.text, "\nBoth Parents Equal :", node.parent)
+  } else if ((node.text).toLowerCase() == (node_two.text).toLowerCase() && node.parent == node_two.parent) {
+    console.log("Both Texts Equal :", (node.text).toLowerCase(), "\nBoth Parents Equal :", node.parent)
     diff_array.push(true);
   }
 
@@ -91,7 +92,8 @@ genFromTable = function(teacher, student) {
   }
   sentence_like = ((sentence_like / 2) / len) * 100;
 
-  percentage.push(((tree_diff + sentence_like) / 200) * 100);
+  //percentage.push(((tree_diff + sentence_like) / 200) * 100);
+  percentage.push(tree_diff);
   var result = [percentage, teacher_segmented_sentence, student_segmented_sentence, diff_array]
   //console.log("teacher >> ", teacher_segmented_sentence);
   //console.log("student >> ", student_segmented_sentence);

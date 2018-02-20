@@ -2,7 +2,7 @@ var d3 = require("d3");
 var treeStruc = require("./treeStruc");
 var grading = require("./grading");
 var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
-var ex = require("./exampleTrees");
+var SFL_trees = require("./exampleTrees");
 
 //var ObjectID = require('mongodb').ObjectID;
 module.exports = function(app, db) {
@@ -34,14 +34,17 @@ module.exports = function(app, db) {
       text: req.body,
       title: req.body.title
     };
-    var teacher = JSON.stringify(req.body.body_t).slice(1, -1).replace(/\\/g, "");
+    //var teacher = JSON.stringify(req.body.body_t).slice(1, -1).replace(/\\/g, "");
     var student = JSON.stringify(req.body.body_s).slice(1, -1).replace(/\\/g, "");
 
-    console.log("teacher - ", teacher);
-    console.log("student - ", student);
+    var sentence = (req.body.sentence).split(' ').join('').toLowerCase();
+    console.log("sentence - ", sentence);
+    var teacher = SFL_trees.examples[sentence]
+
+    //console.log("teacher - ", teacher);
+    //console.log("student - ", student);
 
     var result = grading.genFromTable(JSON.parse(teacher), JSON.parse(student));
-
     //var TreeArray = [myJSON];
 
     //res.send(teacher);

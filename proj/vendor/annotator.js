@@ -1,21 +1,37 @@
 /*
-** Annotator v1.2.7
-** https://github.com/okfn/annotator/
-**
-** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
-** Dual licensed under the MIT and GPLv3 licenses.
-** https://github.com/okfn/annotator/blob/master/LICENSE
-**
-** Built at: 2013-06-27 21:49:30Z
-*/
+ ** Annotator v1.2.7
+ ** https://github.com/okfn/annotator/
+ **
+ ** Copyright 2012 Aron Carroll, Rufus Pollock, and Nick Stenning.
+ ** Dual licensed under the MIT and GPLv3 licenses.
+ ** https://github.com/okfn/annotator/blob/master/LICENSE
+ **
+ ** Built at: 2013-06-27 21:49:30Z
+ */
 
 
 (function() {
   var $, Annotator, Delegator, LinkParser, Range, Util, findChild, fn, functions, g, getNodeName, getNodePosition, gettext, simpleXPathJQuery, simpleXPathPure, _Annotator, _gettext, _i, _j, _len, _len1, _ref, _ref1, _t,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __extends = function(child, parent) {
+      for (var key in parent) {
+        if (__hasProp.call(parent, key)) child[key] = parent[key];
+      }
+
+      function ctor() {
+        this.constructor = child;
+      }
+      ctor.prototype = parent.prototype;
+      child.prototype = new ctor();
+      child.__super__ = parent.prototype;
+      return child;
+    },
+    __bind = function(fn, me) {
+      return function() {
+        return fn.apply(me, arguments);
+      };
+    };
 
   simpleXPathJQuery = function(relativeRoot) {
     var jq;
@@ -711,12 +727,13 @@
     Annotator.prototype.events = {
       ".annotator-adder button click": "onAdderClick",
       ".annotator-adder button mousedown": "onAdderMousedown",
-      ".annotator-hl mouseover": "onHighlightMouseover",
+      //".annotator-hl mouseover": "onHighlightMouseover",
+      ".annotator-hl click": "onHighlightMouseover",
       ".annotator-hl mouseout": "startViewerHideTimer"
     };
 
     Annotator.prototype.html = {
-      adder: '<div class="annotator-adder"> <button>' + _t('Annotate') + '</button> </div>',////////////////////////////
+      adder: '<div class="annotator-adder"> <button>' + _t('Annotate') + '</button> </div>', ////////////////////////////
       wrapper: '<div class="annotator-wrapper"></div>'
     };
 
@@ -797,23 +814,22 @@
     Annotator.prototype._setupEditor = function() {
       this.editor = new Annotator.Editor();
       this.editor.hide().on('hide', this.onEditorHide).on('save', this.onEditorSubmit).addField({
-        type: 'div',//////////////////////////////////////////////////////////////////////////////////////////////////////////
+        type: 'div', //////////////////////////////////////////////////////////////////////////////////////////////////////////
         label: _t('Comments') + '\u2026',
         load: function(field, annotation) {
           return $(field).find('textarea').val(annotation.text || '');
         },
         submit: function(field, annotation) {
-          var taggleObj = example1.getTagValues();//////// Get tags as array of objects
-          var tagStr = JSON.stringify(taggleObj);///////// Convert tags to JSON String
-          example1.removeAll();/////////////////////////// Remove all tags from taggle
-          example1 = null;//////////////////////////////// Nullify taggle instance
-          if(currentUrl=="1"){
-            $("#annotator-field-1").empty();//////////////// Clear content of input div
+          var taggleObj = example1.getTagValues(); //////// Get tags as array of objects
+          var tagStr = JSON.stringify(taggleObj); ///////// Convert tags to JSON String
+          example1.removeAll(); /////////////////////////// Remove all tags from taggle
+          example1 = null; //////////////////////////////// Nullify taggle instance
+          if (currentUrl == "1") {
+            $("#annotator-field-1").empty(); //////////////// Clear content of input div
+          } else if (currentUrl == "1t") {
+            $("#annotator-field-0").empty(); //////////////// Clear content of input div
           }
-          else if(currentUrl=="1t"){
-            $("#annotator-field-0").empty();//////////////// Clear content of input div
-          }
-            return annotation.text = tagStr; // Save tags as JSON string
+          return annotation.text = tagStr; // Save tags as JSON string
         }
       });
       this.editor.element.appendTo(this.wrapper);
@@ -944,15 +960,14 @@
         }
       }
 
-      if(example1!=null){
-        example1 = null;////////////////////////////// Nullify taggle instance
+      if (example1 != null) {
+        example1 = null; ////////////////////////////// Nullify taggle instance
       }
 
-      if(currentUrl=="1"){
-        $("#annotator-field-1").empty();//////////////// Clear content of input div
-      }
-      else if(currentUrl=="1t"){
-        $("#annotator-field-0").empty();//////////////// Clear content of input div
+      if (currentUrl == "1") {
+        $("#annotator-field-1").empty(); //////////////// Clear content of input div
+      } else if (currentUrl == "1t") {
+        $("#annotator-field-0").empty(); //////////////// Clear content of input div
       }
 
       this.publish('annotationDeleted', [annotation]);
@@ -1061,7 +1076,7 @@
         if (typeof klass === 'function') {
           this.plugins[name] = new klass(this.element[0], options);
           this.plugins[name].annotator = this;
-          if (typeof (_base = this.plugins[name]).pluginInit === "function") {
+          if (typeof(_base = this.plugins[name]).pluginInit === "function") {
             _base.pluginInit();
           }
         } else {
@@ -1076,12 +1091,12 @@
       this.editor.element.css(location);
       this.editor.load(annotation);
       this.publish('annotationEditorShown', [this.editor, annotation]);
-      if(!annotation.text || annotation.text==""){//////////////////////// If annotation non-existent or empty
-        tagsArray = ['Placeholder Tag'];//////////////// Show default tags
-      }/////////////////////////////////////////////////////////////////// TODO - Add UI Initialization
-      else{///////////////////////////////////////////////////////////////
-        tagsArray = JSON.parse(annotation.text);////////////////////////// If not empty, convert annotation to array of tags
-      }///////////////////////////////////////////////////////////////////
+      if (!annotation.text || annotation.text == "") { //////////////////////// If annotation non-existent or empty
+        tagsArray = ['']; //'Placeholder Tag'];//////////////// Show default tags
+      } /////////////////////////////////////////////////////////////////// TODO - Add UI Initialization
+      else { ///////////////////////////////////////////////////////////////
+        tagsArray = JSON.parse(annotation.text); ////////////////////////// If not empty, convert annotation to array of tags
+      } ///////////////////////////////////////////////////////////////////
 
       // if(initialCheck){
       //   if(currentUrl=="1"){
@@ -1095,45 +1110,47 @@
       // }
 
       var container;
-      if(currentUrl=="1"){
+      if (currentUrl == "1") {
         // container = annotationMapper.url1;
         container = "annotator-field-1";
-      }else if(currentUrl=="1t"){
+      } else if (currentUrl == "1t") {
         // container = annotationMapper.url1t;
         container = "annotator-field-0";
       }
       console.log(container);
-      example1 = new Taggle(container, {////////////////////////
+      example1 = new Taggle(container, { ////////////////////////
         tags: tagsArray,
-        preserveCase:true,//////////////////////////////////////////////// Set tags to be decided value
-    });///////////////////////////////////////////////////////////////////
-        var input = example1.getInput();
-        var container = example1.getContainer();
-        jQuery(input).autocomplete({
-            source: firstOrder.concat(secondOrder, thirdOrder),
-            appendTo: container,
-            position: { at: 'left bottom', of: container },
-            select: function(e, v) {
-                e.preventDefault();
-                //Add the tag if user clicks
-                if (e.which === 1) {
-                    example1.add(v.item.value);
-                }
-            }
-        });
+        preserveCase: true, //////////////////////////////////////////////// Set tags to be decided value
+      }); ///////////////////////////////////////////////////////////////////
+      var input = example1.getInput();
+      var container = example1.getContainer();
+      jQuery(input).autocomplete({
+        source: firstOrder.concat(secondOrder, thirdOrder),
+        appendTo: container,
+        position: {
+          at: 'left bottom',
+          of: container
+        },
+        select: function(e, v) {
+          e.preventDefault();
+          //Add the tag if user clicks
+          if (e.which === 1) {
+            example1.add(v.item.value);
+          }
+        }
+      });
       return this;
     };
 
     Annotator.prototype.onEditorHide = function() {
-        if(example1!=null){
-        example1 = null;////////////////////////////// Nullify taggle instance
-        }
-        if(currentUrl=="1"){
-          $("#annotator-field-1").empty();//////////////// Clear content of input div
-        }
-        else if(currentUrl=="1t"){
-          $("#annotator-field-0").empty();//////////////// Clear content of input div
-        }
+      if (example1 != null) {
+        example1 = null; ////////////////////////////// Nullify taggle instance
+      }
+      if (currentUrl == "1") {
+        $("#annotator-field-1").empty(); //////////////// Clear content of input div
+      } else if (currentUrl == "1t") {
+        $("#annotator-field-0").empty(); //////////////// Clear content of input div
+      }
       this.publish('annotationEditorHidden', [this.editor]);
       return this.ignoreMouseup = false;
     };
@@ -1503,8 +1520,8 @@
       element = $('<li class="annotator-item" />');
       field.element = element[0];
       switch (field.type) {
-        case 'div':////////////////////////////////////////////
-          input = $('<div />');////////////////////////////////
+        case 'div': ////////////////////////////////////////////
+          input = $('<div />'); ////////////////////////////////
           break;
         case 'input':
         case 'checkbox':

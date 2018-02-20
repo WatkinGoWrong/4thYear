@@ -136,6 +136,8 @@
 
 							var teacher_segmented_sentence = [];
 							var student_segmented_sentence = [];
+							var SFL_node_pos = [];
+
 
 							//var diff_array = [];
 
@@ -911,7 +913,7 @@
 							}
 
 							//update node positions
-							reposition = function(node) {
+							/*reposition = function(node) {
 								console.log(sentence);
 								if (uniformDepth) {
 									tree.nodeDepth();
@@ -989,7 +991,58 @@
 									}
 								});
 
+							}*/
+
+							reposition = function(node) {
+
+								if (uniformDepth) {
+									tree.nodeDepth();
+								}
+
+								var leafCount = getLeafCount(node),
+									left = node.x - tree.w * (leafCount - 1) / 2;
+								node.kids.forEach(function(kid) {
+									var alter = 0;
+									var w = tree.w * getLeafCount(kid);
+									left += w;
+
+									if ((kid.kids[0]) != undefined && ((kid.kids[0]).kids).length == 0) {
+										var cur = (kid.kids[0].text).split(' ').join('');
+										if (cur.toLowerCase() == sentence.substring(0, cur.length)) {
+											sentence = sentence.substring(cur.length, sentence.length);
+											for (x in SFL_node_pos) {
+												var pos_test = Math.abs(SFL_node_pos[x] - (left - (w + tree.w) / 2))
+												console.log(pos_test);
+												if (pos_test >= 0 && pos_test <= 1)
+													alter = -100;
+											}
+											kid.x = left - (w + tree.w) / 2 + alter;
+											SFL_node_pos.push(kid.x);
+										}
+										else {
+											alter = 100;
+											for (x in SFL_node_pos) {
+												var pos_test = Math.abs(SFL_node_pos[x] - (left - (w + tree.w) / 2))
+												if (pos_test >= 0 && pos_test <= 1)
+													alter += 100;
+											}
+											kid.x = left - (w + tree.w) / 2 + alter;
+											SFL_node_pos.push(kid.x);
+										}
+									}
+									else {
+										kid.x = left - (w + tree.w) / 2;
+									}
+									//kid.x = left - (w + tree.w) / 2 + alter;
+									kid.y = node.y + tree.h;
+									//SFL_node_pos.push(kid.x);
+									reposition(kid);
+									redraw();
+								});
+
 							}
+
+
 
 							//save the tree structure as JSON
 							saveTree = function() {
@@ -1012,6 +1065,7 @@
 								var count = 0;
 								teacher_segmented_sentence = [];
 								student_segmented_sentence = [];
+								SFL_node_pos = [];
 								//var diff_array = [];
 								node_length = 0;
 								node_count = 0;
@@ -1056,7 +1110,7 @@
 
 								console.log("teacher >> ", teacher_segmented_sentence);
 								console.log("student >> ", student_segmented_sentence);
-
+								console.log(SFL_node_pos);
 							}
 
 							//save the tree structure as JSON
