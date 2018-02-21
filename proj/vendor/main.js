@@ -182,9 +182,13 @@
               if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1) {
                 for (var i = 0; i < sentence_array.length; i = i + 4) {
                   if (annotation.quote == sentence_array[i]) {
-                    sentence_array.splice(i, i + 4);
+                    sentence_array.splice(i, i + 4, null, null, null, null);
+                    console.log((document.getElementById(i / 4)).innerHTML);
+                    var elem = document.getElementById(i / 4);
+                    elem.parentNode.removeChild(elem);
                   }
                 }
+
                 //document.getElementById("CurrentTree").setAttribute("max", ((sentence_array.length) / 4) - 1);
               } else {
                 for (var i = 0; i < anno_array.length; i = i + 4) {
@@ -694,23 +698,24 @@
         left += w;
 
         if ((kid.kids[0]) != undefined && ((kid.kids[0]).kids).length == 0) {
+
           var cur = (kid.kids[0].text).split(' ').join('');
           if (cur.toLowerCase() == sentence.substring(0, cur.length)) {
             sentence = sentence.substring(cur.length, sentence.length);
             for (x in SFL_node_pos) {
               var pos_test = Math.abs(SFL_node_pos[x] - (left - (w + tree.w) / 2))
               console.log(pos_test);
-              if (pos_test >= 0 && pos_test <= 20)
-                alter = -100;
+              if (pos_test >= 0 && pos_test <= (tree.w) / 2)
+                alter = -(tree.w);
             }
             kid.x = left - (w + tree.w) / 2 + alter;
             SFL_node_pos.push(kid.x);
           } else {
-            alter = 100;
+            alter = tree.w;
             for (x in SFL_node_pos) {
               var pos_test = Math.abs(SFL_node_pos[x] - (left - (w + tree.w) / 2))
-              if (pos_test >= 0 && pos_test <= 20)
-                alter += 100;
+              if (pos_test >= 0 && pos_test <= (tree.w) / 2)
+                alter += tree.w;
             }
             kid.x = left - (w + tree.w) / 2 + alter;
             SFL_node_pos.push(kid.x);
@@ -724,7 +729,7 @@
         reposition(kid);
         //redraw();
       });
-
+      console.log(tree.w);
     }
     getNodeLength = function(node) {
       node.kids.forEach(function(kid) {
@@ -850,6 +855,8 @@
     var diff_array = [];
     var SFL_node_pos = [];
 
+
+    //API CALLS
     $(document).ready(function() {
       //$("#AnnoToTree").click(function(event) {
       $("#Tree_list").click(function(e) {
@@ -882,7 +889,7 @@
         node_count = 0;
         previous_x = 0;
         SFL_node_pos = [];
-
+        var assignment_content = {};
 
         $.post(
           "http://localhost:8000/treetest", {
@@ -903,7 +910,8 @@
                 sentence
               },
               function(data_) {
-                console.log(data_);
+                student_content["Grading"] = data_;
+                //console.log(data_);
               }
             );
 
@@ -912,7 +920,6 @@
             reposition(tree.nodes[0]);
             ////console.log.log(sentence);
             redraw();
-
             node_length = 0;
             node_count = 0;
             previous_x = 0;
@@ -921,8 +928,13 @@
 
         //  console.log(tree.nodes);
 
+        assignment_content["sentence"] = sentence;
+        assignment_content["SFG Tree"] = tree.nodes;
 
-        console.log(sentence);
+        var student_content = {
+          Assignment_1: assignment_content
+        };
+        console.log(student_content);
 
       });
     });

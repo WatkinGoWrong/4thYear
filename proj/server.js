@@ -36,6 +36,8 @@ app.listen(port, () => {
 //})
 
 app.get('/SFL', function(req, res) {
+  var date = new Date();
+  console.log('Date:', date.getDay() + '/' + date.getMonth() + '/' + date.getYear(), 'Time:', date.getHours() + ':' + date.getMinutes());
   res.sendFile(__dirname + "/" + "SFL_Anno.html");
 })
 
