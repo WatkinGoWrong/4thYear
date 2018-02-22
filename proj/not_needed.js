@@ -1,3 +1,118 @@
+//update node positions
+/*reposition = function (node) {
+
+    if (uniformDepth) {
+        tree.nodeDepth();
+    }
+
+    var leafCount = getLeafCount(node),
+        left = node.x - tree.w * (leafCount - 1) / 2;
+    node.kids.forEach(function (kid) {
+        var w = tree.w * getLeafCount(kid);
+        left += w;
+        kid.x = left - (w + tree.w) / 2;
+        kid.y = node.y + tree.h;
+        reposition(kid);
+        redraw();
+    });
+
+}*/
+
+
+/*getJSON = function(json_tree, num) { //testing how to return json value and parameter names
+  ////console.log.log("hi", JSON.stringify(json_tree));
+
+  body = JSON.stringify(json_tree)
+  var d_width = JSON.stringify(document.getElementById('TreeArea').offsetWidth);
+  ////console.log.log(d_width);
+  $.ajax({
+    url: "http://localhost:8000/treetest",
+    type: "POST",
+    data: {
+      body
+    },
+    contentType: "application/json",
+    sucess: console.log.log("success"),
+    complete: function(data) {
+      ////console.log.log(data);
+    }
+  });
+
+  if (document.getElementById('tree-' + num) == null) {
+    var div = document.createElement("div");
+    div.setAttribute("id", "tree-" + num);
+    document.getElementById("TreeArea").appendChild(div);
+    initialise(num);
+  }
+  resetTree();
+
+  //api call ---
+
+
+  var myObj = json_tree;
+  var treeNames = Object.keys(myObj);
+  var parent = tree.nodes[0];
+  var depth = 0;
+  for (name in treeNames) {
+    recursiveGetProperty(myObj, treeNames[name], function(obj) {}, parent, depth);
+  }
+
+
+  TreeJSON();
+}*/
+
+//old bubble sort for anno_arrays
+bubbleSortAnno = function(a) {
+  for (var i = 0; i < a.length; i += 1) {
+    for (var j = 2; j < a.length - i; j += 4) {
+      if (a[j] > a[j + 4]) {
+        var temp_1 = a[j - 2];
+        var temp_2 = a[j - 1];
+        var temp_3 = a[j];
+        var temp_4 = a[j + 1];
+        //-----
+        a[j - 2] = a[j + 2];
+        a[j - 1] = a[j + 3];
+        a[j] = a[j + 4];
+        a[j + 1] = a[j + 5];
+        //-----
+        a[j + 2] = temp_1;
+        a[j + 3] = temp_2;
+        a[j + 4] = temp_3;
+        a[j + 5] = temp_4;
+      }
+    }
+  }
+  //console.log(a);
+  return a
+}
+
+//old treeGen method for anno_array
+/*for (var i = 0; i < anno_array.length; i += 4) {
+
+  //console.log(sentence_array[TreeNum + 2], anno_array[i + 2], sentence_array[TreeNum + 3], anno_array[i + 3]);
+
+  //if(sentence_array[TreeNum].indexOf(anno_array[i-1])!=-1){
+  if ((sentence_array[TreeNum + 2] <= anno_array[i + 2] && sentence_array[TreeNum + 3] >= anno_array[i + 3]) && (sentence_array[TreeNum].indexOf(anno_array[i]) > -1)) {
+
+    var Tree = {
+      [anno_array[i]]: {}
+    };
+
+    texts = ((anno_array[i + 1]).replace("[", "").replace("]", "")).split(",");
+
+    for (var pos = texts.length - 1; pos >= 0; pos--) {
+      var curNode = {
+        [(texts[pos].replace("\"", "")).slice(0, -1)]: Tree
+      };
+      Tree = curNode;
+    }
+    _.merge(WholeTree, Tree);
+  } else {
+    console.log(anno_array[i], "- is not in the sentence -", sentence_array[TreeNum]);
+  }
+}*/
+
 /*
  * Loads data for trees, and takes a function as an argument
  * which is called on the generated trees
