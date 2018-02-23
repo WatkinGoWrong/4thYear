@@ -35,21 +35,22 @@ module.exports = function(app, db) {
       title: req.body.title
     };
     //var teacher = JSON.stringify(req.body.body_t).slice(1, -1).replace(/\\/g, "");
-    var student = JSON.stringify(req.body.body_s).slice(1, -1).replace(/\\/g, "");
+    var student = JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, "");
+    //console.log("ttt ----", student);
 
-    var sentence = (req.body.sentence).split(' ').join('').toLowerCase();
-    console.log("sentence - ", sentence);
-    var teacher = SFL_trees.examples[sentence]
+    //var sentence = (req.body.sentence).split(' ').join('').toLowerCase();
+    //console.log("sentence - ", sentence);
+    var teacher = SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()];
 
     //console.log("teacher - ", teacher);
     //console.log("student - ", student);
 
-    var result = grading.genFromTable(JSON.parse(teacher), JSON.parse(student));
+    //var result =
     //var TreeArray = [myJSON];
 
     //res.send(teacher);
     //res.send(student);
-    res.send(result);
+    res.send(grading.genFromTable(JSON.parse(teacher), JSON.parse(student)));
 
   });
 

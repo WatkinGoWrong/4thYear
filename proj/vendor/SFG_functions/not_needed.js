@@ -561,3 +561,31 @@ function getCookie(cname) {
     }
   } while (swapped);
 }*/
+
+
+function recursiveGetProperty(obj, lookup, callback, parent, depth) {
+  depth++;
+  for (property in obj) {
+    if (property == lookup) {
+      var obj2 = obj[property];
+      var t = Object.keys(obj2);
+      //////console.log.log(t);
+      for (name in t) {
+        parent2 = tree.addFromJSON(parent, t[name], name, depth);
+        if (t[name] != undefined) {
+          callback(t[name]);
+        }
+
+        recursiveGetProperty(obj2, t[name], callback, parent2, depth);
+      }
+    }
+  }
+  //////console.log.log("<--->");
+}
+
+TreeJSON = function() {
+  //////console.log.log(tree.nodes);
+  JSONData = JSON.stringify(tree.nodes);
+  ////console.log.log(JSONData);
+  //getStruc(tree.nodes,student);
+}
