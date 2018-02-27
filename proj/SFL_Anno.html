@@ -12,11 +12,13 @@
   <!--CSS for basic example of tree generation-->
   <link rel="stylesheet" href="css/Treant.css">
   <!--CSS for treant-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 
   <style>
     [id^=svg] {
-      border: 1px solid black;
+      border: 1px solid grey;
+      overflow: auto;
     }
   </style>
 
@@ -24,11 +26,18 @@
 </head>
 
 <body>
-  <div class="container-fluid fill bg-light">
-    <!-- Functional Grammar Analysis Mode -->
-    <h1 id="AnalysisMode" style="align-content:center;width:100%;text-align: center;"></h1>
+  <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal">4th Year Project - SFG</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+      <a class="p-2 text-dark" href="#" id="captureSFG">Capture Tree (In progress)</a>
+      <a class="p-2 text-dark" href="#" id="gradeSFG">Grade (In progress)</a>
+      <a class="p-2 text-dark" href="#" id="adjustSFG">Adjust</a>
+      <a class="p-2 text-dark" href="#" id="genSFG">Generate SFG</a>
 
-    <p id="tempStore1"></p>
+    </nav>
+  </div>
+  <div style="align-content:center;width:100%;text-align: center;">
+
     <div class="card">
       <div id="content">
         <p>This little piggy had none</p>
@@ -37,111 +46,102 @@
 
         <p>Can you believe that</p>
 
+        <p>it's about 6(hours) am</p>
       </div>
 
       <div id="content2" style="display: none;">
       </div>
     </div>
 
-    <a id="downloadAnchorElem" style="display:none"></a>
+  </div>
+  <div id="allBoxes" style="display: none;">
+    <!--Container to hold box diagrams-->
+  </div>
+  <div id="allTrees" style="display:none;">
+    <!--Container to hold tree-->
+  </div>
 
-    <!-- <div id="example1" style="width:100px;height:100px"></div> -->
-    <div style="align-content:center;width:100%;text-align: center;">
-
-
-
-      <!--<label class="btn btn-primary" id="textInputLabel"><span class="inputSpan">Upload A Text</span><input type="file" id="inputText" value="Import" /><br/></label>
-    <p><button class="button" id="generateTrees" style="display: none;" onclick="loadDataForTrees(addTreesToDocument,'1');">Generate Trees</button></p>
-    <p><button class="button" id="generateBoxes" style="display: none;" onclick="loadDataForTrees(addBoxDiagramsToDocument,'1');">Generate Box Diagrams</button></p>
-    <p><button class="button" id="generateTheme" style="display: none;" onclick="loadDataForTrees(addThemeDiagramsToDocument,'1t');">Generate Theme Diagrams</button></p>
-  -->
-
-
-      <!--<p><button class="button" id="genNew">Create New Annotation Data</button></p>
-    <label class="button" id="annotationInput" style="display: none;"><span class="inputSpan">Upload Annotation Data</span><input type="file" id="inputFile" value="Import" /><br/></label>
-    <p><button class="button" id="dwnJson" style="display: none;">Download Annotation Data</button></p>
-    <p><button class="button" id="themeAnalyse" style="display: none;" onclick="enterThemeMode();">Theme Analysis mode</button></p>
-    <p><button class="button" id="grammarAnalyse" style="display: none;" onclick="enterGrammarMode();">Grammar Analysis mode</button></p>
-    <p><button class="button" id="AnnoToTree" style="display: none;" onclick="">Generate Tree</button></p>
-    <p><button class="button" id="CompareTree" style="display: none;" onclick="getStruc(WholeTree,student);">Compare Tree</button></p>
-    <input id="CurrentTree" type="range" min="0" max="0" step="1" style="display: none;">
-    <p><button class="button" id="SelectTree" style="display: none;" onclick="setTreeNum();">Select Tree</button></p>-->
-      <p><button class="button" id="captureSFG">Capture Tree</button></p>
-
-
-    </div>
-    <div id="allBoxes" style="display: none;">
-      <!--Container to hold box diagrams-->
-    </div>
-    <div id="allTrees" style="display:none;">
-      <!--Container to hold tree-->
-    </div>
-    <br>
-
-    <!-- createWholeTree();getJSON(WholeTree,num);
-  Tree div -->
-    <!--<div id = "tree-one" class="col-lg-6" style="display: none;">
-
-  </div>-->
-    <div class="card-group">
-      <div class="card" style="width: 20rem;">
-        <div class="card-block">
-          <ul id="Tree_list" class="list-group list-group-flush">
+  <div id="accordion">
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h5 class="">
+        <button class="btn btn-secondary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Sentences
+        </button>
+      </h5>
+      </div>
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          <ul id="Tree_list" class="list-group">
           </ul>
         </div>
       </div>
-      <div class="container">
-        <div class="row">
-          <div id="TreeArea" class="container text-center ">
-          </div>
-        </div>
-      </div>
     </div>
+  </div>
+
+  <div class="progress">
+    <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0</div>
+  </div>
+
+  <div class="row">
+    <!--<div class="col-3">
+      <ul id="Tree_list- r" class="list-group list-group-flush">
+      </ul>
+    </div>-->
+    <div class="col-12" id="TreeArea">
+      <!--<div id="TreeArea" class="container text-center ">-->
+    </div>
+  </div>
+  </div>
 
 
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src=" vendor/jquery.js ">
+  </script>
 
-    <script src=" vendor/jquery.js ">
-    </script>
+  <!-- The following line of code should be uncommented for use with electron in generating desktop application -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js " onload="window.$=w indow.jQuery=m odule.exports; "></script> -->
 
-    <!-- The following line of code should be uncommented for use with electron in generating desktop application -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js " onload="window.$=w indow.jQuery=m odule.exports; "></script> -->
+  <script src="vendor/annotator.js ">
+  </script>
+  <script src="vendor/highlighter.js ">
+  </script>
+  <script src="vendor/rainbow-custom.min.js "></script>
 
-    <script src="vendor/annotator.js ">
-    </script>
-    <script src="vendor/highlighter.js ">
-    </script>
-    <script src="vendor/rainbow-custom.min.js "></script>
+  <script src="vendor/raphael.js ">
+    // Treant related
+  </script>
+  <script src="vendor/Treant.js ">
+    // Treant related
+  </script>
+  <script src="vendor/js.cookie.js "></script>
 
-    <script src="vendor/raphael.js ">
-      // Treant related
-    </script>
-    <script src="vendor/Treant.js ">
-      // Treant related
-    </script>
-    <script src="vendor/js.cookie.js "></script>
+  <script src="vendor/taggle.min.js "></script>
+  <script src="vendor/jquery-ui.js "></script>
 
-    <script src="vendor/taggle.min.js "></script>
-    <script src="vendor/jquery-ui.js "></script>
+  <!--<script src="vendor/SFG_functions/SVG_find_functions.js "></script>-->
+  <script src="vendor/SFG_functions/api_calls.js "></script>
+  <script src="vendor/SFG_functions/initialise.js "></script>
+  <script src="vendor/SFG_functions/reposition.js "></script>
+  <script src="vendor/SFG_functions/redraw.js "></script>
+  <script src="vendor/SFG_functions/nav_bar.js "></script>
+  <script src="vendor/main.js "></script>
+  <script src="vendor/SFG_functions/added_features.js "></script>
 
-    <!--<script src="vendor/SFG_functions/SVG_find_functions.js "></script>-->
-    <script src="vendor/SFG_functions/api_calls.js "></script>
-    <script src="vendor/SFG_functions/initialise.js "></script>
-    <script src="vendor/SFG_functions/reposition.js "></script>
-    <script src="vendor/SFG_functions/redraw.js "></script>
-    <script src="vendor/main.js "></script>
-
-    <script src="vendor/lodash.js "></script>
-    <script src="http://d3js.org/d3.v3.min.js "></script>
-    <!--<script src="vendor/SFL.js "></script>
+  <script src="vendor/lodash.js "></script>
+  <script src="http://d3js.org/d3.v3.min.js "></script>
+  <!--<script src="vendor/SFL.js "></script>
 -->
 
 
-    <script type="text/coffeescript ">
-      # Attept at error handling for touch devices. window.onerror = (msg, file, line) -> alert(msg + ' ' + file + ' ' + line) jQuery.ajaxSetup async: false modules = jQuery.trim " "" touch touch/utils touch/editor touch/viewer "" " modules = modules.split(/\s+/)
-      run = (file, source) -> filename = file.replace /coffee$/, "js " compiled = "#{CoffeeScript.compile(source)}\n//@ sourceURL=#{filename} " eval(compiled) sources = ("./src/#{script}.coffee " for script in modules) requests = jQuery.map sources, (script)
-      -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content ").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
-      > -1 }) window.annotator = jQuery("#content ").data('annotator')
-    </script>
+  <script type="text/coffeescript ">
+    # Attept at error handling for touch devices. window.onerror = (msg, file, line) -> alert(msg + ' ' + file + ' ' + line) jQuery.ajaxSetup async: false modules = jQuery.trim " "" touch touch/utils touch/editor touch/viewer "" " modules = modules.split(/\s+/)
+    run = (file, source) -> filename = file.replace /coffee$/, "js " compiled = "#{CoffeeScript.compile(source)}\n//@ sourceURL=#{filename} " eval(compiled) sources = ("./src/#{script}.coffee " for script in modules) requests = jQuery.map sources, (script)
+    -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content ").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
+    > -1 }) window.annotator = jQuery("#content ").data('annotator')
+  </script>
   </div>
 </body>
 

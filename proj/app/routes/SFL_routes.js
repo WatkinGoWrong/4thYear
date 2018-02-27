@@ -35,12 +35,14 @@ module.exports = function(app, db) {
       title: req.body.title
     };
     //var teacher = JSON.stringify(req.body.body_t).slice(1, -1).replace(/\\/g, "");
+    console.log("body - ", JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, ""));
     var student = JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, "");
     //console.log("ttt ----", student);
 
     //var sentence = (req.body.sentence).split(' ').join('').toLowerCase();
-    //console.log("sentence - ", sentence);
+    console.log("sentence - ", req.body.sentence);
     var teacher = SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()];
+    console.log(teacher)
 
     //console.log("teacher - ", teacher);
     //console.log("student - ", student);

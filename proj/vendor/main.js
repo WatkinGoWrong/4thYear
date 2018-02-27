@@ -72,24 +72,26 @@
   };
 
 
-  function node_obj(id, quote, text, anno_start, anno_end) {
+  function node_obj(id, quote, text, anno_start, anno_end, para_start, para_end) {
     this.id = id;
     this.quote = quote;
     this.text = text;
     this.anno_start = anno_start;
     this.anno_end = anno_end;
+    this.para_start = para_start;
+    this.para_end = para_end;
   }
 
   createWholeTree = function() {
     //Treenum = setTreeNum();
     WholeTree = {};
     //sentence = (node_sentence_array[TreeNum].quote).split(' ').join('').toLowerCase();
-    for (x in node_sentence_array) {
+    /*for (x in node_sentence_array) {
       if (node_sentence_array[x].id = TreeNum) {
         sentence = (node_sentence_array[x].quote).split(' ').join('').toLowerCase();
         //TreeNum = x;
       }
-    }
+    }*/
 
 
     for (var i = 0; i < node_array.length; i++) {
@@ -116,49 +118,21 @@
         console.log(node_array[i].quote, "- is not in the sentence -", node_sentence_array[TreeNum].quote);
       }
     }
+
+    if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("SENTENCE") != -1)
+      WholeTree["Sentence"] = WholeTree[""];
+    else
+      WholeTree["Clause"] = WholeTree[""];
+    delete WholeTree[""];
   }
 
 
   Annotator.Plugin.fileStorage = function(element) {
     return {
       pluginInit: function() {
-        this.annotator.subscribe("annotationCreated", function(annotation) {
-            //current work area
-
-            //Checks for sentence tag - which will add it to sentence array for cehcking against words
-            if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1) {
-              var list = document.getElementById('Tree_list');
-              var entry = document.createElement('li');
-              entry.appendChild(document.createTextNode(annotation.quote));
-              entry.className = "list-group-item";
-              entry.setAttribute("id", cur_id);
-              list.appendChild(entry);
-
-              /*used for sentence_array before OO
-              sentence_array.push(annotation.quote);
-              sentence_array.push(annotation.text);
-              sentence_array.push(annotation.ranges[0].startOffset);
-              sentence_array.push(annotation.ranges[0].endOffset);*/
-
-              var node = new node_obj(cur_id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset);
-              node_sentence_array.push(node);
-              cur_id++;
-            } else {
-              /*used for anno_array before OO
-              anno_array.push(annotation.quote);
-              anno_array.push(annotation.text);
-              anno_array.push(annotation.ranges[0].startOffset);
-              anno_array.push(annotation.ranges[0].endOffset);*/
-
-              var node = new node_obj(annotation.id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset);
-              node_array.push(node);
-            }
-            if (node_array.length > 1) {
-              node_array = bubbleSortNode(node_array);
-            }
-            //anno_array = bubbleSortAnno(anno_array);
-            console.log("nodes : ", node_array);
-            console.log("Sentences : ", node_sentence_array);
+        this.annotator.subscribe("annotationCreated", function(annotation) { //current work area
+            console.log("anno := ",
+              annotation);
 
 
             if (annotation.quote.length > 0 && annotation.text.length > 0) {
@@ -192,13 +166,48 @@
               obj.push(annotation);
 
             }
+            //Checks for sentence tag - which will add it to sentence array for cehcking against words
+            if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1 || ((annotation.text).toUpperCase()).indexOf("CLAUSE") != -1) {
+              var list = document.getElementById('Tree_list');
+              var entry = document.createElement('li');
+              entry.appendChild(document.createTextNode(annotation.quote));
+              entry.className = "list-group-item list-group-item-action";
+              //cur_id = parseInt(annotation.id);
+              entry.setAttribute("id", annotation.id);
+              list.appendChild(entry);
+
+              /*used for sentence_array before OO
+              sentence_array.push(annotation.quote);
+              sentence_array.push(annotation.text);
+              sentence_array.push(annotation.ranges[0].startOffset);
+              sentence_array.push(annotation.ranges[0].endOffset);*/
+
+              var node = new node_obj(annotation.id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset, annotation.ranges[0].start, annotation.ranges[0].end);
+              node_sentence_array.push(node);
+              //cur_id++;
+            } else {
+              /*used for anno_array before OO
+              anno_array.push(annotation.quote);
+              anno_array.push(annotation.text);
+              anno_array.push(annotation.ranges[0].startOffset);
+              anno_array.push(annotation.ranges[0].endOffset);*/
+
+              var node = new node_obj(annotation.id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset, annotation.ranges[0].start, annotation.ranges[0].end);
+              node_array.push(node);
+            }
+            if (node_array.length > 1) {
+              node_array = bubbleSortNode(node_array);
+            }
+            //anno_array = bubbleSortAnno(anno_array);
+            console.log("nodes : ", node_array);
+            console.log("Sentences : ", node_sentence_array);
           })
           .subscribe("annotationDeleted", function(annotation) {
             // Check if the annotation actually exists (workaround annotatorjs bug #258).
             if (annotation.id) {
               ////console.log.log(annotation);
 
-              if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1) {
+              if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1 || ((annotation.text).toUpperCase()).indexOf("CLAUSE") != -1) {
 
                 /*sentence anno deletion before OO
                 for (var i = 0; i < sentence_array.length; i = i + 4) {
@@ -260,7 +269,7 @@
 
             //updating for OO struc
             for (var i = 0; i < node_array.length; i++) {
-              if (annotation.quote == node_array[i].quote) {
+              if (annotation.id == node_array[i].id) {
                 var node = new node_obj(annotation.id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset);
                 node_array.splice(i, i + 1, node);
               }
@@ -341,11 +350,10 @@
 
   function tree() {
 
-    var node_length = 0;
     var node_count = 0;
     var previous_x = 0;
 
-    var svgWidth = (document.getElementById('TreeArea').offsetWidth) * .985,
+    var svgWidth = 1440, //(document.getElementById('TreeArea').offsetWidth) * .90,
       svgHeight = svgWidth / 2;
 
     var devide = 2,
@@ -377,7 +385,7 @@
     var in_diff_array = [];
 
     //get the nodes
-    /*tree.getNodes = function() {
+    tree.getNodes = function() {
       var n = [];
 
       function getNodes(node) {
@@ -450,13 +458,13 @@
       return t.sort(function(a, b) {
         return a.toId - b.toId
       });
-    }*/
+    }
 
-    tree.getNodes = function() {
+    tree.getcorrectNodes = function() {
       var n = [];
       c_diff_array = diff_array.slice(0);
 
-      function getNodes(node) {
+      function getcorrectNodes(node) {
         //node.kids.forEach(function(kid) {
         if (c_diff_array[0]) {
           n.push({
@@ -471,14 +479,14 @@
         }
         node.kids.forEach(function(kid) {
           c_diff_array = c_diff_array.slice(1);
-          return getNodes(kid);
+          return getcorrectNodes(kid);
         });
         //console.log("kid >> ", kid);
         //c_diff_array = c_diff_array.slice(1);
         //getNodes(kid);
         //});
       }
-      getNodes(tree.nodes[0]);
+      getcorrectNodes(tree.nodes[0]);
       return n.sort(function(a, b) {
         return a.id - b.id;
       });
@@ -513,18 +521,18 @@
     }
 
     //get the links
-    tree.getLinks = function() {
+    tree.getcorrectLinks = function() {
       var l = [];
       c_diff_array = diff_array.slice(1);
       //console.log("l_diff > ", c_diff_array)
-      getLinks(tree.nodes[0], l);
+      getcorrectLinks(tree.nodes[0], l);
       //console.log("link >> ", l);
       return l.sort(function(a, b) {
         return a.toId - b.toId
       });
     }
 
-    function getLinks(node, l) {
+    function getcorrectLinks(node, l) {
       node.kids.forEach(function(kid) {
         if (!kid.isLeaf) {
           if (c_diff_array[0]) {
@@ -536,14 +544,11 @@
               toX: kid.x,
               toY: kid.y,
             });
-            //c_diff_array = c_diff_array.slice(1);
-            //console.log(">> ", c_diff_array)
-
           }
         }
         c_diff_array = c_diff_array.slice(1);
         //console.log(">> ", c_diff_array)
-        getLinks(kid, l);
+        getcorrectLinks(kid, l);
       });
     }
 
@@ -578,11 +583,11 @@
     }
 
     //get the triangles -- size of the trees
-    tree.getTriangles = function() {
+    tree.getcorrectTriangles = function() {
       var t = [];
       c_diff_array = diff_array.slice(1);
 
-      function getTriangles(node) {
+      function getcorrectTriangles(node) {
         node.kids.forEach(function(kid) {
           if (kid.isLeaf) {
             if (c_diff_array[0]) {
@@ -599,11 +604,11 @@
             }
           }
           c_diff_array = c_diff_array.slice(1);
-          getTriangles(kid);
+          getcorrectTriangles(kid);
         }); //10
         //node.kids.forEach(getTriangles);
       }
-      getTriangles(tree.nodes[0]);
+      getcorrectTriangles(tree.nodes[0]);
       return t.sort(function(a, b) {
         return a.toId - b.toId
       });
@@ -660,40 +665,7 @@
     //add a new leaf - have to look into refactoring this code
 
     //sets leafs depth to deepest leaf
-    tree.nodeDepth = function() {
-      var leafs = [];
-      var depth = 0;
 
-      //check if nodes are leafs
-      function nodeDepth(n) {
-        n.kids.forEach(function(kid) {
-          if (kid.isLeaf) {
-            leafs.push({
-              id: kid.id
-            });
-            if (kid.y > depth) {
-              depth = kid.y;
-            }
-          }
-        });
-        n.kids.forEach(nodeDepth);
-      }
-      nodeDepth(tree.nodes[0]);
-
-      function changeDepth(n) {
-        n.kids.forEach(function(kid) {
-          leafs.forEach(function(leaf) {
-            if (kid.id == leaf.id) {
-              kid.y = depth;
-            }
-          })
-
-        });
-        n.kids.forEach(changeDepth);
-      }
-      changeDepth(tree.nodes[0]);
-      tree.leafDepth = depth;
-    }
 
     //update/refresh svg
     refresh = function() {
@@ -702,43 +674,6 @@
       d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).remove();
     }
     //get leaf count for node
-    getLeafCount = function(node) {
-      if (node.kids.length == 0) {
-        return 1;
-      } else {
-        return node.kids.map(getLeafCount).reduce(function(a, b) {
-          return a + b;
-        });
-      }
-    }
-
-    getNodeLength = function(node) {
-      node.kids.forEach(function(kid) {
-        getNodeLength(kid);
-        if ((kid.kids).length == 0) {
-          node_length++;
-        }
-      });
-
-    }
-
-    resetTree = function() {
-      tree.nodes = [];
-      tree.nodes.push({
-        id: '00',
-        text: 'Clause',
-        x: tree.cx,
-        y: tree.cy,
-        isLeaf: false,
-        tWidth: 0,
-        depth: 0,
-        kids: []
-      });
-      refresh();
-      reposition(tree.nodes[0], SFL_node_pos);
-      redraw();
-    }
-
 
     //API CALLS
     $(document).ready(function() {
@@ -748,18 +683,28 @@
         if (e.target && e.target.nodeName == "LI") {
           ////console.log.log(e.target.innerHTML);
           ////console.log.log(e.target.id);
-          TreeNum = e.target.id;
-          console.log(TreeNum);
+          //TreeNum = e.target.id;
+          //console.log(TreeNum);
+
+          for (x in node_sentence_array) {
+            //console.log(node_sentence_array[x].quote, " = ", x);
+            if (node_sentence_array[x].quote == e.target.innerHTML) {
+              TreeNum = x;
+              sentence = (node_sentence_array[x].quote).split(' ').join('').toLowerCase();
+              console.log("sentence :", sentence);
+              createWholeTree();
+              break;
+            }
+          }
         }
         ////console.log.log(TreeNum);
 
         diff_array = [];
         percentage = ['%'];
-        var count = 0;
+        //var count = 0;
         teacher_segmented_sentence = [];
         student_segmented_sentence = [];
-
-        createWholeTree();
+        resetTree();
 
         if (document.getElementById('tree-' + num) == null) {
           var div = document.createElement("div");
@@ -770,73 +715,64 @@
 
         body = JSON.stringify(WholeTree)
 
-        node_length = 0;
-        node_count = 0;
-        previous_x = 0;
+        //node_length = 0;
+        //node_count = 0;
+        //previous_x = 0;
         SFL_node_pos = [];
         var assignment_content = {};
 
         tree.nodes = await getTree(body);
-        for (x in node_sentence_array) {
+        console.log(node_sentence_array);
+
+        /*for (x in node_sentence_array) {
           if (node_sentence_array[x].id = TreeNum)
             sentence = (node_sentence_array[x].quote).split(' ').join('').toLowerCase();
-        }
+        }*/
         var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
 
         diff_array = grade[3];
 
+        document.getElementById("progress-bar").innerHTML = grade[0][1] + '%';
+        document.getElementById("progress-bar").style.width = grade[0][1] + '%';
 
-        getNodeLength(tree.nodes[0]);
-        reposition(tree.nodes[0], SFL_node_pos);
+
+        //getNodeLength(tree.nodes[0]);
+
+        if (adjust)
+          reposition_adjust(tree.nodes[0], SFL_node_pos);
+        else
+          reposition(tree.nodes[0]);
+
         redraw();
 
 
-        assignment_content["GRADE"] = {
+        console.log("SEN:", sentence);
+        var GRADE = {
           "PERCENTAGE": grade[0],
           "TEACHER_SEG_SEN": grade[1],
           "STUDENT_SEG_SEN": grade[2],
           "LIKENESS": grade[3]
         }
         //console.log(grade);
-        assignment_content["SENTENCE"] = sentence;
-        assignment_content["SFG"] = tree.nodes[0];
-        //assignment_content["GRADE"] = getGrade(body, sentence);
-
-        var student_content = {
-          Assignment_1: assignment_content
-        };
-        console.log(student_content);
-
+        assignment_content[sentence] = {
+          "GRADE": GRADE,
+          "SFG": tree.nodes[0]
+        }
+        console.log(assignment_content);
       });
     });
-
-    captureSFG = function() {
-      var c = document.getElementById('tree-0');
-      var t = c.getContext('2d');
-      window.open('', document.getElementById('tree-0').toDataURL());
-    }
-
-    $(function() {
-      $("#captureSFG").click(function() {
-        html2canvas($("#tree-0"), {
-          onrendered: function(canvas) {
-            theCanvas = canvas;
-            document.body.appendChild(canvas);
-
-            // Convert and download as image
-            Canvas2Image.saveAsPNG(canvas);
-            //$("#img-out").append(canvas);
-            // Clean up
-            //document.body.removeChild(canvas);
-          }
-        });
-      });
-    });
-
-
-
     //initialise();
     return tree;
   }
+  $(function() {
+    $("#genSFG").click(async function() {
+      resetTree();
+      createWholeTree();
+      body = JSON.stringify(WholeTree)
+      tree.nodes = await getTree(body);
+      reposition(tree.nodes[0]);
+      console.log(JSON.stringify(tree.nodes));
+    });
+  });
 
   var tree = tree();

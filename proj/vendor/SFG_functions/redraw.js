@@ -7,17 +7,41 @@ var devide = 2,
   trainglepadding = fontsize - 2,
   stroke_width = fontsize / 15
 
-/*redraw = function() {
+reset = function() {
   d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
   d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
   d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
+
+  d3.select('#nodes_2').selectAll('text').data(tree.getincorrectNodes()).exit().remove();
+  d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks()).exit().remove();
+  d3.select('#triangles_2').selectAll('polygon').data(tree.getincorrectTriangles()).exit().remove();
+
+  d3.select('#nodes_3').selectAll('text').data(tree.getcorrectNodes()).exit().remove();
+  d3.select('#links_3').selectAll('line').data(tree.getcorrectLinks()).exit().remove();
+  d3.select('#triangles_3').selectAll('polygon').data(tree.getcorrectTriangles()).exit().remove();
+}
+
+redraw = function() {
+  //reset();
+
+  d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
+  d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
+  d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
+
+  /*d3.select('#nodes_2').selectAll('text').data(tree.getincorrectNodes()).exit().remove();
+  d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks()).exit().remove();
+  d3.select('#triangles_2').selectAll('polygon').data(tree.getincorrectTriangles()).exit().remove();
+
+  d3.select('#nodes_3').selectAll('text').data(tree.getcorrectNodes()).exit().remove();
+  d3.select('#links_3').selectAll('line').data(tree.getcorrectLinks()).exit().remove();
+  d3.select('#triangles_3').selectAll('polygon').data(tree.getcorrectTriangles()).exit().remove();*/
 
   var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
 
   nodes.text(function(node) {
       return node.text
     }) /*.transition().duration(500)*/
-/*.attr('x', function(node) {
+    .attr('x', function(node) {
       return node.x;
     }).attr('y', function(node) {
       return node.y + 5;
@@ -31,7 +55,7 @@ var devide = 2,
     }); //red|blue
 
   nodes.enter().append('text').attr('id', function(node) { /*/ ///console.log.log('id = ' + node.id);*/
-/*return node.id;
+      return node.id;
     })
     .attr('x', function(node) {
       return node.x;
@@ -41,23 +65,23 @@ var devide = 2,
     .text(function(node) {
       return node.text;
     })
-    /*.attr('tWidth', function(node) {
+    .attr('tWidth', function(node) {
       var n = tree.getNode(node);
       //n.width = 40;
       n.tWidth = this.getBBox().width;
       return this.getBBox().width;
       //return tree.getTextWidth(node);
       //return 40;
-    })*/
-//Change font below
-/*.style({
-  'text-anchor': 'middle',
-  'cursor': 'pointer',
-  'font-size': fontsize
-})
-//.on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
-/*.transition().duration(500)*/
-/*.attr('x', function(node) {
+    })
+    //Change font below
+    .style({
+      'text-anchor': 'middle',
+      'cursor': 'pointer',
+      'font-size': fontsize
+    })
+    //.on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
+    //.transition().duration(500) * /
+    .attr('x', function(node) {
       return node.x;
     }).attr('y', function(node) {
       return node.y + 5;
@@ -67,7 +91,7 @@ var devide = 2,
   var links = d3.select('#links').selectAll('line').data(tree.getLinks());
 
   links /*.transition().duration(500)*/
-/*.attr('x1', function(link) {
+    .attr('x1', function(link) {
       return link.fromX;
     }).attr('y1', function(link) {
       return link.fromY + linkSpace;
@@ -95,7 +119,7 @@ var devide = 2,
       'stroke-width': stroke_width + 'px'
     }) //'stroke-dasharray': 5 , -- Use for showing error in comparison
     /*.transition().duration(500)*/
-/*.attr('x2', function(link) {
+    .attr('x2', function(link) {
       return link.toX;
     }).attr('y2', function(link) {
       return link.toY - linkSpace;
@@ -105,7 +129,7 @@ var devide = 2,
   var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
 
   triangles /*.transition().duration(500)*/
-/*.attr('points', function(triangle) {
+    .attr('points', function(triangle) {
       return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX - trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX + trainglepadding) + ',' + triangle.rightY)
     });
 
@@ -120,23 +144,28 @@ var devide = 2,
       'fill': 'white'
     }) //'stroke-dasharray': 5 , -- Use for showing error in comparison
     /*.transition().duration(500)*/
-/*  .attr('points', function(triangle) {
+    .attr('points', function(triangle) {
       return (triangle.topX + ',' + triangle.topY + ' ' + (triangle.leftX - trainglepadding) + ',' + triangle.leftY + ' ' + (triangle.rightX + trainglepadding) + ',' + triangle.rightY)
     });
-}*/
+}
 
-redraw = function() {
+redraw_grade = function() {
+  //reset();
   d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
   d3.select('#links').selectAll('line').data(tree.getLinks()).exit().remove();
   d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).exit().remove();
+
+  d3.select('#nodes_2').selectAll('text').data(tree.getincorrectNodes()).exit().remove();
   d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks()).exit().remove();
   d3.select('#triangles_2').selectAll('polygon').data(tree.getincorrectTriangles()).exit().remove();
-  d3.select('#nodes_2').selectAll('text').data(tree.getincorrectNodes()).exit().remove();
 
+  d3.select('#nodes_3').selectAll('text').data(tree.getcorrectNodes()).exit().remove();
+  d3.select('#links_3').selectAll('line').data(tree.getcorrectLinks()).exit().remove();
+  d3.select('#triangles_3').selectAll('polygon').data(tree.getcorrectTriangles()).exit().remove();
 
   //console.log("-- 1");
 
-  var nodes = d3.select('#nodes').selectAll('text').data(tree.getNodes());
+  var nodes = d3.select('#nodes_3').selectAll('text').data(tree.getcorrectNodes());
 
   nodes.text(function(node) {
       return node.text
@@ -223,7 +252,7 @@ redraw = function() {
       return node.y + 5;
     });
   //var links = [];
-  var links = d3.select('#links').selectAll('line').data(tree.getLinks());
+  var links = d3.select('#links_3').selectAll('line').data(tree.getcorrectLinks());
   //console.log("links>>", links);
   links.attr('x1', function(link) {
     return link.fromX;
@@ -285,7 +314,7 @@ redraw = function() {
   });
 
   //console.log("diff >> ", diff_array);
-  var triangles = d3.select('#triangles').selectAll('polygon').data(tree.getTriangles());
+  var triangles = d3.select('#triangles_3').selectAll('polygon').data(tree.getcorrectTriangles());
 
   triangles /*.transition().duration(500)*/
     .attr('points', function(triangle) {

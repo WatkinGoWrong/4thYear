@@ -1,6 +1,6 @@
 function tree(JSONTree) {
   var num;
-  var svgWidth = 1000,
+  var svgWidth = 1440,
     svgHeight = svgWidth / 2;
 
   var devide = 2,
@@ -277,7 +277,7 @@ function tree(JSONTree) {
     //add the root node
     tree.nodes.push({
       id: '00',
-      text: 'Clause',
+      text: Object.keys(JSON.parse(JSONTree))[0],
       x: tree.cx,
       y: tree.cy,
       parent: 'none',
@@ -287,7 +287,7 @@ function tree(JSONTree) {
       kids: []
     });
   }
-
+  //console.log("--- HERE --- ", Object.keys(JSON.parse(JSONTree))[0]);
   initialise();
   getJSON(JSONTree)
 
