@@ -9,6 +9,8 @@
   var cur_id = 0;
   var node_array = [];
   var node_sentence_array = [];
+  var assignment_content = {};
+
 
   //Setting number of notches on slide - number of SFLs
   setTreeNum = function() {
@@ -50,24 +52,7 @@
     ann.annotator('loadAnnotations', obj);
     ann2.annotator('loadAnnotations', obj);
 
-    $("#genNew").hide(0, function() {
-      $("#annotationInput").hide(0, function() {
-        $("#AnnoToTree").hide(0, function() {
-          $("#CompareTree").hide(0, function() {
-            $("#CurrentTree").hide(0);
-          });
-        });
-        //$("#generateTrees").show(250, function(){
-        //$("#generateBoxes").show(250, function(){
-        //$("#generateTheme").show(250, function(){
-        //$("#dwnJson").show(250, function(){
-        //$("#themeAnalyse").show(250);
-        //});
-        //});
-        //});
-        //});
-      });
-    });
+    $("#inputText").css('display', 'none');
 
   };
 
@@ -353,14 +338,14 @@
     var node_count = 0;
     var previous_x = 0;
 
-    var svgWidth = 1440, //(document.getElementById('TreeArea').offsetWidth) * .90,
+    /*var svgWidth = 1440, //(document.getElementById('TreeArea').offsetWidth) * .90,
       svgHeight = svgWidth / 2;
 
     var devide = 2,
       fontsize = svgWidth / 90,
       linkSpace = fontsize - 1,
       trainglepadding = fontsize - 2,
-      stroke_width = fontsize / 15
+      stroke_width = fontsize / 15*/
 
     var tree = {
       cx: svgWidth / 2,
@@ -556,31 +541,32 @@
       var l_in = [];
       in_diff_array = diff_array.slice(1);
       //console.log("l-I_diff > ", in_diff_array)
-      getincorrectLinks(tree.nodes[0], l_in);
+      function getincorrectLinks(node) {
+        node.kids.forEach(function(kid) {
+          if (!kid.isLeaf) {
+            if (!in_diff_array[0]) {
+              l_in.push({
+                fromId: node.id,
+                fromX: node.x,
+                fromY: node.y,
+                toId: kid.id,
+                toX: kid.x,
+                toY: kid.y,
+              });
+            }
+          }
+          in_diff_array = in_diff_array.slice(1);
+          getincorrectLinks(kid);
+        });
+      }
+      getincorrectLinks(tree.nodes[0]);
       //console.log("link_in >> ", l_in);
       return l_in.sort(function(a, b) {
         return a.toId - b.toId
       });
     }
 
-    function getincorrectLinks(node, l_in) {
-      node.kids.forEach(function(kid) {
-        if (!kid.isLeaf) {
-          if (!in_diff_array[0]) {
-            l_in.push({
-              fromId: node.id,
-              fromX: node.x,
-              fromY: node.y,
-              toId: kid.id,
-              toX: kid.x,
-              toY: kid.y,
-            });
-          }
-        }
-        in_diff_array = in_diff_array.slice(1);
-        getincorrectLinks(kid, l_in);
-      });
-    }
+
 
     //get the triangles -- size of the trees
     tree.getcorrectTriangles = function() {
@@ -668,14 +654,15 @@
 
 
     //update/refresh svg
-    refresh = function() {
+    /*refresh = function() {
       d3.select('#nodes').selectAll('text').data(tree.getNodes()).remove();
       d3.select('#links').selectAll('line').data(tree.getLinks()).remove();
       d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).remove();
-    }
+    }*/
     //get leaf count for node
 
     //API CALLS
+
     $(document).ready(function() {
       //$("#AnnoToTree").click(function(event) {
       $("#Tree_list").click(async function(e) {
@@ -697,14 +684,18 @@
             }
           }
         }
-        ////console.log.log(TreeNum);
 
-        diff_array = [];
+        var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
+
+        diff_array = grade[3];
+
+        resetTree();
+        refresh();
+        refresh_grade();
+
         percentage = ['%'];
-        //var count = 0;
         teacher_segmented_sentence = [];
         student_segmented_sentence = [];
-        resetTree();
 
         if (document.getElementById('tree-' + num) == null) {
           var div = document.createElement("div");
@@ -714,56 +705,71 @@
         }
 
         body = JSON.stringify(WholeTree)
-
-        //node_length = 0;
-        //node_count = 0;
-        //previous_x = 0;
         SFL_node_pos = [];
-        var assignment_content = {};
 
-        tree.nodes = await getTree(body);
-        console.log(node_sentence_array);
+        if (!teacher) {
+          assignment_content = {};
 
-        /*for (x in node_sentence_array) {
-          if (node_sentence_array[x].id = TreeNum)
-            sentence = (node_sentence_array[x].quote).split(' ').join('').toLowerCase();
-        }*/
-        var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
+          refresh();
+          refresh_grade();
 
-        diff_array = grade[3];
+          tree.nodes = await getTree(body);
+          console.log(node_sentence_array);
 
-        document.getElementById("progress-bar").innerHTML = grade[0][1] + '%';
-        document.getElementById("progress-bar").style.width = grade[0][1] + '%';
+          var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
 
+          diff_array = grade[3];
+          var percent = parseFloat(Math.round(grade[0][1] * 100) / 100).toFixed(2)
+          document.getElementById("progress-bar").innerHTML = percent + '%';
+          document.getElementById("progress-bar").style.width = percent + '%';
 
-        //getNodeLength(tree.nodes[0]);
+          if (adjust)
+            reposition_adjust(tree.nodes[0], SFL_node_pos);
+          else
+            reposition(tree.nodes[0]);
 
-        if (adjust)
-          reposition_adjust(tree.nodes[0], SFL_node_pos);
-        else
-          reposition(tree.nodes[0]);
+          if (grading)
+            redraw_grade();
+          else
+            redraw();
 
-        redraw();
+          console.log("SEN:", sentence);
+          var GRADE = {
+            "PERCENTAGE": grade[0],
+            "TEACHER_SEG_SEN": grade[1],
+            "STUDENT_SEG_SEN": grade[2],
+            "LIKENESS": grade[3],
+            "MISSING": grade[4]
+          }
+          //console.log(grade);
+          assignment_content[sentence] = {
+            "GRADE": GRADE,
+            "SFG": tree.nodes[0]
+          }
+          console.log(assignment_content);
 
+        } else {
 
-        console.log("SEN:", sentence);
-        var GRADE = {
-          "PERCENTAGE": grade[0],
-          "TEACHER_SEG_SEN": grade[1],
-          "STUDENT_SEG_SEN": grade[2],
-          "LIKENESS": grade[3]
+          refresh();
+          refresh_grade();
+
+          document.getElementById("progress-bar").innerHTML = 0 + '%';
+          document.getElementById("progress-bar").style.width = 0 + '%';
+          tree.nodes = JSON.parse(await getTeacherSFL(sentence));
+
+          if (adjust)
+            reposition_adjust(tree.nodes[0], SFL_node_pos);
+          else
+            reposition(tree.nodes[0]);
+
+          redraw();
         }
-        //console.log(grade);
-        assignment_content[sentence] = {
-          "GRADE": GRADE,
-          "SFG": tree.nodes[0]
-        }
-        console.log(assignment_content);
       });
     });
     //initialise();
     return tree;
   }
+
   $(function() {
     $("#genSFG").click(async function() {
       resetTree();
@@ -774,5 +780,23 @@
       console.log(JSON.stringify(tree.nodes));
     });
   });
+
+
+  storeSFL = function(student_SFL_struc) {
+    var body = student_SFL_struc;
+    return new Promise(function(resolve, reject) {
+      $.post(
+        "http://localhost:8000/mydb/", {
+          body
+        },
+        function(data) {
+          var res = data
+          //nodes = JSON.parse(res);
+          resolve(res);
+        }
+      );
+    });
+  }
+
 
   var tree = tree();

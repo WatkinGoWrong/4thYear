@@ -155,6 +155,7 @@ function tree(JSONTree) {
   tree.addFromJSON = function(parent, child, pos, depth) {
     tree.size++;
     var node = parent;
+    console.log("child :", child);
 
     function addLeaf(node) {
       var draw = true;
@@ -227,6 +228,7 @@ function tree(JSONTree) {
           }
 
           recursiveGetProperty(obj2, t[name], callback, parent2, depth);
+          //console.log("-- child : ", t[name])
         }
       }
     }

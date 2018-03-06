@@ -59,6 +59,7 @@ nodeDepth = function() {
 }
 
 reposition_adjust = function(node, SFL_node_pos) {
+  console.log(SFL_node_pos);
 
   if (uniformDepth) {
     nodeDepth();
@@ -110,6 +111,8 @@ reposition_adjust = function(node, SFL_node_pos) {
 }
 
 resetTree = function() {
+  refresh();
+  refresh_grade();
   tree.nodes = [];
   tree.nodes.push({
     id: '00',
@@ -121,9 +124,6 @@ resetTree = function() {
     depth: 0,
     kids: []
   });
-  refresh();
-  reposition(tree.nodes[0]);
-  redraw();
 }
 
 
@@ -141,7 +141,7 @@ reposition = function(node) {
     kid.x = left - (w + tree.w) / 2;
     kid.y = node.y + tree.h;
     reposition(kid);
-    redraw();
+    //redraw();
   });
 
 }

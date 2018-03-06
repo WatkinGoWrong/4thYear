@@ -1,6 +1,5 @@
 // server.js
 const express = require('express');
-//const MongoClient    = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const db = require('./config/db');
 const app = express();
@@ -38,7 +37,7 @@ app.listen(port, () => {
 app.get('/SFL', function(req, res) {
   var date = new Date();
   console.log('Date:', date.getDay() + '/' + date.getMonth() + '/' + date.getYear(), 'Time:', date.getHours() + ':' + date.getMinutes());
-  res.sendFile(__dirname + "/" + "SFL_Anno.html");
+  res.sendFile(__dirname + "/" + "SFL_Anno.html"); //SFL_Anno
 })
 
 

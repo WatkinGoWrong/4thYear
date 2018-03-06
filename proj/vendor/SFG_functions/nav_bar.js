@@ -20,20 +20,51 @@ $(function() {
     });
   });
 });
-
+var grading = false;
 $(function() {
   $("#gradeSFG").click(function() {
-    redraw_grade();
+    if (!grading) {
+      //document.getElementById('gradeSFG').innerHTML = "Grade (On)"
+      $("#gradeSFG").html("Grade (On)");
+      return grading = true
+    } else {
+      //document.getElementById('gradeSFG').innerHTML = "Grade (Off)"
+      $("#gradeSFG").html("Grade (Off)");
+      return grading = false
+    }
   });
 });
 
 var adjust = false;
 $(function() {
   $("#adjustSFG").click(async function() {
-    if (!adjust)
+    if (!adjust) {
+      $("#adjustSFG").html("Adjust (On)");
       return adjust = true
-    else
+    } else {
+      $("#adjustSFG").html("Adjust (Off)");
       return adjust = false
+    }
 
+  });
+});
+
+var teacher = false;
+$(function() {
+  $("#genTeacherSFL").click(async function() {
+    if (!teacher) {
+      $("#genTeacherSFL").html("Teacher (On)");
+      return teacher = true
+    } else {
+      $("#genTeacherSFL").html("Teacher (Off)");
+      return teacher = false
+    }
+  });
+});
+
+$(function() {
+  $("#storeSFL").click(async function() {
+    var result = await storeSFL(assignment_content);
+    console.log(result);
   });
 });
