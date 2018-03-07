@@ -1,13 +1,7 @@
-var d3 = require("d3");
 var treeStruc = require("./treeStruc");
 var grading = require("./grading");
-var JSONTree = '{"tree1":{"Participant 1":{"This Little Piggy":{}},"Process":{"Had":{}},"Participant 2":{"None":{}}}}';
 var SFL_trees = require("./exampleTrees");
-var test = 0;
-const MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
-
-
+var data = require("./db_api");
 
 //var ObjectID = require('mongodb').ObjectID;
 module.exports = function(app, db) {
@@ -33,8 +27,13 @@ module.exports = function(app, db) {
       text: req.body,
       title: req.body.title
     };
+    //console.log(req.body.teacher);
+
     var student = JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, "");
-    var teacher = SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()];
+    var teacher = SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()]; //JSON.stringify(req.body.teacher).slice(1, -1).replace(/\\/g, "");
+    //console.log(teacher);
+    //console.log(student); //SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()]; //await data.getTeacherSFL_db()
+    //teacher = teacher[sentence.split(' ').join('').toLowerCase()]
     console.log("SFL Graded!");
     if (teacher == undefined)
       res.send(["", "", "", "", ""])
@@ -52,24 +51,4 @@ module.exports = function(app, db) {
     console.log(SFLs);
     res.send(SFLs);
   });
-
-
-  app.post('/mydb/', (req, res) => {
-    var test = req.body.body;
-    MongoClient.connect(url, function(err, db) {
-      if (err) throw err;
-      var dbo = db.db("mydb");
-      var myobj = [{
-        test
-      }];
-      dbo.collection("SFL_trees").insertMany(myobj, function(err, res) {
-        if (err) throw err;
-        console.log("Number of documents inserted: " + res.insertedCount);
-        test++;
-        db.close();
-      });
-    });
-    res.send(req.body.body);
-  });
-
 };

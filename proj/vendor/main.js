@@ -715,6 +715,7 @@
 
           tree.nodes = await getTree(body);
           console.log(node_sentence_array);
+          console.log((tree.nodes[0].kids).length);
 
           var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
 
@@ -732,7 +733,6 @@
             redraw_grade();
           else
             redraw();
-
           console.log("SEN:", sentence);
           var GRADE = {
             "PERCENTAGE": grade[0],
@@ -742,11 +742,22 @@
             "MISSING": grade[4]
           }
           //console.log(grade);
-          assignment_content[sentence] = {
+          assignment_content = {
             "GRADE": GRADE,
-            "SFG": tree.nodes[0]
+            "SFL": tree.nodes[0],
           }
-          console.log(assignment_content);
+          var total_SFL = {
+            id: 1,
+            key: sentence,
+            value: assignment_content,
+            collection: "student",
+            connection_type: "update",
+            annotations: node_array
+          }
+          await postSFL_db(total_SFL)
+
+          console.log("here");
+
 
         } else {
 
@@ -755,7 +766,10 @@
 
           document.getElementById("progress-bar").innerHTML = 0 + '%';
           document.getElementById("progress-bar").style.width = 0 + '%';
-          tree.nodes = JSON.parse(await getTeacherSFL(sentence));
+
+
+          var result = await getTeacherSFL_db();
+          tree.nodes = JSON.parse(result[sentence]);
 
           if (adjust)
             reposition_adjust(tree.nodes[0], SFL_node_pos);
@@ -782,21 +796,15 @@
   });
 
 
-  storeSFL = function(student_SFL_struc) {
-    var body = student_SFL_struc;
-    return new Promise(function(resolve, reject) {
-      $.post(
-        "http://localhost:8000/mydb/", {
-          body
-        },
-        function(data) {
-          var res = data
-          //nodes = JSON.parse(res);
-          resolve(res);
-        }
-      );
+  /*$(function() {
+    $("#testDB").click(async function() {
+      var result = await getTeacherSFL_db();
+      console.log(sentence);
+      tree.nodes = JSON.parse(result[sentence]);
+      reposition(tree.nodes[0]);
+      redraw();
     });
-  }
+  });*/
 
 
   var tree = tree();

@@ -1,6 +1,9 @@
 // routes/index.js
-const noteRoutes = require('./SFL_routes');
+const SFLRoutes = require('./SFL_routes');
+const dbRoutes = require('./db_routes');
+
 module.exports = function(app, db) {
-  noteRoutes(app, db);
+  dbRoutes(app, db);
+  SFLRoutes(app, db);
   // Other route groups could go here, in the future
 };

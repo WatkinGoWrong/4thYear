@@ -45,3 +45,37 @@ getTeacherSFL = function(sentence) {
     );
   });
 }
+
+getTeacherSFL_db = function() {
+  return new Promise(function(resolve, reject) {
+    $.get(
+      "http://localhost:8000/mydb",
+      function(data) {
+        var res = data;
+        resolve(res);
+      }
+    );
+  });
+}
+
+postSFL_db = function(obj) {
+  console.log(obj);
+
+  return new Promise(function(resolve, reject) {
+    $.post(
+      "http://localhost:8000/mydb/", {
+        key: obj.key,
+        id: obj.id,
+        value: obj.value,
+        collection: obj.collection,
+        connection_type: obj.connection_type,
+        annotations: obj.annotations
+      },
+
+      function(data) {
+        var res = data;
+        resolve(res);
+      }
+    );
+  });
+}
