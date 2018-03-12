@@ -368,6 +368,7 @@
     var SFL_node_pos = [];
     var c_diff_array = [];
     var in_diff_array = [];
+    var past_sentences = [];
 
     //get the nodes
     tree.getNodes = function() {
@@ -648,30 +649,35 @@
       return n;
     }
 
-    //add a new leaf - have to look into refactoring this code
-
-    //sets leafs depth to deepest leaf
-
-
-    //update/refresh svg
-    /*refresh = function() {
-      d3.select('#nodes').selectAll('text').data(tree.getNodes()).remove();
-      d3.select('#links').selectAll('line').data(tree.getLinks()).remove();
-      d3.select('#triangles').selectAll('polygon').data(tree.getTriangles()).remove();
-    }*/
-    //get leaf count for node
-
-    //API CALLS
-
     $(document).ready(function() {
       //$("#AnnoToTree").click(function(event) {
       $("#Tree_list").click(async function(e) {
+        console.log("sentence : ", sentence);
 
         if (e.target && e.target.nodeName == "LI") {
           ////console.log.log(e.target.innerHTML);
           ////console.log.log(e.target.id);
           //TreeNum = e.target.id;
           //console.log(TreeNum);
+
+          //need to ensure no element created by d3 exists when reinitalising the tree div
+          //should only happen is tree.nodes exists
+          if (diff_array != []) {
+            //var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
+            //diff_array = grade[3];
+            resetTree();
+            refresh();
+            refresh_grade();
+            redraw();
+            redraw_grade();
+          } else {
+            resetTree();
+            refresh();
+            redraw();
+          }
+
+          document.getElementById("progress-bar").innerHTML = 0 + '%';
+          document.getElementById("progress-bar").style.width = 0 + '%';
 
           for (x in node_sentence_array) {
             //console.log(node_sentence_array[x].quote, " = ", x);
@@ -683,26 +689,25 @@
               break;
             }
           }
+
+
+
         }
-
-        var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
-
-        diff_array = grade[3];
-
-        resetTree();
-        refresh();
-        refresh_grade();
 
         percentage = ['%'];
         teacher_segmented_sentence = [];
         student_segmented_sentence = [];
 
-        if (document.getElementById('tree-' + num) == null) {
-          var div = document.createElement("div");
-          div.setAttribute("id", "tree-" + num);
-          document.getElementById("TreeArea").appendChild(div);
-          initialise(num);
-        }
+        //if (document.getElementById('tree-' + num) == null) {
+
+        // issue with d3 and deleting elements - redraw, delete div and re-create div
+        document.getElementById("tree-" + num).remove();
+        var div = document.createElement("div");
+        div.setAttribute("id", "tree-" + num);
+        document.getElementById("TreeArea").appendChild(div);
+        initialise(num);
+
+        //}
 
         body = JSON.stringify(WholeTree)
         SFL_node_pos = [];
@@ -710,19 +715,42 @@
         if (!teacher) {
           assignment_content = {};
 
-          refresh();
-          refresh_grade();
-
           tree.nodes = await getTree(body);
-          console.log(node_sentence_array);
-          console.log((tree.nodes[0].kids).length);
 
-          var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
+          if (grading) {
+            past_sentences.push(sentence);
+            console.log("adding", sentence);
 
-          diff_array = grade[3];
-          var percent = parseFloat(Math.round(grade[0][1] * 100) / 100).toFixed(2)
-          document.getElementById("progress-bar").innerHTML = percent + '%';
-          document.getElementById("progress-bar").style.width = percent + '%';
+            grade = await getGrade(JSON.stringify(tree.nodes), sentence);
+
+            diff_array = grade[3];
+
+            var percent = parseFloat(Math.round(grade[0][1] * 100) / 100).toFixed(2)
+            document.getElementById("progress-bar").innerHTML = percent + '%';
+            document.getElementById("progress-bar").style.width = percent + '%';
+
+            var GRADE = {
+              "PERCENTAGE": grade[0],
+              "TEACHER_SEG_SEN": grade[1],
+              "STUDENT_SEG_SEN": grade[2],
+              "LIKENESS": grade[3],
+              "MISSING": grade[4]
+            }
+            //console.log(grade);
+            assignment_content = {
+              "GRADE": GRADE,
+              "SFL": tree.nodes[0],
+            }
+            var total_SFL = {
+              id: 1,
+              key: sentence,
+              value: assignment_content,
+              collection: "student",
+              connection_type: "update",
+              annotations: node_array
+            }
+            await postSFL_db(total_SFL)
+          }
 
           if (adjust)
             reposition_adjust(tree.nodes[0], SFL_node_pos);
@@ -733,41 +761,7 @@
             redraw_grade();
           else
             redraw();
-          console.log("SEN:", sentence);
-          var GRADE = {
-            "PERCENTAGE": grade[0],
-            "TEACHER_SEG_SEN": grade[1],
-            "STUDENT_SEG_SEN": grade[2],
-            "LIKENESS": grade[3],
-            "MISSING": grade[4]
-          }
-          //console.log(grade);
-          assignment_content = {
-            "GRADE": GRADE,
-            "SFL": tree.nodes[0],
-          }
-          var total_SFL = {
-            id: 1,
-            key: sentence,
-            value: assignment_content,
-            collection: "student",
-            connection_type: "update",
-            annotations: node_array
-          }
-          await postSFL_db(total_SFL)
-
-          console.log("here");
-
-
         } else {
-
-          refresh();
-          refresh_grade();
-
-          document.getElementById("progress-bar").innerHTML = 0 + '%';
-          document.getElementById("progress-bar").style.width = 0 + '%';
-
-
           var result = await getTeacherSFL_db();
           tree.nodes = JSON.parse(result[sentence]);
 
