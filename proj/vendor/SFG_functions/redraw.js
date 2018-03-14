@@ -53,7 +53,7 @@ redraw = function() {
       return node.y + 5;
     })
     .text(function(node) {
-      return node.text;
+      return (node.text).replace("\\", "");
     })
     .attr('tWidth', function(node) {
       var n = tree.getNode(node);
@@ -170,7 +170,7 @@ redraw_grade = function() {
     }).attr('y', function(node) {
       return node.y + 5;
     }).text(function(node) {
-      return node.text;
+      return (node.text).replace("\\", "");
     }).attr('tWidth', function(node) {
       var n = tree.getNode(node);
       n.tWidth = this.getBBox().width;
@@ -212,7 +212,7 @@ redraw_grade = function() {
     }).attr('y', function(node) {
       return node.y + 5;
     }).text(function(node) {
-      return node.text;
+      return (node.text).replace("\\", "");
     }).attr('tWidth', function(node) {
       var n = tree.getNode(node);
       n.tWidth = this.getBBox().width;

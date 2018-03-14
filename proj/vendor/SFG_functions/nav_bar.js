@@ -54,9 +54,11 @@ $(function() {
   $("#genTeacherSFL").click(async function() {
     if (!teacher) {
       $("#genTeacherSFL").html("Teacher (On)");
+      $("#gradeSFG").hide();
       return teacher = true
     } else {
       $("#genTeacherSFL").html("Teacher (Off)");
+      $("#gradeSFG").show();
       return teacher = false
     }
   });
