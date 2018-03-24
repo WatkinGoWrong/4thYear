@@ -3,6 +3,9 @@ var text_array = [];
 var sentence_array = [];
 var sentence = "";
 var WholeTree = {};
+var new_obj;
+var session;
+
 
 var num = 0;
 var TreeNum = 0;
@@ -19,11 +22,23 @@ setTreeNum = function() {
   return TreeNum;
 }
 
-
 bubbleSortNode = function(a) {
   for (var i = 0; i < a.length; i++) {
     for (var j = 0; j < a.length - 1; j++) {
-      if (a[j].anno_start > a[j + 1].anno_start) {
+      if ((a[j].anno_start) > (a[j + 1].anno_start)) {
+        var temp = a[j];
+        a[j] = a[j + 1];
+        a[j + 1] = temp;
+      }
+    }
+  }
+  return a
+}
+
+bubbleSortNode_para = function(a) {
+  for (var i = 0; i < a.length; i++) {
+    for (var j = 0; j < a.length - 1; j++) {
+      if (parseInt((a[j].para_start).replace(/^\D+|\D+$/g, "")) > parseInt((a[j + 1].para_start).replace(/^\D+|\D+$/g, ""))) { //parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, ""))
         var temp = a[j];
         a[j] = a[j + 1];
         a[j + 1] = temp;
@@ -34,7 +49,7 @@ bubbleSortNode = function(a) {
 }
 
 //$("#genNew").click(function() {
-window.onload = function() {
+window.onload = async function() {
   if (document.getElementById('tree-' + num) == null) {
     var div = document.createElement("div");
     div.setAttribute("id", "tree-" + num);
@@ -42,17 +57,73 @@ window.onload = function() {
     initialise(num);
   }
 
+  //
+  new_obj = await getStudentSFL_db();
   obj = new Array();
+
   var ann2 = $("#content2").annotator();
   var ann = $("#content").annotator(); //Assign container to hold annotator content
 
   ann.annotator('addPlugin', 'fileStorage'); // Add Storage Plugin
   ann2.annotator('addPlugin', 'fileStorage');
 
-  ann.annotator('loadAnnotations', obj);
-  ann2.annotator('loadAnnotations', obj);
+  ann.annotator("addPlugin", "Touch");
 
-  $("#inputText").css('display', 'none');
+  //ann.annotator('loadAnnotations', obj);
+  //ann2.annotator('loadAnnotations', obj);
+
+  //used to load last saved sessions annotations
+  //currently only shows highlights - need to add to arrays
+  if (new_obj.last_session[0] != '[]') {
+    var data = JSON.parse(new_obj.last_session);
+    console.log(data);
+    console.log("test", data[0].quote == data[1].quote)
+    if ((data[0].quote == data[1].quote) == true)
+      data.shift();
+    obj = data;
+  } else {
+    var data;
+  }
+  if (data == undefined) {
+
+  } else {
+    var data1 = new Array();
+    var data2 = new Array();
+    for (var i = 0; i < data.length; i++) {
+
+      if ((((data[i].text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((data[i].text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((data[i].text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
+        var list = document.getElementById('Tree_list');
+        var entry = document.createElement('li');
+        entry.appendChild(document.createTextNode(data[i].quote));
+        entry.className = "list-group-item list-group-item-action";
+        entry.setAttribute("id", data[i].id);
+        list.appendChild(entry);
+        if (parseInt((data[i].ranges[0].start).replace(/^\D+|\D+$/g, "")) < parseInt((data[i].ranges[0].end).replace(/^\D+|\D+$/g, "")))
+          data[i].ranges[0].endOffset = data[i].ranges[0].endOffset * parseInt((data[i].ranges[0].end).replace(/^\D+|\D+$/g, ""));
+        var node = new node_obj(data[i].id, data[i].quote, data[i].text, data[i].ranges[0].startOffset, data[i].ranges[0].endOffset, data[i].ranges[0].start, data[i].ranges[0].end);
+        node_sentence_array.push(node);
+      } else {
+        var node = new node_obj(data[i].id, data[i].quote, data[i].text, data[i].ranges[0].startOffset, data[i].ranges[0].endOffset, data[i].ranges[0].start, data[i].ranges[0].end);
+        node_array.push(node);
+      }
+      if (node_array.length > 1) {
+        node_array = bubbleSortNode(node_array);
+        node_array = bubbleSortNode_para(node_array);
+      }
+      //console.log(data[i]);
+      data[i].ranges = data[i].ranges;
+      data[i].highlights = data[i].highlights;
+      if (data[i].url == "1") {
+        data1.push(data[i]);
+      } else if (data[i].url == "1t") {
+        data2.push(data[i]);
+      }
+    }
+    //console.log(data1)
+    ann.annotator('loadAnnotations', data1);
+    ann2.annotator('loadAnnotations', data2);
+  }
+  $("#inputText").hide();
 
 };
 
@@ -68,22 +139,11 @@ function node_obj(id, quote, text, anno_start, anno_end, para_start, para_end) {
 }
 
 createWholeTree = function() {
-  //Treenum = setTreeNum();
   WholeTree = {};
-  //sentence = (node_sentence_array[TreeNum].quote).split(' ').join('').toLowerCase();
-  /*for (x in node_sentence_array) {
-    if (node_sentence_array[x].id = TreeNum) {
-      sentence = (node_sentence_array[x].quote).split(' ').join('').toLowerCase();
-      //TreeNum = x;
-    }
-  }*/
 
 
   for (var i = 0; i < node_array.length; i++) {
 
-    //console.log(sentence_array[TreeNum + 2], anno_array[i + 2], sentence_array[TreeNum + 3], anno_array[i + 3]);
-
-    //if(sentence_array[TreeNum].indexOf(anno_array[i-1])!=-1){
     if ((node_sentence_array[TreeNum].anno_start <= node_array[i].anno_start && node_sentence_array[TreeNum].anno_end >= node_array[i].anno_end) && ((node_sentence_array[TreeNum].quote).indexOf(node_array[i].quote) > -1)) {
 
       var Tree = {
@@ -100,14 +160,17 @@ createWholeTree = function() {
       }
       _.merge(WholeTree, Tree);
     } else {
+      console.log(node_sentence_array[TreeNum].anno_start, node_array[i].anno_start, node_sentence_array[TreeNum].anno_end, node_array[i].anno_end);
       console.log(node_array[i].quote, "- is not in the sentence -", node_sentence_array[TreeNum].quote);
     }
   }
 
   if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("SENTENCE") != -1)
     WholeTree["Sentence"] = WholeTree[""];
-  else
+  else if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("CLAUSE") != -1)
     WholeTree["Clause"] = WholeTree[""];
+  else if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("NGP") != -1)
+    WholeTree["Ngp"] = WholeTree[""];
   delete WholeTree[""];
 }
 
@@ -119,9 +182,12 @@ Annotator.Plugin.fileStorage = function(element) {
           console.log("anno := ",
             annotation);
 
+          console.log("test : ", parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, "")));
 
           if (annotation.quote.length > 0 && annotation.text.length > 0) {
             annotation.url = currentUrl;
+
+            console.log("obj", obj);
 
             var data = obj;
             if (data == undefined) {
@@ -152,7 +218,8 @@ Annotator.Plugin.fileStorage = function(element) {
 
           }
           //Checks for sentence tag - which will add it to sentence array for cehcking against words
-          if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1 || ((annotation.text).toUpperCase()).indexOf("CLAUSE") != -1) {
+          console.log("[\"\",\"SENTENCE\"]");
+          if ((((annotation.text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((annotation.text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((annotation.text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
             var list = document.getElementById('Tree_list');
             var entry = document.createElement('li');
             entry.appendChild(document.createTextNode(annotation.quote));
@@ -161,48 +228,28 @@ Annotator.Plugin.fileStorage = function(element) {
             entry.setAttribute("id", annotation.id);
             list.appendChild(entry);
 
-            /*used for sentence_array before OO
-            sentence_array.push(annotation.quote);
-            sentence_array.push(annotation.text);
-            sentence_array.push(annotation.ranges[0].startOffset);
-            sentence_array.push(annotation.ranges[0].endOffset);*/
-
+            if (parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, "")) < parseInt((annotation.ranges[0].end).replace(/^\D+|\D+$/g, "")))
+              annotation.ranges[0].endOffset = annotation.ranges[0].endOffset * parseInt((annotation.ranges[0].end).replace(/^\D+|\D+$/g, ""));
             var node = new node_obj(annotation.id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset, annotation.ranges[0].start, annotation.ranges[0].end);
             node_sentence_array.push(node);
-            //cur_id++;
           } else {
-            /*used for anno_array before OO
-            anno_array.push(annotation.quote);
-            anno_array.push(annotation.text);
-            anno_array.push(annotation.ranges[0].startOffset);
-            anno_array.push(annotation.ranges[0].endOffset);*/
 
             var node = new node_obj(annotation.id, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset, annotation.ranges[0].start, annotation.ranges[0].end);
             node_array.push(node);
           }
           if (node_array.length > 1) {
             node_array = bubbleSortNode(node_array);
+            node_array = bubbleSortNode_para(node_array);
           }
           //anno_array = bubbleSortAnno(anno_array);
           console.log("nodes : ", node_array);
           console.log("Sentences : ", node_sentence_array);
+          console.log("Annotations : ", obj);
         })
         .subscribe("annotationDeleted", function(annotation) {
           // Check if the annotation actually exists (workaround annotatorjs bug #258).
           if (annotation.id) {
-            ////console.log.log(annotation);
-
-            if (((annotation.text).toUpperCase()).indexOf("SENTENCE") != -1 || ((annotation.text).toUpperCase()).indexOf("CLAUSE") != -1) {
-
-              /*sentence anno deletion before OO
-              for (var i = 0; i < sentence_array.length; i = i + 4) {
-                if (annotation.quote == sentence_array[i]) {
-                  sentence_array.splice(i, i + 4, null, null, null, null);
-                  //console.log((document.getElementById(i / 4)).innerHTML);
-                  //var elem = document.getElementById(i / 4);
-                  //elem.parentNode.removeChild(elem);
-                }
-              }*/
+            if ((((annotation.text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((annotation.text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((annotation.text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
 
               //changing functions to work for OO array instead of non OO array
               for (var i = 0; i < node_sentence_array.length; i++) {
@@ -213,16 +260,7 @@ Annotator.Plugin.fileStorage = function(element) {
                 }
               }
 
-              //document.getElementById("CurrentTree").setAttribute("max", ((sentence_array.length) / 4) - 1);
             } else {
-
-              /*anno deletion before OO
-              for (var i = 0; i < anno_array.length; i = i + 4) {
-                if (annotation.quote == anno_array[i]) {
-                  //console.log(annotation.quote);
-                  anno_array.splice(i, i + 4);
-                }
-              }*/
 
               //changing functions to work for OO array instead of non OO array
               for (var i = 0; i < node_array.length; i++) {

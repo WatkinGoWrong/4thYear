@@ -31,9 +31,6 @@ module.exports = function(app, db) {
 
     var student = JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, "");
     var teacher = SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()]; //JSON.stringify(req.body.teacher).slice(1, -1).replace(/\\/g, "");
-    //console.log(teacher);
-    //console.log(student); //SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()]; //await data.getTeacherSFL_db()
-    //teacher = teacher[sentence.split(' ').join('').toLowerCase()]
     console.log("SFL Graded!");
     if (teacher == undefined)
       res.send(["", "", "", "", ""])

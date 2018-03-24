@@ -1,11 +1,11 @@
 var svgWidth = (document.getElementById('TreeArea').offsetWidth), // * .985,
-  svgHeight = svgWidth / 2;
+  svgHeight = svgWidth / 2,
+  devide = 1.2;
 
-var devide = 2,
-  fontsize = svgWidth / 120,
-  linkSpace = fontsize - 1,
-  trainglepadding = fontsize - 2,
-  stroke_width = fontsize / 15
+var fontsize = (svgWidth / 120) / devide,
+  linkSpace = (fontsize) / devide,
+  trainglepadding = (fontsize) / devide,
+  stroke_width = (fontsize / 15) / devide;
 
 refresh = function() {
   d3.select('#nodes').selectAll('text').data(tree.getNodes()).exit().remove();
@@ -23,6 +23,7 @@ refresh_grade = function() {
 }
 
 redraw = function() {
+  console.log(devide);
   refresh();
   refresh_grade();
 
@@ -53,7 +54,7 @@ redraw = function() {
       return node.y + 5;
     })
     .text(function(node) {
-      return (node.text).replace("\\", "");
+      return ((node.text).replace("\\", ""));
     })
     .attr('tWidth', function(node) {
       var n = tree.getNode(node);
@@ -67,7 +68,7 @@ redraw = function() {
     .style({
       'text-anchor': 'middle',
       'cursor': 'pointer',
-      'font-size': fontsize
+      'font-size': fontsize + 'px'
     })
     //.on('click', function (node) { if (d3.event.shiftKey) { return tree.changeText(node); } else if (d3.event.ctrlKey) { return tree.removeLeaf(node); } else { return tree.addLeaf(node.id); } })
     //.transition().duration(500) * /
@@ -180,7 +181,7 @@ redraw_grade = function() {
     .style({
       'text-anchor': 'middle',
       'cursor': 'pointer',
-      'font-size': fontsize
+      'font-size': fontsize + 'px'
     }).attr('x', function(node) {
       return node.x;
     }).attr('y', function(node) {
@@ -223,7 +224,7 @@ redraw_grade = function() {
     .style({
       'text-anchor': 'middle',
       'cursor': 'pointer',
-      'font-size': fontsize,
+      'font-size': fontsize + 'px',
       'font-weight': 'bold',
       'font-style': 'italic'
     }).attr('x', function(node) {

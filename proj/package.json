@@ -28,6 +28,6 @@
     "url-to-image": "^1.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.17.2"
   }
 }

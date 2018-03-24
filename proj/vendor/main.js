@@ -28,10 +28,10 @@
       stroke_width = fontsize / 15*/
 
     var tree = {
-      cx: svgWidth / 2,
-      cy: svgHeight / 40,
-      w: svgHeight / 4,
-      h: svgHeight / 10,
+      cx: (svgWidth / 2) / devide,
+      cy: (svgHeight / 40) / devide,
+      w: (svgHeight / 4) / devide,
+      h: (svgHeight / 10) / devide,
       size: 1,
       leafDepth: Infinity,
       nodes: []
@@ -41,7 +41,7 @@
 
     $(document).ready(function() {
       //$("#AnnoToTree").click(function(event) {
-      $("#Tree_list").click(async function(e) {
+      $("#Tree_list").on('click', async function(e) {
         console.log("sentence : ", sentence);
 
         if (e.target && e.target.nodeName == "LI") {
@@ -73,7 +73,7 @@
             //console.log(node_sentence_array[x].quote, " = ", x);
             if (node_sentence_array[x].quote == e.target.innerHTML) {
               TreeNum = x;
-              sentence = (node_sentence_array[x].quote).split(' ').join('').toLowerCase();
+              sentence = (node_sentence_array[x].quote).split(' ').join('').split("\n").join('').toLowerCase();
               console.log("sentence :", sentence);
               createWholeTree();
               break;
@@ -131,15 +131,21 @@
               "GRADE": GRADE,
               "SFL": tree.nodes[0],
             }
+
+            //session = obj;
+            console.log(obj);
+
             var total_SFL = {
               id: 1,
               key: sentence,
               value: assignment_content,
               collection: "student",
               connection_type: "update",
-              annotations: node_array
+              annotations: node_array,
+              last_session: JSON.stringify(obj)
             }
-            await postSFL_db(total_SFL)
+            await postSFL_db(total_SFL);
+            console.log("done");
           }
 
           if (adjust)
@@ -152,8 +158,11 @@
           else
             redraw();
         } else {
-          var result = await getTeacherSFL_db();
 
+          var result = await getTeacherSFL_db();
+          //document.cookie = "SFL=" + JSON.stringify(result);
+          //console.log(document.cookie);
+          //tree.nodes = JSON.parse(result)
           tree.nodes = JSON.parse((result[sentence]).replace("\'s", "\\'s"));
 
           if (adjust)

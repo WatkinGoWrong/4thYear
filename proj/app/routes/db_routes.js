@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var url = "mongodb://localhost:27017"; //mongodb://localhost:27017/";
 
 module.exports = function(app, db) {
 
@@ -10,6 +10,7 @@ module.exports = function(app, db) {
     var collection = req.body.collection; //student , teacher
     var connection_type = req.body.connection_type;
     var annotations = req.body.annotations;
+    var last_session = req.body.last_session;
 
     var myobj = [{
       _id: id,
@@ -48,7 +49,8 @@ module.exports = function(app, db) {
               $set: {
                 _id: id,
                 [key]: value,
-                annotations: [annotations]
+                annotations: [annotations],
+                last_session: [last_session]
               }
             };
           }
@@ -66,6 +68,35 @@ module.exports = function(app, db) {
     }
   });
 
+  app.post('/mydb_save/', (req, res) => {
+    var id = req.body.id;
+    var collection = req.body.collection; //student , teacher
+    var last_session = req.body.last_session;
+
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("mydb");
+
+      var myquery = {
+        _id: id
+      };
+
+      var newvalues = {
+        $set: {
+          _id: id,
+          last_session: [last_session]
+        }
+      };
+      dbo.collection(collection).updateOne(myquery, newvalues, function(err, res) {
+        if (err) throw err;
+        console.log("1 document updated");
+        db.close();
+      });
+    });
+    res.send();
+  });
+
+
   app.get('/mydb/', (req, res) => {
     var teacher;
     MongoClient.connect(url, function(err, db) {
@@ -79,6 +110,22 @@ module.exports = function(app, db) {
       });
     });
   });
+
+  /*app.get('/:id', function(req, res) {
+    // First read existing users.
+    var teacher;
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("mydb");
+      dbo.collection("teacher").findOne({}, function(err, result) {
+        if (err) throw err;
+        var teacher = result;
+        res.send(teacher[req.params.id]);
+        db.close();
+      });
+    });
+  });*/
+
 
   app.get('/mydb_s/', (req, res) => {
     MongoClient.connect(url, function(err, db) {

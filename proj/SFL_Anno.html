@@ -7,6 +7,7 @@
   <title>Syntactify</title>
 
   <link rel="stylesheet" href="css/annotator.css" />
+  <link rel="stylesheet" href="css/annotator.touch.css" />
   <link rel="stylesheet" type="text/css" href="css/taggle.css">
   <link rel="stylesheet" href="css/basic-example.css">
   <!--CSS for basic example of tree generation-->
@@ -25,16 +26,20 @@
 
 </head>
 
-<body>
+<body style="cursor: pointer">
   <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 text-light bg-dark navbar-dark border-bottom sticky-top">
     <h5 class="my-0 mr-md-auto font-weight-light">4th Year Project - SFG</h5>
     <nav class="my-2 my-md-0 mr-md-3 ">
       <input class="p-2 text-light" type="file" id="inputText" value="Import" />
       <!--<a class="p-2 text-light" href="#" id="captureSFG">Capture Tree (In progress)</a>-->
+      <a class="p-2 text-light" href="#" id="zoom_level">Zoom [ 2 ]</a>
+      <a class="p-2 text-light" href="#" id="zoom_in">Zoom In</a>
+      <a class="p-2 text-light" href="#" id="zoom_out">Zoom Out</a>
+      <a class="p-2 text-light" href="#" id="save">Save</a>
       <a class="p-2 text-light" href="#" id="gradeSFG">Grade (Off)</a>
       <a class="p-2 text-light" href="#" id="adjustSFG">Adjust (Off)</a>
       <a class="p-2 text-light" href="#" id="genTeacherSFL">Teacher (Off)</a>
-      <a class="p-2 text-light" href="#" id="storeSFL">Save SFL</a>
+      <!--<a class="p-2 text-light" href="#" id="storeSFL">Save SFL</a>-->
 
 
       <!--<a class="p-2 text-light" href="#" id="genSFG">Generate SFG</a>-->
@@ -60,6 +65,10 @@
         <p>Can you believe that</p>
 
         <p>it's about 6(hours) am</p>
+
+        <p>A much nicer person than he used to be</p>
+
+        <p>One morning I shot an elephant in my pyjamas</p>
       </div>
 
       <div id="content2" style="display: none;">
@@ -116,6 +125,7 @@
 
   <script src="vendor/annotator.js ">
   </script>
+  <script src="vendor/annotator.touch.js"></script>
   <script src="vendor/highlighter.js ">
   </script>
   <!--<script src="vendor/rainbow-custom.min.js "></script>-->
@@ -153,8 +163,8 @@
   <script type="text/coffeescript ">
     # Attept at error handling for touch devices. window.onerror = (msg, file, line) -> alert(msg + ' ' + file + ' ' + line) jQuery.ajaxSetup async: false modules = jQuery.trim " "" touch touch/utils touch/editor touch/viewer "" " modules = modules.split(/\s+/)
     run = (file, source) -> filename = file.replace /coffee$/, "js " compiled = "#{CoffeeScript.compile(source)}\n//@ sourceURL=#{filename} " eval(compiled) sources = ("./src/#{script}.coffee " for script in modules) requests = jQuery.map sources, (script)
-    -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content ").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
-    > -1 }) window.annotator = jQuery("#content ").data('annotator')
+    -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
+    > -1 }) window.annotator = jQuery("#content").data('annotator')
   </script>
   </div>
 </body>

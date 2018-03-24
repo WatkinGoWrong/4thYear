@@ -13,6 +13,7 @@ getLeafCount = function(node) {
   }
 }
 
+
 getNodeLength = function(node) {
   node.kids.forEach(function(kid) {
     getNodeLength(kid);
@@ -59,7 +60,7 @@ nodeDepth = function() {
 }
 
 reposition_adjust = function(node, SFL_node_pos) {
-  console.log(SFL_node_pos);
+  //console.log(SFL_node_pos);
 
   if (uniformDepth) {
     nodeDepth();
@@ -74,7 +75,7 @@ reposition_adjust = function(node, SFL_node_pos) {
 
     if ((kid.kids[0]) != undefined && ((kid.kids[0]).kids).length == 0) {
 
-      var cur = (kid.kids[0].text).split(' ').join('');
+      var cur = (kid.kids[0].text).split(' ').join('').replace("\\", "");
 
       //Check if bottom most node is next in the sentence
       //If it is it will check and see if its needs to be moved to ensure its in its correct position

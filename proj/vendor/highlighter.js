@@ -1,5 +1,5 @@
 /*jshint immed:false*/ /*globals Range*/
-(function (module, window, document) {
+(function(module, window, document) {
   /* Helper function to provide support for Function.prototype.bind() in
    * unsupported browsers. NOTE: This method is not equivalent to the
    * specification for bind. An only supports the context argument for
@@ -11,7 +11,7 @@
    * Returns a new function bound to the context.
    */
   function bind(fn, context) {
-    return fn.bind ? fn.bind(context) : function () {
+    return fn.bind ? fn.bind(context) : function() {
       return fn.apply(context, arguments);
     };
   }
@@ -126,7 +126,7 @@
     this.selected = null;
     this.handles = {
       start: this.createHandle('start'),
-      end:   this.createHandle('end')
+      end: this.createHandle('end')
     };
 
     if (options.enable !== false) {
@@ -149,7 +149,7 @@
      *
      * Returns a Selection instance.
      */
-    get: function () {
+    get: function() {
       return window.getSelection();
     },
 
@@ -162,11 +162,13 @@
      *
      * Returns itself.
      */
-    enable: function () {
+    enable: function() {
       if (!this.enabled) {
-        this.bind(this.root, {click: '_onClick'});
+        this.bind(this.root, {
+          click: '_onClick'
+        });
         this.bind(document, {
-          tapstart:  '_onDocumentDown',
+          tapstart: '_onDocumentDown',
           mousedown: '_onDocumentDown'
         });
 
@@ -192,11 +194,13 @@
      *
      * Returns itself.
      */
-    disable: function () {
+    disable: function() {
       if (this.enabled) {
-        this.unbind(this.root, {click: '_onClick'});
+        this.unbind(this.root, {
+          click: '_onClick'
+        });
         this.unbind(document, {
-          tapstart:  '_onDocumentDown',
+          tapstart: '_onDocumentDown',
           mousedown: '_onDocumentDown'
         });
 
@@ -223,7 +227,7 @@
      *
      * Returns true if the listener is currently enabled.
      */
-    isEnabled: function () {
+    isEnabled: function() {
       return this.enabled;
     },
 
@@ -239,13 +243,13 @@
      *
      * Returns itself.
      */
-    select: function (range) {
+    select: function(range) {
       var selection = this.get(),
-          top   = window.scrollY,
-          left  = window.scrollX,
-          rects = range.getClientRects(),
-          first = rects[0],
-          last  = rects[rects.length - 1];
+        top = window.scrollY,
+        left = window.scrollX,
+        rects = range.getClientRects(),
+        first = rects[0],
+        last = rects[rects.length - 1];
 
       selection.removeAllRanges();
       selection.addRange(range);
@@ -274,7 +278,7 @@
      *
      * Returns itself.
      */
-    deselect: function () {
+    deselect: function() {
       var selected = this.get();
       if (selected) {
         this.selected = null;
@@ -295,7 +299,7 @@
      *
      * Returns itself.
      */
-    selectWord: function (position) {
+    selectWord: function(position) {
       var word = this.createRange(position);
       if (word) {
         word.expand("word");
@@ -314,7 +318,7 @@
      *
      * Returns itself.
      */
-    selectRange: function (start, end) {
+    selectRange: function(start, end) {
       var range = document.createRange();
       range.setStart(start.startContainer, start.startOffset);
       range.setEnd(end.endContainer, end.endOffset);
@@ -332,11 +336,12 @@
      *
      * Returns itself.
      */
-    expandStart: function (start) {
-      var current = this.selected, hasChanged;
+    expandStart: function(start) {
+      var current = this.selected,
+        hasChanged;
       if (current) {
         hasChanged = current.startContainer !== start.startContainer ||
-                     current.startOffset !== start.startOffset;
+          current.startOffset !== start.startOffset;
 
         if (hasChanged) {
           this.selectRange(start, current);
@@ -355,12 +360,13 @@
      *
      * Returns itself.
      */
-    expandEnd: function (end) {
-      var current = this.selected, hasChanged;
+    expandEnd: function(end) {
+      var current = this.selected,
+        hasChanged;
       if (current) {
         end.expand("character");
         hasChanged = current.endContainer !== end.endContainer ||
-                     current.endOffset !== end.endOffset;
+          current.endOffset !== end.endOffset;
 
         if (hasChanged) {
           this.selectRange(current, end);
@@ -380,7 +386,7 @@
      *
      * Returns a new Range instance or null.
      */
-    createRange: function (position) {
+    createRange: function(position) {
       // NOTE: This method is not supported by Firefox. There is an
       // Event.rangeParent() method that could be used instead.
       // See: http://clauswitt.com/click-to-split-text-in-the-browser.html
@@ -395,7 +401,7 @@
      *
      * Returns itself.
      */
-    showHandles: function () {
+    showHandles: function() {
       removeClass(document.documentElement, this.prefix + 'hide');
       return this;
     },
@@ -408,7 +414,7 @@
      *
      * Returns itself.
      */
-    hideHandles: function () {
+    hideHandles: function() {
       addClass(document.documentElement, this.prefix + 'hide');
       return this;
     },
@@ -430,7 +436,7 @@
      *
      * Returns the position object or null.
      */
-    getFirstPosition: function (event, useClient) {
+    getFirstPosition: function(event, useClient) {
       var firstTouch = event.touches ? event.touches[0] : event;
       if (firstTouch) {
         return {
@@ -454,7 +460,7 @@
      *
      * Returns itself.
      */
-    bind: function (node, events) {
+    bind: function(node, events) {
       var event, callback;
       for (event in events) {
         if (events.hasOwnProperty(event)) {
@@ -481,7 +487,7 @@
      *
      * Returns itself.
      */
-    unbind: function (node, events) {
+    unbind: function(node, events) {
       var event, callback;
       for (event in events) {
         if (events.hasOwnProperty(event)) {
@@ -502,7 +508,7 @@
      *
      * Returns itself.
      */
-    updatePositionByHandle: function (position, isStartHandle) {
+    updatePositionByHandle: function(position, isStartHandle) {
       var selected, range, isEndBeforeStart, isStartBeforeEnd;
 
       // Grab the range for the current position ignoring handle elements.
@@ -518,7 +524,7 @@
         // vice versa.
         isEndBeforeStart = !this._isStartHandle &&
           selected.compareBoundaryPoints(Range.START_TO_START, range) === 1;
-        isStartBeforeEnd =  this._isStartHandle &&
+        isStartBeforeEnd = this._isStartHandle &&
           selected.compareBoundaryPoints(Range.END_TO_END, range) === -1;
 
         // Account for the selection being reversed.
@@ -551,7 +557,7 @@
      *
      * Returns true if the node is one of the handles.
      */
-    isHandle: function (node) {
+    isHandle: function(node) {
       return node === this.handles.start || node === this.handles.end;
     },
 
@@ -563,18 +569,18 @@
      *
      * Returns itself.
      */
-    positionHandles: function (start, end) {
+    positionHandles: function(start, end) {
       start = start || {};
-      end   = end || {};
+      end = end || {};
 
       if (start.y) {
-        this.handles.start.style.top  = start.y + 'px';
+        this.handles.start.style.top = start.y + 'px';
       }
       if (start.x) {
         this.handles.start.style.left = start.x + 'px';
       }
       if (end.y) {
-        this.handles.end.style.top  = end.y + 'px';
+        this.handles.end.style.top = end.y + 'px';
       }
       if (end.x) {
         this.handles.end.style.left = end.x + 'px';
@@ -590,7 +596,7 @@
      *
      * Returns a new <span> Element.
      */
-    createHandle: function (className) {
+    createHandle: function(className) {
       var handle = document.createElement('span');
 
       addClass(handle, this.prefix + 'handle');
@@ -598,7 +604,7 @@
 
       this.bind(handle, {
         touchstart: '_onHandleDown',
-        mousedown:  '_onHandleDown'
+        mousedown: '_onHandleDown'
       });
 
       return handle;
@@ -615,11 +621,11 @@
      *
      * Returns a <style> element.
      */
-    createStyle: function () {
+    createStyle: function() {
       var css = '::selection {$} ::-moz-selection {$} ::-webkit-selection {$}',
-          style = document.createElement('style'),
-          isStyle = typeof this.options.highlightStyles === 'string',
-          content = this.options.highlightStyles;
+        style = document.createElement('style'),
+        isStyle = typeof this.options.highlightStyles === 'string',
+        content = this.options.highlightStyles;
 
       content = isStyle ? content : 'background-color: rgb(180, 213, 254)';
 
@@ -635,7 +641,7 @@
      *
      * Returns nothing.
      */
-    _onClick: function (event) {
+    _onClick: function(event) {
       if (!this.selected && !this._cleared) {
         var position = this.getFirstPosition(event);
         if (position) {
@@ -653,16 +659,16 @@
      *
      * Returns nothing.
      */
-    _onDocumentDown: function (event) {
+    _onDocumentDown: function(event) {
       var position = this.getFirstPosition(event),
-          selected = this.selected,
-          range, isBeforeStart, isAfterEnd;
+        selected = this.selected,
+        range, isBeforeStart, isAfterEnd;
 
       delete this._cleared;
       if (this.selected && position && !this.isHandle(event.target)) {
         range = this.createRange(position);
         isBeforeStart = range.compareBoundaryPoints(Range.START_TO_END, selected) === -1;
-        isAfterEnd    = range.compareBoundaryPoints(Range.END_TO_START, selected) === 1;
+        isAfterEnd = range.compareBoundaryPoints(Range.END_TO_START, selected) === 1;
 
         if (isBeforeStart || isAfterEnd) {
           this._cleared = true;
@@ -682,11 +688,11 @@
      *
      * Returns nothing.
      */
-    _onHandleDown: function (event) {
+    _onHandleDown: function(event) {
       var position = this.getFirstPosition(event);
       if (position && this.selected) {
         this._offset = {
-          y: position.y - parseFloat(event.target.style.top)  + window.scrollY,
+          y: position.y - parseFloat(event.target.style.top) + window.scrollY,
           x: position.x - parseFloat(event.target.style.left) + window.scrollX
         };
 
@@ -695,9 +701,9 @@
 
         this.bind(document, {
           mousemove: '_onHandleMove',
-          mouseup:   '_onHandleUp',
+          mouseup: '_onHandleUp',
           touchmove: '_onHandleMove',
-          touchend:  '_onHandleUp'
+          touchend: '_onHandleUp'
         });
       }
       event.stopPropagation();
@@ -711,13 +717,14 @@
      *
      * Returns nothing.
      */
-    _onHandleMove: function (event) {
-      var self = this, position;
+    _onHandleMove: function(event) {
+      var self = this,
+        position;
       event.stopPropagation();
       event.preventDefault();
 
       if (!this._throttled) {
-        this._throttled = setTimeout(function () {
+        this._throttled = setTimeout(function() {
           self._throttled = null;
         }, this.throttle);
 
@@ -740,7 +747,7 @@
      *
      * Returns nothing.
      */
-    _onHandleUp: function () {
+    _onHandleUp: function() {
       clearTimeout(this._throttled);
 
       delete this._isStartHandle;
@@ -751,9 +758,9 @@
 
       this.unbind(document, {
         mousemove: '_onHandleMove',
-        mouseup:   '_onHandleUp',
+        mouseup: '_onHandleUp',
         touchmove: '_onHandleMove',
-        touchend:  '_onHandleUp'
+        touchend: '_onHandleUp'
       });
     }
   };
