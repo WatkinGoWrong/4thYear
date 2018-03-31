@@ -26,28 +26,28 @@ compareJSON = function(node, node_two, diff_array, not_present_array) {
     });
   }
 
-  //console.log("teacher << ", node);
-  //console.log("student << ", node_two);
+  ////console.log("teacher << ", node);
+  ////console.log("student << ", node_two);
 
 
   if (node == undefined && node_two != undefined) {
-    //console.log("Teacher doesn't contain this node\nStudent node text :", (node_two.text).toLowerCase(), "\nStudent node parent :", node_two.parent);
+    ////console.log("Teacher doesn't contain this node\nStudent node text :", (node_two.text).toLowerCase(), "\nStudent node parent :", node_two.parent);
     diff_array.push(false);
   } else if (node != undefined && node_two == undefined) {
-    //console.log("Student doesn't contain this node\nTeacher node text :", (node.text).toLowerCase(), "\nTeacher node parent :", node.parent);
+    ////console.log("Student doesn't contain this node\nTeacher node text :", (node.text).toLowerCase(), "\nTeacher node parent :", node.parent);
     not_present_array.push(false);
   } else if ((node.text).toLowerCase() != (node_two.text).toLowerCase()) { // && node.parent != node_two.parent) {
-    //console.log("Parents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent, "\nTexts Differ\nTeacher :", (node.text).toLowerCase(), "\nStudent :", (node_two.text).toLowerCase());
+    ////console.log("Parents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent, "\nTexts Differ\nTeacher :", (node.text).toLowerCase(), "\nStudent :", (node_two.text).toLowerCase());
     diff_array.push(false);
   } else if ((node.text).toLowerCase() == (node_two.text).toLowerCase()) { //}&& node.parent != node_two.parent) {
-    //console.log("Both texts Equal :", (node.text).toLowerCase(), "\nParents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent);
+    ////console.log("Both texts Equal :", (node.text).toLowerCase(), "\nParents Differ\nTeacher :", node.parent, "\nStudent : ", node_two.parent);
     diff_array.push(true);
   }
   /*\ else if ((node.text).toLowerCase() != (node_two.text).toLowerCase() && node.parent == node_two.parent) {
-      //console.log("Both Parents Equal :", node.parent, "\nTexts Differ\nTeacher :", (node.text).toLowerCase(), "\nStudent :", (node_two.text).toLowerCase());
+      ////console.log("Both Parents Equal :", node.parent, "\nTexts Differ\nTeacher :", (node.text).toLowerCase(), "\nStudent :", (node_two.text).toLowerCase());
       diff_array.push(false);
     } else if ((node.text).toLowerCase() == (node_two.text).toLowerCase() && node.parent == node_two.parent) {
-      //console.log("Both Texts Equal :", (node.text).toLowerCase(), "\nBoth Parents Equal :", node.parent)
+      ////console.log("Both Texts Equal :", (node.text).toLowerCase(), "\nBoth Parents Equal :", node.parent)
       diff_array.push(true);
     }*/
 
@@ -57,7 +57,7 @@ compareJSON = function(node, node_two, diff_array, not_present_array) {
     student;
 
   for (i in pos) {
-    //console.log("< - >");
+    ////console.log("< - >");
     compareJSON(teacher[i], student[i], diff_array, not_present_array);
   }
 }
@@ -69,7 +69,7 @@ genFromTable = function(teacher, student) {
   count = 0;
   teacher_segmented_sentence = [];
   student_segmented_sentence = [];
-  //console.log(node_length);
+  ////console.log(node_length);
   compareJSON(teacher[0], student[0], diff_array, not_present_array);
 
   for (i in diff_array) {
@@ -98,12 +98,12 @@ genFromTable = function(teacher, student) {
   if (sentence_like > len)
     sentence_like = sentence_like / 2;
   sentence_like = ((sentence_like) / len) * 100;
-  //console.log(student_segmented_sentence);
+  ////console.log(student_segmented_sentence);
   percentage.push(((tree_diff + sentence_like) / 200) * 100);
   //percentage.push(tree_diff);
   var result = [percentage, teacher_segmented_sentence, student_segmented_sentence, diff_array, not_present_array]
-  //console.log("teacher >> ", teacher_segmented_sentence);
-  //console.log("student >> ", student_segmented_sentence);
+  ////console.log("teacher >> ", teacher_segmented_sentence);
+  ////console.log("student >> ", student_segmented_sentence);
   return result;
 }
 

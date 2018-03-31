@@ -1,3 +1,22 @@
+var student_segmented_sentence = [];
+
+getBottomNodes = function(node) {
+
+  var student = [];
+
+  if (node != undefined) {
+    node.kids.forEach(function(kid) {
+      if ((kid.kids).length == 0)
+        student_segmented_sentence.push((kid.text).toLowerCase());
+      student.push(kid);
+    });
+  }
+
+  for (i in student) {
+    getBottomNodes(student[i]);
+  }
+}
+
 tree.getNodes = function() {
   var n = [];
 
@@ -64,7 +83,7 @@ tree.getTriangles = function() {
           rightY: (kid.y - 10)
         });
       }
-    }); //10
+    });
     node.kids.forEach(getTriangles);
   }
   getTriangles(tree.nodes[0]);
@@ -78,7 +97,6 @@ tree.getcorrectNodes = function() {
   c_diff_array = diff_array.slice(0);
 
   function getcorrectNodes(node) {
-    //node.kids.forEach(function(kid) {
     if (c_diff_array[0]) {
       n.push({
         id: node.id,
@@ -94,10 +112,6 @@ tree.getcorrectNodes = function() {
       c_diff_array = c_diff_array.slice(1);
       return getcorrectNodes(kid);
     });
-    //console.log("kid >> ", kid);
-    //c_diff_array = c_diff_array.slice(1);
-    //getNodes(kid);
-    //});
   }
   getcorrectNodes(tree.nodes[0]);
   return n.sort(function(a, b) {
@@ -137,9 +151,7 @@ tree.getincorrectNodes = function() {
 tree.getcorrectLinks = function() {
   var l = [];
   c_diff_array = diff_array.slice(1);
-  //console.log("l_diff > ", c_diff_array)
   getcorrectLinks(tree.nodes[0], l);
-  //console.log("link >> ", l);
   return l.sort(function(a, b) {
     return a.toId - b.toId
   });
@@ -160,7 +172,6 @@ function getcorrectLinks(node, l) {
       }
     }
     c_diff_array = c_diff_array.slice(1);
-    //console.log(">> ", c_diff_array)
     getcorrectLinks(kid, l);
   });
 }
@@ -168,7 +179,7 @@ function getcorrectLinks(node, l) {
 tree.getincorrectLinks = function() {
   var l_in = [];
   in_diff_array = diff_array.slice(1);
-  //console.log("l-I_diff > ", in_diff_array)
+
   function getincorrectLinks(node) {
     node.kids.forEach(function(kid) {
       if (!kid.isLeaf) {
@@ -188,7 +199,6 @@ tree.getincorrectLinks = function() {
     });
   }
   getincorrectLinks(tree.nodes[0]);
-  //console.log("link_in >> ", l_in);
   return l_in.sort(function(a, b) {
     return a.toId - b.toId
   });
@@ -219,8 +229,7 @@ tree.getcorrectTriangles = function() {
       }
       c_diff_array = c_diff_array.slice(1);
       getcorrectTriangles(kid);
-    }); //10
-    //node.kids.forEach(getTriangles);
+    });
   }
   getcorrectTriangles(tree.nodes[0]);
   return t.sort(function(a, b) {
@@ -250,8 +259,7 @@ tree.getincorrectTriangles = function() {
       }
       in_diff_array = in_diff_array.slice(1);
       getincorrectTriangles(kid);
-    }); //10
-    //node.kids.forEach(getTriangles);
+    });
   }
   getincorrectTriangles(tree.nodes[0]);
   return t.sort(function(a, b) {
@@ -262,8 +270,7 @@ tree.getincorrectTriangles = function() {
 //returns node object from nodes array
 tree.getNode = function(thisNode) {
   var n;
-  //////console.log.log('thisNode');
-  //////console.log.log(thisNode);
+
   function getNode(node) {
     if (node.id == thisNode.id) {
       n = node;
@@ -271,7 +278,5 @@ tree.getNode = function(thisNode) {
     node.kids.forEach(getNode);
   }
   getNode(tree.nodes[0]);
-  //////console.log.log('n');
-  //////console.log.log(n);
   return n;
 }

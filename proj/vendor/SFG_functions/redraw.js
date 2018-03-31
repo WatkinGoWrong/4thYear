@@ -23,7 +23,7 @@ refresh_grade = function() {
 }
 
 redraw = function() {
-  console.log(devide);
+  //console.log(devide);
   refresh();
   refresh_grade();
 
@@ -45,7 +45,7 @@ redraw = function() {
       }
     }); //red|blue
 
-  nodes.enter().append('text').attr('id', function(node) { /*/ ///console.log.log('id = ' + node.id);*/
+  nodes.enter().append('text').attr('id', function(node) { /*/ /////console.log.log('id = ' + node.id);*/
       return node.id;
     })
     .attr('x', function(node) {
@@ -144,7 +144,7 @@ redraw_grade = function() {
   refresh();
   refresh_grade();
 
-  //console.log("-- 1");
+  ////console.log("-- 1");
 
   var nodes = d3.select('#nodes_3').selectAll('text').data(tree.getcorrectNodes());
 
@@ -164,7 +164,7 @@ redraw_grade = function() {
     }
   }); //red/blue
 
-  nodes.enter().append('text').attr('id', function(node) { /*console.log('id = ' + node.id);*/
+  nodes.enter().append('text').attr('id', function(node) { /*//console.log('id = ' + node.id);*/
       return node.id;
     }).attr('x', function(node) {
       return node.x;
@@ -206,7 +206,7 @@ redraw_grade = function() {
     }
   }); //red/blue
 
-  nodes.enter().append('text').attr('id', function(node) { /*console.log('id = ' + node.id);*/
+  nodes.enter().append('text').attr('id', function(node) { /*//console.log('id = ' + node.id);*/
       return node.id;
     }).attr('x', function(node) {
       return node.x;
@@ -217,7 +217,7 @@ redraw_grade = function() {
     }).attr('tWidth', function(node) {
       var n = tree.getNode(node);
       n.tWidth = this.getBBox().width;
-      //console.log(n.tWidth);
+      ////console.log(n.tWidth);
       return this.getBBox().width;
     })
     //Change font below
@@ -234,7 +234,7 @@ redraw_grade = function() {
     });
   //var links = [];
   var links = d3.select('#links_3').selectAll('line').data(tree.getcorrectLinks());
-  //console.log("links>>", links);
+  ////console.log("links>>", links);
   links.attr('x1', function(link) {
     return link.fromX;
   }).attr('y1', function(link) {
@@ -264,7 +264,7 @@ redraw_grade = function() {
   });
   //var links_2 = [];
   var links_2 = d3.select('#links_2').selectAll('line').data(tree.getincorrectLinks());
-  //console.log("links_incorrect>>", links_2);
+  ////console.log("links_incorrect>>", links_2);
 
   links_2.attr('x1', function(link) {
     return link.fromX;
@@ -294,7 +294,7 @@ redraw_grade = function() {
     return link.toY - linkSpace;
   });
 
-  //console.log("diff >> ", diff_array);
+  ////console.log("diff >> ", diff_array);
   var triangles = d3.select('#triangles_3').selectAll('polygon').data(tree.getcorrectTriangles());
 
   triangles /*.transition().duration(500)*/

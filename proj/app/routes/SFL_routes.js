@@ -7,7 +7,7 @@ var data = require("./db_api");
 module.exports = function(app, db) {
 
   app.post('/treetest/', (req, res) => {
-    console.log("SFL Generating!");
+    //console.log("SFL Generating!");
     const note = {
       text: req.body,
       title: req.body.title
@@ -16,22 +16,22 @@ module.exports = function(app, db) {
     var myJSON = JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, "");
     var doc_width = JSON.stringify(req.body.d_width);
     myJSON = JSON.stringify(treeStruc.tree(myJSON, doc_width));
-    console.log("SFL Generated!");
+    //console.log("SFL Generated!");
     res.send(myJSON);
     res.send(doc_width);
   });
 
   app.post('/grading/', (req, res) => {
-    console.log("SFL Grading!");
+    //console.log("SFL Grading!");
     const note = {
       text: req.body,
       title: req.body.title
     };
-    //console.log(req.body.teacher);
+    ////console.log(req.body.teacher);
 
     var student = JSON.stringify(req.body.body).slice(1, -1).replace(/\\/g, "");
     var teacher = SFL_trees.examples[(req.body.sentence).split(' ').join('').toLowerCase()]; //JSON.stringify(req.body.teacher).slice(1, -1).replace(/\\/g, "");
-    console.log("SFL Graded!");
+    //console.log("SFL Graded!");
     if (teacher == undefined)
       res.send(["", "", "", "", ""])
     else
@@ -40,12 +40,12 @@ module.exports = function(app, db) {
   });
 
   app.post('/exampleTrees/', (req, res) => {
-    console.log(req.body.sfl);
+    //console.log(req.body.sfl);
     var SFLs = SFL_trees.examples[req.body.sfl];
     if (SFLs == undefined) {
       SFLs = "Does not exist"
     }
-    console.log(SFLs);
+    //console.log(SFLs);
     res.send(SFLs);
   });
 };

@@ -108,8 +108,8 @@ function tree(JSONTree) {
   //returns node object from nodes array
   tree.getNode = function(thisNode) {
     var n;
-    //console.log('thisNode');
-    //console.log(thisNode);
+    ////console.log('thisNode');
+    ////console.log(thisNode);
     function getNode(node) {
       if (node.id == thisNode.id) {
         n = node;
@@ -117,20 +117,20 @@ function tree(JSONTree) {
       node.kids.forEach(getNode);
     }
     getNode(tree.nodes[0]);
-    //console.log('n');
-    //console.log(n);
+    ////console.log('n');
+    ////console.log(n);
     return n;
   }
   //add a new leaf - have to look into refactoring this code
   tree.addLeaf = function(parent) {
     tree.size++;
-    //console.log(parent);
+    ////console.log(parent);
     function addLeaf(node) {
-      //console.log(parent);
-      //console.log(node);
+      ////console.log(parent);
+      ////console.log(node);
       if (node.id == parent) {
-        //console.log("addLeaf");
-        //console.log('id' + (tree.size - 1));
+        ////console.log("addLeaf");
+        ////console.log('id' + (tree.size - 1));
         node.kids.push({
           id: 'id' + (tree.size),
           text: 'Node' + (tree.size),
@@ -155,7 +155,7 @@ function tree(JSONTree) {
   tree.addFromJSON = function(parent, child, pos, depth) {
     tree.size++;
     var node = parent;
-    console.log("child :", child);
+    //console.log("child :", child);
 
     function addLeaf(node) {
       var draw = true;
@@ -228,7 +228,7 @@ function tree(JSONTree) {
           }
 
           recursiveGetProperty(obj2, t[name], callback, parent2, depth);
-          //console.log("-- child : ", t[name])
+          ////console.log("-- child : ", t[name])
         }
       }
     }
@@ -269,9 +269,9 @@ function tree(JSONTree) {
     tree.leafDepth = depth;
   }
   TreeJSON = function() {
-    console.log(tree.nodes);
+    //console.log(tree.nodes);
     JSONData = JSON.stringify(tree.nodes);
-    console.log(JSONData);
+    //console.log(JSONData);
   }
 
   //set up the page
@@ -289,7 +289,7 @@ function tree(JSONTree) {
       kids: []
     });
   }
-  //console.log("--- HERE --- ", Object.keys(JSON.parse(JSONTree))[0]);
+  ////console.log("--- HERE --- ", Object.keys(JSON.parse(JSONTree))[0]);
   initialise();
   getJSON(JSONTree)
 

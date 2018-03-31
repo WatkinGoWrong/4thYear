@@ -9,7 +9,6 @@ function onTextChange(event) {
 }
 
 var obj; // Holds Annotation Instance
-var t = 0;
 
 function onReaderLoad(event) {
   var text = event.target.result;
@@ -26,6 +25,5 @@ function onReaderLoad(event) {
   ann2.annotator('loadAnnotations', obj);
 
   $("#inputText").css('display', 'none');
-  console.log("Successful Load");
 
 }

@@ -60,7 +60,7 @@ nodeDepth = function() {
 }
 
 reposition_adjust = function(node, SFL_node_pos) {
-  //console.log(SFL_node_pos);
+  ////console.log(SFL_node_pos);
 
   if (uniformDepth) {
     nodeDepth();
@@ -83,7 +83,7 @@ reposition_adjust = function(node, SFL_node_pos) {
         sentence = sentence.substring(cur.length, sentence.length);
         for (x in SFL_node_pos) {
           var pos_test = Math.abs(SFL_node_pos[x] - (left - (w + tree.w) / 2))
-          //console.log(pos_test);
+          ////console.log(pos_test);
           if (pos_test >= 0 && pos_test <= (tree.w) / 2)
             alter = -(tree.w);
         }
@@ -108,7 +108,7 @@ reposition_adjust = function(node, SFL_node_pos) {
     reposition_adjust(kid, SFL_node_pos);
     //redraw();
   });
-  //console.log(tree.w);
+  ////console.log(tree.w);
 }
 
 resetTree = function() {

@@ -74,7 +74,7 @@ getStudentSFL_db = function() {
 }
 
 postSFL_db = function(object) {
-  console.log(object);
+  //console.log(object);
 
   return new Promise(function(resolve, reject) {
     $.post(

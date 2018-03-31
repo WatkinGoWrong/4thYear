@@ -6,18 +6,7 @@ captureSFG = function() {
 
 $(function() {
   $("#captureSFG").click(function() {
-    html2canvas($("#tree-0"), {
-      onrendered: function(canvas) {
-        theCanvas = canvas;
-        document.body.appendChild(canvas);
-
-        // Convert and download as image
-        Canvas2Image.saveAsPNG(canvas);
-        //$("#img-out").append(canvas);
-        // Clean up
-        //document.body.removeChild(canvas);
-      }
-    });
+    saveSVG();
   });
 });
 
@@ -98,7 +87,7 @@ $(function() {
       tree.h = (svgHeight / 10) / devide;
     }
 
-    console.log(devide)
+    //console.log(devide)
     e.preventDefault();
 
   });
@@ -117,10 +106,8 @@ $(function() {
       tree.cy = (svgHeight / 40) / devide;
       tree.w = (svgHeight / 4) / devide;
       tree.h = (svgHeight / 10) / devide;
-
     }
-
-    console.log(devide)
+    //console.log(devide)
     e.preventDefault();
   });
 });
@@ -128,6 +115,7 @@ $(function() {
 $(function() {
   $("#storeSFL").click(async function() {
     var result = await storeSFL(assignment_content);
-    console.log(result);
+    e.preventDefault();
+    //console.log(result);
   });
 });

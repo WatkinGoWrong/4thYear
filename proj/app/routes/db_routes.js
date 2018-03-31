@@ -23,15 +23,15 @@ module.exports = function(app, db) {
         if (err) throw err;
         var dbo = db.db("mydb");
         if (connection_type == "insert") {
-          console.log("insert");
+          //console.log("insert");
           dbo.collection(collection).insertMany(myobj, function(err, res) {
             if (err) throw err;
-            console.log("Number of documents inserted: " + res.insertedCount);
+            //console.log("Number of documents inserted: " + res.insertedCount);
             test++;
             db.close();
           });
         } else if (connection_type == "update") {
-          console.log("update");
+          //console.log("update");
 
           var myquery = {
             _id: id
@@ -57,7 +57,7 @@ module.exports = function(app, db) {
 
           dbo.collection(collection).updateOne(myquery, newvalues, function(err, res) {
             if (err) throw err;
-            console.log("1 document updated");
+            //console.log("1 document updated");
             db.close();
           });
         }
@@ -89,7 +89,7 @@ module.exports = function(app, db) {
       };
       dbo.collection(collection).updateOne(myquery, newvalues, function(err, res) {
         if (err) throw err;
-        console.log("1 document updated");
+        ////console.log("1 document updated");
         db.close();
       });
     });

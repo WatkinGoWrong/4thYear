@@ -32,7 +32,7 @@
     <nav class="my-2 my-md-0 mr-md-3 ">
       <input class="p-2 text-light" type="file" id="inputText" value="Import" />
       <!--<a class="p-2 text-light" href="#" id="captureSFG">Capture Tree (In progress)</a>-->
-      <a class="p-2 text-light" href="#" id="zoom_level">Zoom [ 2 ]</a>
+      <a class="p-2 text-light" href="#" id="zoom_level">Zoom [ 1.2 ]</a>
       <a class="p-2 text-light" href="#" id="zoom_in">Zoom In</a>
       <a class="p-2 text-light" href="#" id="zoom_out">Zoom Out</a>
       <a class="p-2 text-light" href="#" id="save">Save</a>
@@ -66,9 +66,9 @@
 
         <p>it's about 6(hours) am</p>
 
-        <p>A much nicer person than he used to be</p>
+        <!--  <p>A much nicer person than he used to be</p>
 
-        <p>One morning I shot an elephant in my pyjamas</p>
+        <p>One morning I shot an elephant in my pyjamas</p>-->
       </div>
 
       <div id="content2" style="display: none;">
@@ -114,9 +114,9 @@
 
 
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js " integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN " crossorigin="anonymous "></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js " integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q " crossorigin="anonymous "></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js " integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl " crossorigin="anonymous "></script>
   <script src=" vendor/jquery.js ">
   </script>
 
@@ -125,17 +125,17 @@
 
   <script src="vendor/annotator.js ">
   </script>
-  <script src="vendor/annotator.touch.js"></script>
+  <script src="vendor/annotator.touch.js "></script>
   <script src="vendor/highlighter.js ">
   </script>
-  <!--<script src="vendor/rainbow-custom.min.js "></script>-->
+  <script src="vendor/rainbow-custom.min.js "></script>
 
-  <script src="vendor/raphael.js ">
+  <!--<script src="vendor/raphael.js ">
     // Treant related
   </script>
   <script src="vendor/Treant.js ">
     // Treant related
-  </script>
+  </script>-->
   <!--<script src="vendor/js.cookie.js "></script>-->
 
   <script src="vendor/taggle.min.js "></script>
@@ -163,8 +163,8 @@
   <script type="text/coffeescript ">
     # Attept at error handling for touch devices. window.onerror = (msg, file, line) -> alert(msg + ' ' + file + ' ' + line) jQuery.ajaxSetup async: false modules = jQuery.trim " "" touch touch/utils touch/editor touch/viewer "" " modules = modules.split(/\s+/)
     run = (file, source) -> filename = file.replace /coffee$/, "js " compiled = "#{CoffeeScript.compile(source)}\n//@ sourceURL=#{filename} " eval(compiled) sources = ("./src/#{script}.coffee " for script in modules) requests = jQuery.map sources, (script)
-    -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
-    > -1 }) window.annotator = jQuery("#content").data('annotator')
+    -> jQuery.get script, jQuery.proxy(run, this, script) jQuery.when.apply(jQuery, requests).done -> jQuery("#content ").annotator().annotator('addPlugin', 'Touch', { force: location.search.indexOf('force') > -1, useHighlighter: location.search.indexOf('highlighter')
+    > -1 }) window.annotator = jQuery("#content ").data('annotator')
   </script>
   </div>
 </body>

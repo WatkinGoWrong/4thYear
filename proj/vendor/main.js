@@ -12,20 +12,12 @@
   var c_diff_array = [];
   var in_diff_array = [];
   var past_sentences = [];
+  var sentence_adjust = "";
 
   function tree() {
 
     var node_count = 0;
     var previous_x = 0;
-
-    /*var svgWidth = 1440, //(document.getElementById('TreeArea').offsetWidth) * .90,
-      svgHeight = svgWidth / 2;
-
-    var devide = 2,
-      fontsize = svgWidth / 90,
-      linkSpace = fontsize - 1,
-      trainglepadding = fontsize - 2,
-      stroke_width = fontsize / 15*/
 
     var tree = {
       cx: (svgWidth / 2) / devide,
@@ -42,19 +34,13 @@
     $(document).ready(function() {
       //$("#AnnoToTree").click(function(event) {
       $("#Tree_list").on('click', async function(e) {
-        console.log("sentence : ", sentence);
+        //console.log("sentence : ", sentence);
 
         if (e.target && e.target.nodeName == "LI") {
-          ////console.log.log(e.target.innerHTML);
-          ////console.log.log(e.target.id);
-          //TreeNum = e.target.id;
-          //console.log(TreeNum);
 
           //need to ensure no element created by d3 exists when reinitalising the tree div
           //should only happen is tree.nodes exists
           if (diff_array != []) {
-            //var grade = await getGrade(JSON.stringify(tree.nodes), sentence);
-            //diff_array = grade[3];
             resetTree();
             refresh();
             refresh_grade();
@@ -70,17 +56,16 @@
           document.getElementById("progress-bar").style.width = 0 + '%';
 
           for (x in node_sentence_array) {
-            //console.log(node_sentence_array[x].quote, " = ", x);
+            ////console.log(node_sentence_array[x].quote, " = ", x);
             if (node_sentence_array[x].quote == e.target.innerHTML) {
               TreeNum = x;
+              sentence_adjust = node_sentence_array[x].quote
               sentence = (node_sentence_array[x].quote).split(' ').join('').split("\n").join('').toLowerCase();
-              console.log("sentence :", sentence);
+              //console.log("sentence :", sentence);
               createWholeTree();
               break;
             }
           }
-
-
 
         }
 
@@ -105,11 +90,19 @@
         if (!teacher) {
           assignment_content = {};
 
-          tree.nodes = await getTree(body);
-
-          if (grading) {
-            past_sentences.push(sentence);
-            console.log("adding", sentence);
+          if (!grading) {
+            var current_session = {
+              id: 1,
+              collection: "student",
+              connection_type: "update",
+              last_session: JSON.stringify(obj)
+            }
+            save_session(current_session);
+            tree.nodes = await getTree(body);
+          } else {
+            //past_sentences.push(sentence);
+            //console.log("adding", sentence);
+            tree.nodes = await getTree(body);
 
             grade = await getGrade(JSON.stringify(tree.nodes), sentence);
 
@@ -126,14 +119,14 @@
               "LIKENESS": grade[3],
               "MISSING": grade[4]
             }
-            //console.log(grade);
+            ////console.log(grade);
             assignment_content = {
               "GRADE": GRADE,
               "SFL": tree.nodes[0],
             }
 
             //session = obj;
-            console.log(obj);
+            //console.log(obj);
 
             var total_SFL = {
               id: 1,
@@ -145,12 +138,19 @@
               last_session: JSON.stringify(obj)
             }
             await postSFL_db(total_SFL);
-            console.log("done");
           }
 
-          if (adjust)
+          if (adjust) {
+            student_segmented_sentence = [];
+            getBottomNodes(tree.nodes[0]);
+            student_segmented_sentence = student_segmented_sentence.join(" ");
+            var a1 = (sentence_adjust.toLowerCase()).split(" ");
+            var a2 = (student_segmented_sentence.toLowerCase()).split(" ");
+            var diff = $(a1).not(a2).get();
+            a1 = $(a1).not(diff).get();
+            sentence = a1.join("");
             reposition_adjust(tree.nodes[0], SFL_node_pos);
-          else
+          } else
             reposition(tree.nodes[0]);
 
           if (grading)
@@ -160,33 +160,17 @@
         } else {
 
           var result = await getTeacherSFL_db();
-          //document.cookie = "SFL=" + JSON.stringify(result);
-          //console.log(document.cookie);
-          //tree.nodes = JSON.parse(result)
           tree.nodes = JSON.parse((result[sentence]).replace("\'s", "\\'s"));
 
-          if (adjust)
+          if (adjust) {
             reposition_adjust(tree.nodes[0], SFL_node_pos);
-          else
+          } else
             reposition(tree.nodes[0]);
 
           redraw();
         }
       });
     });
-    //initialise();
     return tree;
   }
-
-  $(function() {
-    $("#genSFG").click(async function() {
-      resetTree();
-      createWholeTree();
-      body = JSON.stringify(WholeTree)
-      tree.nodes = await getTree(body);
-      reposition(tree.nodes[0]);
-      console.log(JSON.stringify(tree.nodes));
-    });
-  });
-
   var tree = tree();

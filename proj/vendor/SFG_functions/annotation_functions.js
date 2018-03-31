@@ -13,12 +13,13 @@ var cur_id = 0;
 var node_array = [];
 var node_sentence_array = [];
 var assignment_content = {};
+var sentence_check = ["[\"\",\"SENTENCE\"]", "[\"\",\"CLAUSE\"]", "[\"\",\"NGP\"]", "[\"\",\"SITUATION/CLAUSE\"]"]
 
 
 //Setting number of notches on slide - number of SFLs
 setTreeNum = function() {
   TreeNum = ($("#CurrentTree").val()) * 4;
-  console.log(TreeNum);
+  //console.log(TreeNum);
   return TreeNum;
 }
 
@@ -48,7 +49,6 @@ bubbleSortNode_para = function(a) {
   return a
 }
 
-//$("#genNew").click(function() {
 window.onload = async function() {
   if (document.getElementById('tree-' + num) == null) {
     var div = document.createElement("div");
@@ -69,6 +69,8 @@ window.onload = async function() {
 
   ann.annotator("addPlugin", "Touch");
 
+  $("#inputText").hide();
+
   //ann.annotator('loadAnnotations', obj);
   //ann2.annotator('loadAnnotations', obj);
 
@@ -76,10 +78,11 @@ window.onload = async function() {
   //currently only shows highlights - need to add to arrays
   if (new_obj.last_session[0] != '[]') {
     var data = JSON.parse(new_obj.last_session);
-    console.log(data);
-    console.log("test", data[0].quote == data[1].quote)
-    if ((data[0].quote == data[1].quote) == true)
-      data.shift();
+
+    if (data[1] != undefined) {
+      if ((data[0].quote == data[1].quote) == true)
+        data.shift();
+    }
     obj = data;
   } else {
     var data;
@@ -91,7 +94,7 @@ window.onload = async function() {
     var data2 = new Array();
     for (var i = 0; i < data.length; i++) {
 
-      if ((((data[i].text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((data[i].text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((data[i].text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
+      if (sentence_check.indexOf((data[i].text).toUpperCase()) > -1) {
         var list = document.getElementById('Tree_list');
         var entry = document.createElement('li');
         entry.appendChild(document.createTextNode(data[i].quote));
@@ -110,7 +113,6 @@ window.onload = async function() {
         node_array = bubbleSortNode(node_array);
         node_array = bubbleSortNode_para(node_array);
       }
-      //console.log(data[i]);
       data[i].ranges = data[i].ranges;
       data[i].highlights = data[i].highlights;
       if (data[i].url == "1") {
@@ -119,11 +121,10 @@ window.onload = async function() {
         data2.push(data[i]);
       }
     }
-    //console.log(data1)
+
     ann.annotator('loadAnnotations', data1);
     ann2.annotator('loadAnnotations', data2);
   }
-  $("#inputText").hide();
 
 };
 
@@ -160,17 +161,19 @@ createWholeTree = function() {
       }
       _.merge(WholeTree, Tree);
     } else {
-      console.log(node_sentence_array[TreeNum].anno_start, node_array[i].anno_start, node_sentence_array[TreeNum].anno_end, node_array[i].anno_end);
-      console.log(node_array[i].quote, "- is not in the sentence -", node_sentence_array[TreeNum].quote);
+      //console.log(node_sentence_array[TreeNum].anno_start, node_array[i].anno_start, node_sentence_array[TreeNum].anno_end, node_array[i].anno_end);
+      //console.log(node_array[i].quote, "- is not in the sentence -", node_sentence_array[TreeNum].quote);
     }
   }
-
-  if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("SENTENCE") != -1)
+  var root_check = (node_sentence_array[TreeNum].text).replace(/[^\w\s!?]/g, '')
+  /*if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("SENTENCE") != -1)
     WholeTree["Sentence"] = WholeTree[""];
   else if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("CLAUSE") != -1)
     WholeTree["Clause"] = WholeTree[""];
   else if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("NGP") != -1)
-    WholeTree["Ngp"] = WholeTree[""];
+    WholeTree["Ngp"] = WholeTree[""];*/
+  if (sentence_check.indexOf((root_check.toUpperCase() > 1)))
+    WholeTree[root_check] = WholeTree[""];
   delete WholeTree[""];
 }
 
@@ -179,15 +182,14 @@ Annotator.Plugin.fileStorage = function(element) {
   return {
     pluginInit: function() {
       this.annotator.subscribe("annotationCreated", function(annotation) { //current work area
-          console.log("anno := ",
-            annotation);
+          //console.log("anno := ",annotation);
 
-          console.log("test : ", parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, "")));
+          //console.log("test : ", parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, "")));
 
           if (annotation.quote.length > 0 && annotation.text.length > 0) {
             annotation.url = currentUrl;
 
-            console.log("obj", obj);
+            //console.log("obj", obj);
 
             var data = obj;
             if (data == undefined) {
@@ -213,13 +215,14 @@ Annotator.Plugin.fileStorage = function(element) {
             $(annotation.highlights).attr("data-annotation-id", annotation.id);
             $(annotation.highlights).attr("id", "annotation_" + annotation.id);
             $(annotation.highlights).addClass("annotation_" + annotation.id);
-            //////console.log.log(JSON.stringify(Tree));
+            ////////console.log.log(JSON.stringify(Tree));
             obj.push(annotation);
 
           }
           //Checks for sentence tag - which will add it to sentence array for cehcking against words
-          console.log("[\"\",\"SENTENCE\"]");
-          if ((((annotation.text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((annotation.text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((annotation.text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
+          //console.log("[\"\",\"SENTENCE\"]");
+          //if ((((annotation.text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((annotation.text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((annotation.text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
+          if (sentence_check.indexOf((data[i].text).toUpperCase()) > -1) {
             var list = document.getElementById('Tree_list');
             var entry = document.createElement('li');
             entry.appendChild(document.createTextNode(annotation.quote));
@@ -241,10 +244,6 @@ Annotator.Plugin.fileStorage = function(element) {
             node_array = bubbleSortNode(node_array);
             node_array = bubbleSortNode_para(node_array);
           }
-          //anno_array = bubbleSortAnno(anno_array);
-          console.log("nodes : ", node_array);
-          console.log("Sentences : ", node_sentence_array);
-          console.log("Annotations : ", obj);
         })
         .subscribe("annotationDeleted", function(annotation) {
           // Check if the annotation actually exists (workaround annotatorjs bug #258).
@@ -265,7 +264,7 @@ Annotator.Plugin.fileStorage = function(element) {
               //changing functions to work for OO array instead of non OO array
               for (var i = 0; i < node_array.length; i++) {
                 if (annotation.quote == node_array[i].quote) {
-                  //console.log(annotation.quote);
+                  ////console.log(annotation.quote);
                   node_array.splice(i, i + 1);
                 }
               }
@@ -282,13 +281,6 @@ Annotator.Plugin.fileStorage = function(element) {
           }
         })
         .subscribe("annotationUpdated", function(annotation) {
-
-          /*updating before OO struc
-          for (var i = 0; i < anno_array.length; i = i + 4) {
-            if (annotation.quote == anno_array[i]) {
-              anno_array.splice(i, i + 4, annotation.quote, annotation.text, annotation.ranges[0].startOffset, annotation.ranges[0].endOffset);
-            }
-          }*/
 
           //updating for OO struc
           for (var i = 0; i < node_array.length; i++) {
