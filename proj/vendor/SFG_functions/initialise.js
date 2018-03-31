@@ -1,5 +1,11 @@
-initialise = function(num) {
+/**
+ *This function sets up the SVG
+ *It creates all nescesary elements for the tree in the SVG
+ *Creates the initial tree element
+ *
+ */
 
+initialise = function(num) {
   //add the root node
   tree.nodes.push({
     id: '00',

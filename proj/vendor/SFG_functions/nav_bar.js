@@ -1,14 +1,11 @@
-captureSFG = function() {
-  var c = document.getElementById('tree-0');
-  var t = c.getContext('2d');
-  window.open('', document.getElementById('tree-0').toDataURL());
-}
-
-$(function() {
-  $("#captureSFG").click(function() {
-    saveSVG();
-  });
-});
+/**
+ *All functions related to the nav bar along the top of the application
+ *Saving current annotation data,
+ *Turning grading on and Off, - changes how the tree is displayed
+ *Turning Adjust on and off, - changes how the tree is structured
+ *Display teachers trees on and off, - retrieves and displays teachers pre constructed trees
+ *Zooming in and out of the tree
+ */
 
 $(function() {
   $("#save").click(async function(e) {

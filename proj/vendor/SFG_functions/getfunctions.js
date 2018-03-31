@@ -1,3 +1,10 @@
+/**
+ *These functions are all get methods related to the tree
+ *Getting the bottom nodes to ensure the sentence is correct - used for adjust function
+ *All get methods for the links, nodes, and triangles for the tree diagram
+ *Get methods for the generic drawing, then the correct and incorrect for the grading drawing
+ */
+
 var student_segmented_sentence = [];
 
 getBottomNodes = function(node) {

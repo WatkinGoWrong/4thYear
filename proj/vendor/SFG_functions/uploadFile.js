@@ -1,3 +1,9 @@
+/*file uploading function - taken from Colm Mathews code
+ *Code given to me by Colm - previous student of Maynooth University
+ *
+ *Allows the uploading and diplaying of text files to be annotated
+ */
+
 $("#inputText").change(function(e) {
   onTextChange(e);
 });

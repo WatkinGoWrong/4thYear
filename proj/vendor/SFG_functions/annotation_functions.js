@@ -1,3 +1,14 @@
+/**
+ *Annotation functions - parts taken from Colm Mathews code
+ *Code given to me by Colm - previous student of Maynooth University
+ *
+ *Contains all functions related to creation, updating and deletion of Annotation data
+ *Creates the basic JSON structure for a syntax tree - WholeTree
+ *Contians bubble sorting for nodes
+ *Loads previous annotation data and displays it
+ */
+
+
 var anno_array = [];
 var text_array = [];
 var sentence_array = [];
@@ -5,11 +16,10 @@ var sentence = "";
 var WholeTree = {};
 var new_obj;
 var session;
-
-
 var num = 0;
+
+
 var TreeNum = 0;
-var cur_id = 0;
 var node_array = [];
 var node_sentence_array = [];
 var assignment_content = {};
@@ -37,8 +47,10 @@ bubbleSortNode = function(a) {
 }
 
 bubbleSortNode_para = function(a) {
+  //console.log(a);
   for (var i = 0; i < a.length; i++) {
     for (var j = 0; j < a.length - 1; j++) {
+      //console.log(a[j + 1]);
       if (parseInt((a[j].para_start).replace(/^\D+|\D+$/g, "")) > parseInt((a[j + 1].para_start).replace(/^\D+|\D+$/g, ""))) { //parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, ""))
         var temp = a[j];
         a[j] = a[j + 1];
@@ -166,12 +178,6 @@ createWholeTree = function() {
     }
   }
   var root_check = (node_sentence_array[TreeNum].text).replace(/[^\w\s!?]/g, '')
-  /*if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("SENTENCE") != -1)
-    WholeTree["Sentence"] = WholeTree[""];
-  else if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("CLAUSE") != -1)
-    WholeTree["Clause"] = WholeTree[""];
-  else if ((node_sentence_array[TreeNum].text).toUpperCase().indexOf("NGP") != -1)
-    WholeTree["Ngp"] = WholeTree[""];*/
   if (sentence_check.indexOf((root_check.toUpperCase() > 1)))
     WholeTree[root_check] = WholeTree[""];
   delete WholeTree[""];
@@ -182,14 +188,8 @@ Annotator.Plugin.fileStorage = function(element) {
   return {
     pluginInit: function() {
       this.annotator.subscribe("annotationCreated", function(annotation) { //current work area
-          //console.log("anno := ",annotation);
-
-          //console.log("test : ", parseInt((annotation.ranges[0].start).replace(/^\D+|\D+$/g, "")));
-
           if (annotation.quote.length > 0 && annotation.text.length > 0) {
             annotation.url = currentUrl;
-
-            //console.log("obj", obj);
 
             var data = obj;
             if (data == undefined) {
@@ -215,19 +215,14 @@ Annotator.Plugin.fileStorage = function(element) {
             $(annotation.highlights).attr("data-annotation-id", annotation.id);
             $(annotation.highlights).attr("id", "annotation_" + annotation.id);
             $(annotation.highlights).addClass("annotation_" + annotation.id);
-            ////////console.log.log(JSON.stringify(Tree));
             obj.push(annotation);
 
           }
-          //Checks for sentence tag - which will add it to sentence array for cehcking against words
-          //console.log("[\"\",\"SENTENCE\"]");
-          //if ((((annotation.text).toUpperCase()).indexOf("[\"\",\"SENTENCE\"]") != -1 || ((annotation.text).toUpperCase()).indexOf("[\"\",\"CLAUSE\"]") != -1) || ((annotation.text).toUpperCase()).indexOf("[\"\",\"NGP\"]") != -1) {
           if (sentence_check.indexOf((data[i].text).toUpperCase()) > -1) {
             var list = document.getElementById('Tree_list');
             var entry = document.createElement('li');
             entry.appendChild(document.createTextNode(annotation.quote));
             entry.className = "list-group-item list-group-item-action";
-            //cur_id = parseInt(annotation.id);
             entry.setAttribute("id", annotation.id);
             list.appendChild(entry);
 

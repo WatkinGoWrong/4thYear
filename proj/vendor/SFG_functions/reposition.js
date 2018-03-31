@@ -1,7 +1,15 @@
+/**
+ *Contains methods needed to position the tree elements correctly (nodes, links, triangles)
+ *Contains two main functions:
+ *reposition - generic tree structure, positioned according to annotations, can cause incoherent sentence
+ *reposition_adjust - changes tree structure, positions elements to create coherent sentence
+ *other functions are needed within the two main functions
+ *
+ */
+
 var uniformDepth = true;
 var previous_x = 0;
 var node_length = 0;
-
 
 getLeafCount = function(node) {
   if (node.kids.length == 0) {

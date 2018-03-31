@@ -1,3 +1,13 @@
+/**
+ *Contains code given to me by Supervisor Dr.John G. Keating-
+ *Changed code to suit my needs
+ *Contains two drawing functions, one for drawing generic tree, one for drawing graded tree
+ *Two refresh methods, one for removing generic tree, one for removing graded tree
+ *D3 causes issues with removing elements - which is why two different methods for each were needed
+ *Calls get functions to retrieve - links, nodes and triangle positions
+ */
+
+
 var svgWidth = (document.getElementById('TreeArea').offsetWidth), // * .985,
   svgHeight = svgWidth / 2,
   devide = 1.2;

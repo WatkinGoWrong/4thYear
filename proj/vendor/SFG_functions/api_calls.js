@@ -1,3 +1,10 @@
+/**
+ *Conatins all api call functions
+ *Grading, Tree constructing, Teachers Tree retreval
+ *Saving and retrieving from database
+ *
+ */
+
 var port = "http://192.168.1.10:8000/"
 var port2 = "http://localhost:8000/"
 
